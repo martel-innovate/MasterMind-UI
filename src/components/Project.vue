@@ -15,9 +15,10 @@
       <h1>Registered Clusters:</h1>
       <ul>
         <li v-for="cluster in clusters">
-          {{cluster.name}}: {{cluster.description}}
+          <router-link :to='"/projects/"+project.id+"/clusters/"+cluster.id'>{{cluster.name}}</router-link>
         </li>
       </ul>
+      <router-link :to='"/projects/"+project.id+"/clusters/new"'>Register Cluster</router-link>
     </div>
     <div class="services-list">
       <h1>Registered Services:</h1>
@@ -27,21 +28,31 @@
         </li>
       </ul>
     </div>
+    <hr/>
+    <div class="edit-project">
+      <router-link :to='"/projects/"+project.id+"/edit"'>Edit Project</router-link>
+    </div>
+    <hr/>
+    <div class="delete-project">
+      <button v-on:click="deleteProject"><b>DELETE PROJECT</b></button>
+    </div>
   </div>
 </template>
 
 <script type = "text/javascript" >
   import axios from 'axios'
+  import auth from '../auth'
+  import router from '../router'
   export default {
     name: 'project',
     created () {
-      axios.get('http://localhost:3000/v1/projects/' + this.$route.params.id, {headers: {'Authorization': 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhY3Rvcl9pZCI6IjEiLCJleHAiOjE1MDQ3NzIyNjB9.6dOLY_lYjjzBzdvfAvfctD2ByiVz-y57CS0Fl-xbDCg'}})
+      axios.get(auth.getAPIUrl() + 'v1/projects/' + this.$route.params.id, {headers: {'Authorization': auth.getAuthHeader()}})
       .then(response => { this.project = response.data })
       .catch(error => { console.log(error) })
-      axios.get('http://localhost:3000/v1/projects/' + this.$route.params.id + '/clusters', {headers: {'Authorization': 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhY3Rvcl9pZCI6IjEiLCJleHAiOjE1MDQ3NzIyNjB9.6dOLY_lYjjzBzdvfAvfctD2ByiVz-y57CS0Fl-xbDCg'}})
+      axios.get(auth.getAPIUrl() + 'v1/projects/' + this.$route.params.id + '/clusters', {headers: {'Authorization': auth.getAuthHeader()}})
       .then(response => { this.clusters = response.data })
       .catch(error => { console.log(error) })
-      axios.get('http://localhost:3000/v1/projects/' + this.$route.params.id + '/services', {headers: {'Authorization': 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhY3Rvcl9pZCI6IjEiLCJleHAiOjE1MDQ3NzIyNjB9.6dOLY_lYjjzBzdvfAvfctD2ByiVz-y57CS0Fl-xbDCg'}})
+      axios.get(auth.getAPIUrl() + 'v1/projects/' + this.$route.params.id + '/services', {headers: {'Authorization': auth.getAuthHeader()}})
       .then(response => { this.services = response.data })
       .catch(error => { console.log(error) })
     },
@@ -50,6 +61,22 @@
         project: {},
         clusters: [],
         services: []
+      }
+    },
+    methods: {
+      deleteProject: function (event) {
+        axios({
+          method: 'delete',
+          url: auth.getAPIUrl() + 'v1/projects/' + this.$route.params.id,
+          headers: { 'Authorization': auth.getAuthHeader() }
+        })
+        .then(function (response) {
+          console.log(response.data)
+          router.push('/projects')
+        })
+        .catch(function (error) {
+          console.log(error)
+        })
       }
     }
   }

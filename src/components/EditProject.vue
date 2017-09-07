@@ -1,6 +1,6 @@
 <template>
-  <div class="new-project">
-    <h1>New Project</h1>
+  <div class="edit-project">
+    <h1>Edit Project</h1>
     <form id="project">
       <p>
         Project Name: <input type="text" v-model="name">
@@ -8,7 +8,7 @@
       <p>
         Project Description: <input type="text" v-model="description">
       </p>
-      <button v-on:click="submit">Create Project</button>
+      <button v-on:click="submit">Edit Project</button>
     </form>
   </div>
 </template>
@@ -19,7 +19,7 @@
   import router from '../router'
 
   export default {
-    name: 'new-project',
+    name: 'edit-project',
     data () {
       return {
         name: '',
@@ -29,8 +29,8 @@
     methods: {
       submit: function (event) {
         axios({
-          method: 'post',
-          url: auth.getAPIUrl() + 'v1/projects',
+          method: 'put',
+          url: auth.getAPIUrl() + 'v1/projects/' + this.$route.params.id,
           headers: { 'Authorization': auth.getAuthHeader() },
           data: {
             name: this.name,
