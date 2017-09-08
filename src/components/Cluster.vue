@@ -14,12 +14,21 @@
         </li>
       </ul>
     </div>
+    <hr/>
+    <div class="edit-cluster">
+      <router-link :to='"/projects/"+this.$route.params.project_id+"/edit/"+cluster.id'>Edit Cluster</router-link>
+    </div>
+    <hr/>
+    <div class="delete-cluster">
+      <button v-on:click="deleteCluster"><b>DELETE CLUSTER</b></button>
+    </div>
   </div>
 </template>
 
 <script type = "text/javascript" >
   import axios from 'axios'
   import auth from '../auth'
+  import router from '../router'
   export default {
     name: 'project',
     created () {
@@ -30,6 +39,23 @@
     data () {
       return {
         cluster: {}
+      }
+    },
+    methods: {
+      deleteCluster: function (event) {
+        var projectId = this.$route.params.project_id
+        axios({
+          method: 'delete',
+          url: auth.getAPIUrl() + 'v1/projects/' + this.$route.params.project_id + '/clusters/' + this.$route.params.cluster_id,
+          headers: { 'Authorization': auth.getAuthHeader() }
+        })
+        .then(function (response) {
+          console.log(response.data)
+          router.push('/projects/' + projectId)
+        })
+        .catch(function (error) {
+          console.log(error)
+        })
       }
     }
   }

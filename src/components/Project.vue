@@ -28,6 +28,14 @@
         </li>
       </ul>
     </div>
+    <div class="services-list">
+      <h1>Registered Roles:</h1>
+      <ul>
+        <li v-for="actor in actors">
+          {{actor.fullname}}
+        </li>
+      </ul>
+    </div>
     <hr/>
     <div class="edit-project">
       <router-link :to='"/projects/"+project.id+"/edit"'>Edit Project</router-link>
@@ -55,12 +63,27 @@
       axios.get(auth.getAPIUrl() + 'v1/projects/' + this.$route.params.id + '/services', {headers: {'Authorization': auth.getAuthHeader()}})
       .then(response => { this.services = response.data })
       .catch(error => { console.log(error) })
+      axios.get(auth.getAPIUrl() + 'v1/projects/' + this.$route.params.id + '/roles', {headers: {'Authorization': auth.getAuthHeader()}})
+      .then(response => {
+        this.roles = response.data
+        var actors = []
+        var promises = []
+        this.roles.forEach(function (element) {
+          promises.push(axios.get(auth.getAPIUrl() + 'v1/actors/' + element.actor_id, {headers: {'Authorization': auth.getAuthHeader()}})
+          .then(response => { actors.push(response.data) })
+          .catch(error => { console.log(error) }))
+        })
+        axios.all(promises).then(response => { this.actors = actors }).catch(error => { console.log(error) })
+      })
+      .catch(error => { console.log(error) })
     },
     data () {
       return {
         project: {},
         clusters: [],
-        services: []
+        services: [],
+        roles: [],
+        actors: []
       }
     },
     methods: {

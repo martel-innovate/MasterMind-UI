@@ -7,6 +7,7 @@ import Cluster from '@/components/Cluster'
 import NewProject from '@/components/NewProject'
 import NewCluster from '@/components/NewCluster'
 import EditProject from '@/components/EditProject'
+import EditCluster from '@/components/EditCluster'
 
 Vue.use(Router)
 
@@ -51,6 +52,11 @@ export default new Router({
       path: '/projects/:project_id/clusters/:cluster_id',
       name: 'Cluster',
       component: Cluster
+    },
+    {
+      path: '/projects/:project_id/clusters/:cluster_id/edit',
+      name: 'EditCluster',
+      component: EditCluster
     }
   ]
 })
