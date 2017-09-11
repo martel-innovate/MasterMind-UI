@@ -24,8 +24,7 @@ export default {
   },
 
   checkAuth () {
-    var jwt = localStorage.getItem('api_token')
-    if (jwt) {
+    if (localStorage.getItem('api_token')) {
       this.user.authenticated = true
     } else {
       this.user.authenticated = false
