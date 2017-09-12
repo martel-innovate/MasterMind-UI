@@ -44,6 +44,7 @@
     },
     methods: {
       submit: function (event) {
+        var projectId = this.$route.params.project_id
         axios({
           method: 'put',
           url: auth.getAPIUrl() + 'v1/projects/' + this.$route.params.project_id + '/clusters/' + this.$route.params.cluster_id,
@@ -59,7 +60,7 @@
         })
         .then(function (response) {
           console.log(response.data)
-          router.push('/projects/' + this.$route.params.project_id)
+          router.push('/projects/' + projectId)
         })
         .catch(function (error) {
           console.log(error)
