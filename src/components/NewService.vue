@@ -58,8 +58,8 @@
     data () {
       return {
         configuration: '',
-        status: 'inactive',
-        managed: 'false',
+        status: 'Inactive',
+        managed: false,
         endpoint: '',
         latitude: 0,
         longitude: 0,

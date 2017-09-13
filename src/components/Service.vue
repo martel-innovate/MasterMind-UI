@@ -37,6 +37,10 @@
       <router-link :to='"/projects/"+this.$route.params.project_id+"/services/"+service.id+"/edit"'>Edit Service</router-link>
     </div>
     <hr/>
+    <div class="deploy-service">
+      <button v-on:click="deployService"><b>DEPLOY</b></button>
+    </div>
+    <hr/>
     <div class="delete-service">
       <button v-on:click="deleteService"><b>DELETE SERVICE</b></button>
     </div>
@@ -73,9 +77,10 @@
     methods: {
       deleteService: function (event) {
         var projectId = this.$route.params.project_id
+        var serviceId = this.$route.params.service_id
         axios({
           method: 'delete',
-          url: auth.getAPIUrl() + 'v1/projects/' + this.$route.params.project_id + '/services/' + this.$route.params.service_id,
+          url: auth.getAPIUrl() + 'v1/projects/' + projectId + '/services/' + serviceId,
           headers: { 'Authorization': auth.getAuthHeader() }
         })
         .then(function (response) {
@@ -85,6 +90,13 @@
         .catch(function (error) {
           console.log(error)
         })
+      },
+      deployService: function (event) {
+        var projectId = this.$route.params.project_id
+        var serviceId = this.$route.params.service_id
+        axios.get(auth.getAPIUrl() + 'v1/projects/' + projectId + '/clusters/' + this.service.cluster_id + '/deploy?service_id=' + serviceId, {headers: {'Authorization': auth.getAuthHeader()}})
+        .then(response => { console.log(response.data) })
+        .catch(error => { console.log(error) })
       }
     }
   }

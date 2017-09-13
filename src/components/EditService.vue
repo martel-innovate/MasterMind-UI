@@ -7,6 +7,12 @@
         <textarea v-model="configuration" placeholder="Environment variables (JSON format)"></textarea>
       </p>
       <p>
+        <input type="radio" id="one" value="true" v-model="managed">
+        <label for="one">Managed</label>
+        <input type="radio" id="two" value="false" v-model="managed">
+        <label for="two">Unmanaged</label>
+      </p>
+      <p>
         Latitude: <input type="text" v-model="latitude">
       </p>
       <p>
@@ -27,6 +33,7 @@
     data () {
       return {
         configuration: '',
+        managed: false,
         latitude: '',
         longitude: ''
       }
@@ -41,6 +48,7 @@
           headers: { 'Authorization': auth.getAuthHeader() },
           data: {
             configuration: this.configuration,
+            managed: this.managed,
             latitude: this.latitude,
             longitude: this.longitude
           }
