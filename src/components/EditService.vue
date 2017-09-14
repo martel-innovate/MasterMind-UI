@@ -3,10 +3,6 @@
     <h1>Edit Service</h1>
     <form id="service">
       <p>
-        Configuration:
-        <textarea v-model="configuration" placeholder="Environment variables (JSON format)"></textarea>
-      </p>
-      <p>
         <input type="radio" id="one" value="true" v-model="managed">
         <label for="one">Managed</label>
         <input type="radio" id="two" value="false" v-model="managed">
@@ -32,7 +28,6 @@
     name: 'edit-service',
     data () {
       return {
-        configuration: '',
         managed: false,
         latitude: '',
         longitude: ''
@@ -47,7 +42,6 @@
           url: auth.getAPIUrl() + 'v1/projects/' + this.$route.params.project_id + '/services/' + this.$route.params.service_id,
           headers: { 'Authorization': auth.getAuthHeader() },
           data: {
-            configuration: this.configuration,
             managed: this.managed,
             latitude: this.latitude,
             longitude: this.longitude

@@ -7,13 +7,10 @@
           <b>{{service.endpoint}}</b>:
         </li>
         <li>
-          Service Type: {{this.service_type}}
+          Service Type: {{this.service_type.name}}
         </li>
         <li>
           Cluster: {{this.cluster}}
-        </li>
-        <li>
-          Configuration: {{service.configuration}}
         </li>
         <li>
           Status: {{service.status}}
@@ -30,6 +27,9 @@
         <li>
           Docker Service ID: {{service.docker_service_id}}
         </li>
+        <li>
+          Configuration: {{service.configuration}}
+        </li>
       </ul>
     </div>
     <hr/>
@@ -38,7 +38,8 @@
     </div>
     <hr/>
     <div class="deploy-service">
-      <button v-on:click="deployService"><b>DEPLOY</b></button>
+      <button v-show="!deploying" v-on:click="deployService"><b>DEPLOY</b></button>
+      <button v-show="deploying" disabled><b>DEPLOYING...</b></button>
     </div>
     <hr/>
     <div class="delete-service">
@@ -59,7 +60,7 @@
         var service = response.data
         this.service = service
         axios.get(auth.getAPIUrl() + 'v1/service_types/' + service.service_type_id, {headers: {'Authorization': auth.getAuthHeader()}})
-        .then(response => { this.service_type = response.data.name })
+        .then(response => { this.service_type = response.data })
         .catch(error => { console.log(error) })
         axios.get(auth.getAPIUrl() + 'v1/projects/' + this.$route.params.project_id + '/clusters/' + service.cluster_id, {headers: {'Authorization': auth.getAuthHeader()}})
         .then(response => { this.cluster = response.data.name })
@@ -71,7 +72,8 @@
       return {
         service: {},
         service_type: '',
-        cluster: ''
+        cluster: '',
+        deploying: false
       }
     },
     methods: {
@@ -92,10 +94,14 @@
         })
       },
       deployService: function (event) {
+        this.deploying = true
         var projectId = this.$route.params.project_id
         var serviceId = this.$route.params.service_id
         axios.get(auth.getAPIUrl() + 'v1/projects/' + projectId + '/clusters/' + this.service.cluster_id + '/deploy?service_id=' + serviceId, {headers: {'Authorization': auth.getAuthHeader()}})
-        .then(response => { console.log(response.data) })
+        .then(response => {
+          console.log(response.data)
+          router.push('/projects/' + projectId)
+        })
         .catch(error => { console.log(error) })
       }
     }
