@@ -4,10 +4,13 @@ import Login from '@/components/Login'
 import ProjectList from '@/components/ProjectList'
 import Project from '@/components/Project'
 import Cluster from '@/components/Cluster'
+import Service from '@/components/Service'
 import NewProject from '@/components/NewProject'
 import NewCluster from '@/components/NewCluster'
+import NewService from '@/components/NewService'
 import EditProject from '@/components/EditProject'
 import EditCluster from '@/components/EditCluster'
+import EditService from '@/components/EditService'
 
 Vue.use(Router)
 
@@ -44,6 +47,11 @@ export default new Router({
       component: NewCluster
     },
     {
+      path: '/projects/:id/services/new',
+      name: 'NewService',
+      component: NewService
+    },
+    {
       path: '/projects/:id/edit',
       name: 'EditProject',
       component: EditProject
@@ -54,9 +62,19 @@ export default new Router({
       component: Cluster
     },
     {
+      path: '/projects/:project_id/services/:service_id',
+      name: 'Service',
+      component: Service
+    },
+    {
       path: '/projects/:project_id/clusters/:cluster_id/edit',
       name: 'EditCluster',
       component: EditCluster
+    },
+    {
+      path: '/projects/:project_id/services/:service_id/edit',
+      name: 'EditService',
+      component: EditService
     }
   ]
 })

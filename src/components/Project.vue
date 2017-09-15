@@ -24,9 +24,10 @@
       <h1>Registered Services:</h1>
       <ul>
         <li v-for="service in services">
-          {{service.endpoint}}
+          <router-link :to='"/projects/"+project.id+"/services/"+service.id'>{{service.endpoint}}</router-link>
         </li>
       </ul>
+      <router-link :to='"/projects/"+project.id+"/services/new"'>Register Service</router-link>
     </div>
     <div class="actors-list">
       <h1>Registered Actors:</h1>
