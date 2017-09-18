@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const API_URL = 'http://localhost:3000/'
+const API_URL = process.env.API_URL
 const LOGIN_URL = API_URL + 'auth/login'
 
 export default {
@@ -10,6 +10,7 @@ export default {
   },
 
   login (context, creds, redirect) {
+    console.log('Env: ' + process.env.API_URL)
     axios.get(LOGIN_URL)
     .then(response => {
       localStorage.setItem('api_token', response.data.auth_token)
