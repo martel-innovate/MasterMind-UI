@@ -4,7 +4,7 @@
       <h1>Service Details:</h1>
       <ul>
         <li>
-          <b>{{service.endpoint}}</b>:
+          <b>{{service.name}}</b>:
         </li>
         <li>
           Service Type: {{this.service_type.name}}
@@ -23,6 +23,9 @@
         </li>
         <li>
           Longitude: {{service.longitude}}
+        </li>
+        <li>
+          Endpoint: {{service.endpoint}}
         </li>
         <li>
           Docker Service ID: {{service.docker_service_id}}

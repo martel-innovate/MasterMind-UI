@@ -3,6 +3,9 @@
     <h1>Register Service</h1>
     <form id="service">
       <p>
+        Name: <input type="text" v-model="name">
+      </p>
+      <p>
         <input type="radio" id="one" value="true" v-model="managed">
         <label for="one">Managed</label>
         <input type="radio" id="two" value="false" v-model="managed">
@@ -40,7 +43,7 @@
         <select v-model="configuration[linkedService.as]">
           <option disabled value="">Select a service</option>
           <option v-for="service in services" v-bind:value="service[linkedService.retrieve]">
-            {{ service.endpoint }}
+            {{ service.name }}
           </option>
         </select>
       </p>
@@ -70,6 +73,7 @@
     },
     data () {
       return {
+        name: '',
         configuration: {},
         status: 'Inactive',
         managed: false,
@@ -108,6 +112,7 @@
           url: auth.getAPIUrl() + 'v1/projects/' + projectId + '/services',
           headers: { 'Authorization': auth.getAuthHeader() },
           data: {
+            name: this.name,
             service_type_id: this.service_type_id,
             configuration: JSON.stringify(this.configuration),
             latitude: this.latitude,
