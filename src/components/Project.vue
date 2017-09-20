@@ -24,7 +24,7 @@
       <h1>Registered Services:</h1>
       <ul>
         <li v-for="service in services">
-          <router-link :to='"/projects/"+project.id+"/services/"+service.id'>{{service.endpoint}}</router-link>
+          <router-link :to='"/projects/"+project.id+"/services/"+service.id'>{{service.name}}</router-link>
         </li>
       </ul>
       <router-link :to='"/projects/"+project.id+"/services/new"'>Register Service</router-link>
