@@ -16,7 +16,7 @@
     </div>
     <hr/>
     <div class="edit-cluster">
-      <router-link :to='"/projects/"+this.$route.params.project_id+"/edit/"+cluster.id'>Edit Cluster</router-link>
+      <router-link :to='"/projects/"+this.$route.params.project_id+"/clusters/"+cluster.id+"/edit"'>Edit Cluster</router-link>
     </div>
     <hr/>
     <div class="delete-cluster">

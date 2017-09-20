@@ -42,8 +42,21 @@
         ca: ''
       }
     },
+    created () {
+      axios.get(auth.getAPIUrl() + 'v1/projects/' + this.$route.params.project_id + '/clusters/' + this.$route.params.cluster_id, {headers: {'Authorization': auth.getAuthHeader()}})
+      .then(response => {
+        this.name = response.data.name
+        this.description = response.data.description
+        this.endpoint = response.data.endpoint
+        this.cert = response.data.cert
+        this.key = response.data.key
+        this.ca = response.data.ca
+      })
+      .catch(error => { console.log(error) })
+    },
     methods: {
       submit: function (event) {
+        var projectId = this.$route.params.project_id
         axios({
           method: 'put',
           url: auth.getAPIUrl() + 'v1/projects/' + this.$route.params.project_id + '/clusters/' + this.$route.params.cluster_id,
@@ -59,7 +72,7 @@
         })
         .then(function (response) {
           console.log(response.data)
-          router.push('/projects/' + this.$route.params.project_id)
+          router.push('/projects/' + projectId)
         })
         .catch(function (error) {
           console.log(error)
