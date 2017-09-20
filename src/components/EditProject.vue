@@ -26,6 +26,14 @@
         description: ''
       }
     },
+    created () {
+      axios.get(auth.getAPIUrl() + 'v1/projects/' + this.$route.params.id, {headers: {'Authorization': auth.getAuthHeader()}})
+      .then(response => {
+        this.name = response.data.name
+        this.description = response.data.description
+      })
+      .catch(error => { console.log(error) })
+    },
     methods: {
       submit: function (event) {
         axios({

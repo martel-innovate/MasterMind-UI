@@ -96,6 +96,7 @@
         // var projectId = this.$route.params.id
         var currentServiceType = {}
         var currentServiceTypeId = this.service_type_id
+        var configuration = this.configuration
         this.service_types.forEach(function (st) {
           if (currentServiceTypeId === st.id) {
             currentServiceType = st
@@ -104,6 +105,11 @@
         const config = yaml.safeLoad(currentServiceType.configuration_template)
         this.env_variables = config.environment_variables
         this.linked_services = config.services
+        if (config.environment_variables) {
+          config.environment_variables.forEach(function (envVar) {
+            configuration[envVar.variable] = envVar.default
+          })
+        }
       },
       submit: function (event) {
         var projectId = this.$route.params.id

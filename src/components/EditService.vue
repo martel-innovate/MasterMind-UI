@@ -33,6 +33,15 @@
         longitude: ''
       }
     },
+    created () {
+      axios.get(auth.getAPIUrl() + 'v1/projects/' + this.$route.params.project_id + '/services/' + this.$route.params.service_id, {headers: {'Authorization': auth.getAuthHeader()}})
+      .then(response => {
+        this.managed = response.data.managed
+        this.latitude = response.data.latitude
+        this.longitude = response.data.longitude
+      })
+      .catch(error => { console.log(error) })
+    },
     methods: {
       submit: function (event) {
         var projectId = this.$route.params.project_id
