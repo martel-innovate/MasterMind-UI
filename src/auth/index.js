@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const API_URL = 'http://localhost:3000/'
+const API_URL = 'http://172.24.78.16:3000/'
 const LOGIN_URL = API_URL + 'auth/login'
 
 export default {

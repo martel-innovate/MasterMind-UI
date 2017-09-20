@@ -3,7 +3,7 @@
     <h1>Edit Project</h1>
     <form id="project">
       <p>
-        Project Name: <input type="text" v-model="name">
+        Project Name: <input type="text" v-model="name" placeholder="">
       </p>
       <p>
         Project Description: <input type="text" v-model="description">

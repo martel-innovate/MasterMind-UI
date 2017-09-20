@@ -1,58 +1,110 @@
 <template>
-  <div class="project">
-    <div class="project-details">
-      <h1>Project Details:</h1>
-      <ul>
-        <li>
-          <b>{{project.name}}</b>:
-        </li>
-        <li>
-          {{project.description}}
-        </li>
-      </ul>
-    </div>
-    <div class="cluster-list">
-      <h1>Registered Clusters:</h1>
-      <ul>
-        <li v-for="cluster in clusters">
-          <router-link :to='"/projects/"+project.id+"/clusters/"+cluster.id'>{{cluster.name}}</router-link>
-        </li>
-      </ul>
-      <router-link :to='"/projects/"+project.id+"/clusters/new"'>Register Cluster</router-link>
-    </div>
-    <div class="services-list">
-      <h1>Registered Services:</h1>
-      <ul>
-        <li v-for="service in services">
-          {{service.endpoint}}
-        </li>
-      </ul>
-    </div>
-    <div class="actors-list">
-      <h1>Registered Actors:</h1>
-      <ul>
-        <li v-for="actor in actors">
-          {{actor.actor.fullname}}: {{actor.role}} <button v-on:click="removeActor(actor.roleId)">-</button>
-        </li>
-      </ul>
-      <button v-show="!isAddingActor" v-on:click="showAddActor">Add Actor</button>
-      <div class="actor-add" v-show="isAddingActor">
-        <form id="actor">
+<!--new style start-->
+<div class="card is-fullwidth">
+  <header class="card-header">
+    <p class="card-header-title">
+      Project Details
+    </p>                
+  </header>
+  <div class="card-content">
+    <article class="media">                  
+      <div class="media-content">
+        <div class="content">
           <p>
-            Full Name: <input type="text" v-model="actorName">
-            <button v-on:click="addActor">Add</button>
+            <strong>Project name:</strong> {{project.name}}
+            <br>
+            <strong>Project description:</strong>
+            {{project.description}}
           </p>
-        </form>
+        </div>
       </div>
-    </div>
-    <hr/>
-    <div class="edit-project">
-      <router-link :to='"/projects/"+project.id+"/edit"'>Edit Project</router-link>
-    </div>
-    <hr/>
-    <div class="delete-project">
-      <button v-on:click="deleteProject"><b>DELETE PROJECT</b></button>
-    </div>
+    </article>
+  </div>
+  <hr>
+  <header class="card-header">
+    <p class="card-header-title">
+      Registered Clusters
+    </p>                
+  </header>
+  <div class="card-content">
+    <article class="media">                  
+      <div class="media-content">
+        <div class="content">
+          <p>
+            <ul>
+              <li v-for="cluster in clusters">
+                <router-link :to='"/projects/"+project.id+"/clusters/"+cluster.id'>{{cluster.name}}</router-link>
+              </li>  
+            </ul>  
+          </p>
+        </div>
+      </div>
+    </article>
+  </div>
+  <hr>
+  <header class="card-header">
+    <p class="card-header-title">
+      Registered Services
+    </p>                
+  </header>
+  <div class="card-content">
+    <article class="media">                  
+      <div class="media-content">
+        <div class="content">
+          <p>
+            <ul>
+              <li v-for="service in services">
+                {{service.endpoint}}
+              </li>
+            </ul>
+          </p>
+        </div>
+      </div>
+    </article>
+  </div>
+  <hr>
+  <header class="card-header">
+    <p class="card-header-title">
+      Registered Actors                  
+    </p>                
+  </header>
+  <div class="card-content">
+    <article class="media">                  
+      <div class="media-content">
+        <div class="content">
+          <p>
+            <ul>
+              <li v-for="actor in actors">
+                {{actor.actor.fullname}}: {{actor.role}} 
+                <button class="button is-danger" v-on:click="removeActor(actor.roleId)">Remove</button>
+              </li>
+            </ul>   
+            <div class="content">
+              <button class="button" v-show="!isAddingActor" v-on:click="showAddActor">Add Actor</button>
+              <div class="actor-add" v-show="isAddingActor">
+                <form id="actor">
+                  <p>
+                    Full Name: <input type="text" v-model="actorName">
+                    <button v-on:click="addActor">Add</button>
+                  </p>
+                </form>
+              </div>
+            </div>                       
+           </p> 
+          
+        </div>
+      </div>
+    </article>
+  </div>
+  <footer class="card-footer">
+    <router-link class="card-footer-item" :to='"/projects/"+project.id+"/clusters/new"'>Register Cluster</router-link>
+    <router-link class="card-footer-item" :to='"/projects/"+project.id+"/edit"'>Edit Project</router-link>
+
+  </footer>
+
+</div>
+<!--new style end-->
+
   </div>
 </template>
 
@@ -197,4 +249,5 @@
   a {
     color: #42b983;
   }
+
 </style>
