@@ -27,8 +27,6 @@
           </ul>
            
             <router-link class="item" to="/login"><span class="icon"><i class="fa fa-map-marker"></i></span><span class="name">Login</span></router-link>
-            <a href="#" class="item"><span class="icon"><i class="fa fa-th-list"></i></span><span class="name">Timeline</span></a>
-            <a href="#" class="item"><span class="icon"><i class="fa fa-folder-o"></i></span><span class="name">Folders</span></a>
          </div>
       </div>
    </aside>

@@ -1,27 +1,27 @@
 <template>
-  <div class="edit-cluster">
-    <h1>Edit Cluster</h1>
-    <form id="cluster">
-      <p>
-        Cluster Name: <input type="text" v-model="name">
+  <div class="panel-block">
+    <p class="panel-heading">Edit Cluster</h1>
+    <div id="cluster">
+      <p class="control">
+        Cluster Name: <input class="input" type="text" v-model="name">
       </p>
-      <p>
-        Cluster Description: <input type="text" v-model="description">
+      <p class="control">
+        Cluster Description: <input class="input" type="text" v-model="description">
       </p>
-      <p>
-        Cluster Endpoint: <input type="text" v-model="endpoint">
+      <p class="control">
+        Cluster Endpoint: <input class="input" type="text" v-model="endpoint">
       </p>
-      <p>
-        Cert: <textarea rows="4" cols="50" v-model="cert"/>
+      <p class="control">
+        Cert: <textarea class="textarea" rows="4" cols="50" v-model="cert"/>
       </p>
-      <p>
-        Key: <textarea rows="4" cols="50" v-model="key"/>
+      <p class="control">
+        Key: <textarea class="textarea" rows="4" cols="50" v-model="key"/>
       </p>
-      <p>
-        Ca: <textarea rows="4" cols="50" v-model="ca"/>
+      <p class="control">
+        Ca: <textarea class="textarea" rows="4" cols="50" v-model="ca"/>
       </p>
       <button v-on:click="submit">Edit Cluster</button>
-    </form>
+    </div>
   </div>
 </template>
 

@@ -1,5 +1,5 @@
 <template>
-  <div class="project-list">
+  <div>
     <table class="table">
                 <thead>
                   <tr>
@@ -26,7 +26,7 @@
                   </tr>
                   
                 </tbody>
-              </table>
+              </table>     
   </div>
 </template>
 

@@ -99,6 +99,7 @@
   <footer class="card-footer">
     <router-link class="card-footer-item" :to='"/projects/"+project.id+"/clusters/new"'>Register Cluster</router-link>
     <router-link class="card-footer-item" :to='"/projects/"+project.id+"/edit"'>Edit Project</router-link>
+    <router-link class="card-footer-item" :to='"/projects/"+project.id+"/services/new"'>Register Service</router-link>
 
   </footer>
 

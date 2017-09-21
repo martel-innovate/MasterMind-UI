@@ -1,28 +1,49 @@
 <template>
-  <div class="register-cluster">
-    <h1>Register Cluster</h1>
-    <form id="cluster">
-      <p>
-        Cluster Name: <input type="text" v-model="name">
-      </p>
-      <p>
-        Cluster Description: <input type="text" v-model="description">
-      </p>
-      <p>
-        Cluster Endpoint: <input type="text" v-model="endpoint">
-      </p>
-      <p>
-        Cert: <textarea rows="4" cols="50" v-model="cert"/>
-      </p>
-      <p>
-        Key: <textarea rows="4" cols="50" v-model="key"/>
-      </p>
-      <p>
-        Ca: <textarea rows="4" cols="50" v-model="ca"/>
-      </p>
-      <button v-on:click="submit">Register Cluster</button>
-    </form>
-  </div>
+  <!-- start -->
+  <section class="panel">
+    <p class="panel-heading">
+                 Register Cluster
+               </p>
+    <div class="field">
+      <label class="label">Cluster name</label>
+      <div class="control">
+        <input class="input" type="text"v-model="name" placeholder="Cluster Name">
+      </div>
+    </div>
+    <div class="field">
+      <label class="label">Cluster description</label>
+      <div class="control">
+        <input class="input" type="text"v-model="description" placeholder="Cluster description">
+      </div>
+    </div>
+    <div class="field">
+      <label class="label">Cluster endpoint</label>
+      <div class="control">
+        <input class="input" type="text"v-model="endpoint" placeholder="Cluster endpoint">
+      </div>
+    </div>
+    <div class="field">
+      <label class="label">Cert</label>
+      <div class="control">
+        <input class="textarea" type="text"v-model="cert" placeholder="Cert">
+      </div>
+    </div>
+    <div class="field">
+      <label class="label">Key</label>
+      <div class="control">
+        <input class="textarea" type="text"v-model="key" placeholder="Key">
+      </div>
+    </div>
+    <div class="field">
+      <label class="label">Ca</label>
+      <div class="control">
+        <input class="textarea" type="text"v-model="ca" placeholder="Ca">
+      </div>
+    </div>
+    <button class="button is-primary" v-on:click="submit">Register Cluster</button>
+  </section>
+  
+  <!-- end -->
 </template>
 
 <script type = "text/javascript" >

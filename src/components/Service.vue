@@ -1,7 +1,6 @@
 <template>
-  <div class="service">
-    <div class="service-details">
-      <h1>Service Details:</h1>
+  <div class="panel-block">
+    <p class="panel-heading">Service Details:</p>
       <ul>
         <li>
           <b>{{service.name}}</b>:
@@ -34,19 +33,18 @@
           Configuration: {{service.configuration}}
         </li>
       </ul>
-    </div>
     <hr/>
-    <div class="edit-service">
+    <div class="panel-block">
       <router-link :to='"/projects/"+this.$route.params.project_id+"/services/"+service.id+"/edit"'>Edit Service</router-link>
     </div>
     <hr/>
-    <div class="deploy-service">
-      <button v-show="!deploying" v-on:click="deployService"><b>DEPLOY</b></button>
-      <button v-show="deploying" disabled><b>DEPLOYING...</b></button>
+    <div class="panel-block">
+      <button class="button is-primary" v-show="!deploying" v-on:click="deployService"><b>DEPLOY</b></button>
+      <button class="button is-primary" v-show="deploying" disabled><b>DEPLOYING...</b></button>
     </div>
     <hr/>
-    <div class="delete-service">
-      <button v-on:click="deleteService"><b>DELETE SERVICE</b></button>
+    <div class="panel-block">
+      <button class="button is-danger" v-on:click="deleteService"><b>DELETE SERVICE</b></button>
     </div>
   </div>
 </template>
