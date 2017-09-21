@@ -4,6 +4,8 @@
     <div>
       <router-link to="/projects"><b>Projects</b></router-link>
       -
+      <router-link to="/catalog"><b>Service Catalog</b></router-link>
+      -
       <router-link to="/login"><b>Login</b></router-link>
     </div>
   <hr/>

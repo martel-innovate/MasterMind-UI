@@ -2,6 +2,8 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Login from '@/components/Login'
 import ProjectList from '@/components/ProjectList'
+import ServiceCatalog from '@/components/ServiceCatalog'
+import CatalogEntry from '@/components/CatalogEntry'
 import Project from '@/components/Project'
 import Cluster from '@/components/Cluster'
 import Service from '@/components/Service'
@@ -20,6 +22,16 @@ export default new Router({
       path: '/',
       name: 'ProjectList',
       component: ProjectList
+    },
+    {
+      path: '/catalog',
+      name: 'ServiceCatalog',
+      component: ServiceCatalog
+    },
+    {
+      path: '/catalog/:id',
+      name: 'CatalogEntry',
+      component: CatalogEntry
     },
     {
       path: '/login',
