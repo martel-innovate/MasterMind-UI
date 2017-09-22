@@ -1,8 +1,13 @@
 <template>
-  <div class="cluster">
-    <div class="cluster-details">
-      <h1>Cluster Details:</h1>
-      <ul>
+  <div class="card">
+    <header class="card-header">
+      <p class="card-header-title">
+        Cluster Details
+      </p>
+    </header>
+    <div class="card-content">
+      <div class="content">
+         <ul>
         <li>
           <b>{{cluster.name}}</b>:
         </li>
@@ -13,15 +18,13 @@
           Endpoint: {{cluster.endpoint}}
         </li>
       </ul>
-    </div>
     <hr/>
-    <div class="edit-cluster">
-      <router-link :to='"/projects/"+this.$route.params.project_id+"/clusters/"+cluster.id+"/edit"'>Edit Cluster</router-link>
+      </div>
     </div>
-    <hr/>
-    <div class="delete-cluster">
-      <button v-on:click="deleteCluster"><b>DELETE CLUSTER</b></button>
-    </div>
+    <footer class="card-footer">
+       <router-link class="card-footer-item" :to='"/projects/"+this.$route.params.project_id+"/clusters/"+cluster.id+"/edit"'>Edit Cluster</router-link>
+       <a href="#" v-on:click="deleteCluster" class="card-footer-item">Delete</a>
+    </footer>
   </div>
 </template>
 
