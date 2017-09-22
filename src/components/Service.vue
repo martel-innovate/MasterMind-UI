@@ -98,7 +98,8 @@
         this.deploying = true
         var projectId = this.$route.params.project_id
         var serviceId = this.$route.params.service_id
-        axios.get(auth.getAPIUrl() + 'v1/projects/' + projectId + '/clusters/' + this.service.cluster_id + '/deploy?service_id=' + serviceId, {headers: {'Authorization': auth.getAuthHeader()}})
+        var serviceName = this.service.name
+        axios.get(auth.getAPIUrl() + 'v1/projects/' + projectId + '/clusters/' + this.service.cluster_id + '/deploy?service_id=' + serviceId + '&service_name=' + serviceName, {headers: {'Authorization': auth.getAuthHeader()}})
         .then(response => {
           console.log(response.data)
           router.push('/projects/' + projectId)

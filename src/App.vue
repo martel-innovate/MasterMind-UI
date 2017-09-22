@@ -25,8 +25,9 @@
                   </ul>
             </li>
           </ul>
-           
+
             <router-link class="item" to="/login"><span class="icon"><i class="fa fa-map-marker"></i></span><span class="name">Login</span></router-link>
+            <router-link class="item" to="/catalog"><span class="icon"><i class="fa fa-map-marker"></i></span><span class="name">Service Catalog</span></router-link>
          </div>
       </div>
    </aside>
@@ -50,7 +51,7 @@
                   MasterMind
                </h1>
                <h2 class="subtitle">
-                  
+
                </h2>
             </div>
          </div>
