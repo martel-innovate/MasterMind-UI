@@ -54,7 +54,7 @@
           <p>
             <ul>
               <li v-for="service in services">
-                {{service.endpoint}}
+                <router-link :to='"/projects/"+project.id+"/services/"+service.id'>{{service.name}}</router-link>
               </li>
             </ul>
           </p>
@@ -99,6 +99,7 @@
   <footer class="card-footer">
     <router-link class="card-footer-item" :to='"/projects/"+project.id+"/clusters/new"'>Register Cluster</router-link>
     <router-link class="card-footer-item" :to='"/projects/"+project.id+"/edit"'>Edit Project</router-link>
+    <a href="#" v-on:click="deleteProject" class="card-footer-item">Delete project</a>
     <router-link class="card-footer-item" :to='"/projects/"+project.id+"/services/new"'>Register Service</router-link>
 
   </footer>
