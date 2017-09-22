@@ -25,24 +25,24 @@
     <div class="field">
       <label class="label">Cert</label>
       <div class="control">
-        <input class="textarea" type="text"v-model="cert" placeholder="Cert">
+        <textarea class="textarea" type="text"v-model="cert" placeholder="Cert"/>
       </div>
     </div>
     <div class="field">
       <label class="label">Key</label>
       <div class="control">
-        <input class="textarea" type="text"v-model="key" placeholder="Key">
+        <textarea class="textarea" type="text"v-model="key" placeholder="Key"/>
       </div>
     </div>
     <div class="field">
       <label class="label">Ca</label>
       <div class="control">
-        <input class="textarea" type="text"v-model="ca" placeholder="Ca">
+        <textarea class="textarea" type="text"v-model="ca" placeholder="Ca"/>
       </div>
     </div>
     <button class="button is-primary" v-on:click="submit">Register Cluster</button>
   </section>
-  
+
   <!-- end -->
 </template>
 
