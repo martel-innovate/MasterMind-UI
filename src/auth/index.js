@@ -1,6 +1,7 @@
 import axios from 'axios'
 
 const API_URL = process.env.API_URL
+
 const LOGIN_URL = API_URL + 'auth/login'
 
 export default {

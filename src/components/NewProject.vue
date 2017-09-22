@@ -1,16 +1,40 @@
 <template>
-  <div class="new-project">
-    <h1>New Project</h1>
-    <form id="project">
-      <p>
-        Project Name: <input type="text" v-model="name">
-      </p>
-      <p>
-        Project Description: <input type="text" v-model="description">
-      </p>
-      <button v-on:click="submit">Create Project</button>
-    </form>
-  </div>
+    <div>
+      <p class="field">
+         <a v-on:click="isActive = !isActive" class="button is-large">
+             <span class="icon is-medium">
+               <i class="fa fa-plus"></i>
+             </span>
+             <span>New Project</span>
+           </a>
+       </p> 
+    <div id="newProj" v-bind:class="{ 'modal' : true, 'is-active' : isActive }">
+      <div class="modal-background"></div>
+      <div class="modal-card">
+        <header class="modal-card-head">
+          <p class="modal-card-title">New Project</p>
+          <button class="delete" aria-label="close"></button>
+        </header>
+        <section class="modal-card-body">
+           <div class="panel-block">
+            <label class="label">Project name</label>
+            <p class="control">
+              <input class="input" type="text" placeholder="Project name" v-model="name">
+            </p>
+            <label class="label">Project description</label>
+            <p class="control has-icon has-icon-right">
+              <input class="input is-success" type="text" placeholder="Description" v-model="description">
+            </p>
+          </div>
+        </section>
+        <footer class="modal-card-foot">
+          <button v-on:click="submit" class="button is-success">Save changes</button>
+          <button v-on:click="isActive = !isActive" class="button">Cancel</button>
+        </footer>
+      </div>
+    </div>  
+    </div>
+    
 </template>
 
 <script type = "text/javascript" >
@@ -23,7 +47,8 @@
     data () {
       return {
         name: '',
-        description: ''
+        description: '',
+        isActive: false
       }
     },
     methods: {

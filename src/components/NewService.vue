@@ -1,55 +1,81 @@
 <template>
-  <div class="register-service">
-    <h1>Register Service</h1>
-    <form id="service">
-      <p>
-        Name: <input type="text" v-model="name">
+  <section class="panel">
+    <p class="panel-heading">Register Service</p>
+    <div class="panel-block" id="service">
+      <label class="label">
+        Name:
+      </label>  
+      <p class="control">
+        <input class="input" type="text" v-model="name" placeholder="Name">
       </p>
-      <p>
-        <input type="radio" id="one" value="true" v-model="managed">
-        <label for="one">Managed</label>
+      <p class="control">
+        <input  type="radio" id="one" value="true" v-model="managed">
+        <label class="radio" for="one">Managed</label>
         <input type="radio" id="two" value="false" v-model="managed">
-        <label for="two">Unmanaged</label>
+        <label class="radio" for="two">Unmanaged</label>
       </p>
-      <p>
-        Latitude: <input type="text" v-model="latitude">
+      <label class="label">
+        Latitude:
+      </label>  
+      <p class="control">
+        <input class="input" type="text" v-model="latitude">
       </p>
-      <p>
-        Longitude: <input type="text" v-model="longitude">
+      <label class="label">
+        Longitude:
+      </label>  
+      <p class="control">
+        <input class="input" type="text" v-model="longitude">
       </p>
-      <p>
-        Cluster:
-        <select v-model="cluster_id">
-          <option disabled value="">Select a cluster</option>
-          <option v-for="cluster in clusters" v-bind:value="cluster.id">
-            {{ cluster.name }}
-          </option>
-        </select>
+      <label class="label">
+        Cluster
+      </label>  
+      <p class="control">
+        <span class="select">
+          <select v-model="cluster_id">
+            <option disabled value="">Select a cluster</option>
+            <option v-for="cluster in clusters" v-bind:value="cluster.id">
+              {{ cluster.name }}
+            </option>
+          </select>  
+        </span>
       </p>
-      <p>
-        Service Type:
-        <select v-model="service_type_id" @change="getConfigTemplate">
-          <option disabled value="">Select a service type</option>
-          <option v-for="service_type in service_types" v-bind:value="service_type.id">
-            {{ service_type.name }}
-          </option>
-        </select>
+      <label class="label">
+         Service Type:
+      </label>  
+      <p class="control"> 
+        <span class="select">
+          <select v-model="service_type_id" @change="getConfigTemplate">
+            <option disabled value="">Select a service type</option>
+            <option v-for="service_type in service_types" v-bind:value="service_type.id">
+              {{ service_type.name }}
+            </option>
+          </select>
+        </span>      
       </p>
-      <p v-for="envVar in env_variables">
-        {{ envVar.name }}: <input type="text" v-model="configuration[envVar.variable]">
-      </p>
-      <p v-for="linkedService in linked_services">
+      <div class="notification">
+        <p class="control" v-for="envVar in env_variables">
+        {{ envVar.name }}: <input class="input" type="text" v-model="configuration[envVar.variable]">
+      </p>  
+      </div>
+      
+      <div class="notification">
+      <p class="control" v-for="linkedService in linked_services">
         {{ linkedService.as }}
-        <select v-model="configuration[linkedService.as]">
-          <option disabled value="">Select a service</option>
-          <option v-for="service in services" v-bind:value="service[linkedService.retrieve]">
-            {{ service.name }}
-          </option>
-        </select>
+        <span class="select">
+          <select v-model="configuration[linkedService.as]">
+            <option disabled value="">Select a service</option>
+            <option v-for="service in services" v-bind:value="service[linkedService.retrieve]">
+              {{ service.name }}
+            </option>
+          </select>  
+        </span>
       </p>
-      <button v-on:click="submit">Register Service</button>
-    </form>
-  </div>
+      </div>
+
+      
+      <button class="button is-primary" v-on:click="submit">Register Service</button>
+    </div>
+  </section>
 </template>
 
 <script type = "text/javascript" >
@@ -155,7 +181,12 @@
   li {
     margin: 0 10px;
   }
-
+  label {
+    color: #222324;
+    display: block;
+    font-weight: bold;
+    display:block; width:x; height:y; text-align:left;
+  }
   a {
     color: #42b983;
   }

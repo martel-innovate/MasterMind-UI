@@ -1,15 +1,15 @@
 <template>
-  <div class="edit-project">
-    <h1>Edit Project</h1>
-    <form id="project">
-      <p>
-        Project Name: <input type="text" v-model="name">
+  <div class="panel-block">
+    <p class="panel-heading">Edit Project</p>
+    <div id="project">
+      <p class="control">
+        <input class="input" type="text" v-model="name" placeholder="Name">
       </p>
-      <p>
-        Project Description: <input type="text" v-model="description">
+      <p class="control">
+        <input class="input" type="text" v-model="description" placeholder="Description">
       </p>
-      <button v-on:click="submit">Edit Project</button>
-    </form>
+      <button class="button is-primary" v-on:click="submit">Edit Project</button>
+    </div>
   </div>
 </template>
 
