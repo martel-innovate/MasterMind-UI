@@ -4,10 +4,10 @@
   <header class="card-header">
     <p class="card-header-title">
       Project Details
-    </p>                
+    </p>
   </header>
   <div class="card-content">
-    <article class="media">                  
+    <article class="media">
       <div class="media-content">
         <div class="content">
           <p>
@@ -24,18 +24,18 @@
   <header class="card-header">
     <p class="card-header-title">
       Registered Clusters
-    </p>                
+    </p>
   </header>
   <div class="card-content">
-    <article class="media">                  
+    <article class="media">
       <div class="media-content">
         <div class="content">
           <p>
             <ul>
               <li v-for="cluster in clusters">
                 <router-link :to='"/projects/"+project.id+"/clusters/"+cluster.id'>{{cluster.name}}</router-link>
-              </li>  
-            </ul>  
+              </li>
+            </ul>
           </p>
         </div>
       </div>
@@ -45,10 +45,10 @@
   <header class="card-header">
     <p class="card-header-title">
       Registered Services
-    </p>                
+    </p>
   </header>
   <div class="card-content">
-    <article class="media">                  
+    <article class="media">
       <div class="media-content">
         <div class="content">
           <p>
@@ -65,20 +65,28 @@
   <hr>
   <header class="card-header">
     <p class="card-header-title">
-      Registered Actors                  
-    </p>                
+      Registered Actors
+    </p>
   </header>
   <div class="card-content">
-    <article class="media">                  
+    <article class="media">
       <div class="media-content">
         <div class="content">
           <p>
             <ul>
               <li v-for="actor in actors">
-                {{actor.actor.fullname}}: {{actor.role}} 
-                <button class="button is-danger" v-on:click="removeActor(actor.roleId)">Remove</button>
+                <button class="button is-danger" v-on:click="removeActor(actor.roleId)">-</button>
+                {{actor.actor.fullname}}:
+                <select v-model="actor.role" @change="changeActorRole(actor.roleId, $event)">
+                  <option v-bind:value="'Admin'">
+                    Admin
+                  </option>
+                  <option v-bind:value="'User'">
+                    User
+                  </option>
+                </select>
               </li>
-            </ul>   
+            </ul>
             <div class="content">
               <button class="button" v-show="!isAddingActor" v-on:click="showAddActor">Add Actor</button>
               <div class="actor-add" v-show="isAddingActor">
@@ -87,11 +95,13 @@
                     Full Name: <input type="text" v-model="actorName">
                     <button v-on:click="addActor">Add</button>
                   </p>
+                  <div v-show="actorDoesNotExistError" class="notification is-danger">
+                    Actor does not exist...
+                  </div>
                 </form>
               </div>
-            </div>                       
-           </p> 
-          
+            </div>
+           </p>
         </div>
       </div>
     </article>
@@ -101,13 +111,8 @@
     <router-link class="card-footer-item" :to='"/projects/"+project.id+"/edit"'>Edit Project</router-link>
     <a href="#" v-on:click="deleteProject" class="card-footer-item">Delete project</a>
     <router-link class="card-footer-item" :to='"/projects/"+project.id+"/services/new"'>Register Service</router-link>
-
   </footer>
-
 </div>
-<!--new style end-->
-
-  </div>
 </template>
 
 <script type = "text/javascript" >
@@ -136,6 +141,7 @@
         roles: [],
         actors: [],
         isAddingActor: false,
+        actorDoesNotExistError: false,
         actorName: ''
       }
     },
@@ -176,11 +182,38 @@
         })
         .catch(error => { console.log(error) })
       },
+      changeActorRole: function (roleId, event) {
+        var projectId = this.$route.params.id
+        var role = 0
+        if (event.target.value === 'Admin') {
+          role = 1
+        }
+        if (event.target.value === 'User') {
+          role = 2
+        }
+        if (role === 0) {
+          console.log('Unable to select role')
+          return
+        }
+        axios({
+          method: 'put',
+          url: auth.getAPIUrl() + 'v1/projects/' + projectId + '/roles/' + roleId,
+          headers: { 'Authorization': auth.getAuthHeader() },
+          data: {
+            role_level_id: role
+          }
+        })
+        .then(function (response) {
+          console.log(response.data)
+        })
+        .catch(function (error) {
+          console.log(error)
+        })
+      },
       showAddActor: function (event) {
         this.isAddingActor = true
       },
       addActor: function (event) {
-        this.isAddingActor = false
         var actorName = this.actorName
         var projectId = this.$route.params.id
         var updateActors = this.updateActors
@@ -194,6 +227,7 @@
             }
           })
           if (actorId !== '') {
+            this.isAddingActor = false
             axios({
               method: 'post',
               url: auth.getAPIUrl() + 'v1/projects/' + projectId + '/roles',
@@ -211,6 +245,8 @@
             .catch(function (error) {
               console.log(error)
             })
+          } else {
+            this.actorDoesNotExistError = true
           }
         })
         .catch(error => { console.log(error) })
