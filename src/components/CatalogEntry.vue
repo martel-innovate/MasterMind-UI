@@ -1,51 +1,55 @@
 <template>
-  <div class="catalog-entry">
-    <div class="catalog-entry-details">
-      <h1>Service Details:</h1>
-      <ul>
-        <li>
-          <h2>{{service.name}}</h2>
-        </li>
-        <li>
-          Protocol Type: {{service.service_protocol_type}}
-        </li>
-        <li>
-          NGSI Version: {{service.ngsi_version}}
-        </li>
-        <li v-show="env_variables">
-          <hr/>
-          Configuration Variables:
-          <p v-for="envVar in env_variables">
-            {{ envVar.name }}:
-            <ul>
-              <li>Variable: {{ envVar.variable }}</li>
-              <li>Description: {{ envVar.description }}</li>
-              <li>Required: {{ envVar.required }}</li>
-              <li>Default Value: {{ envVar.default }}</li>
-            </ul>
-          </p>
-        </li>
-        <li v-show="linked_services">
-          <hr/>
-          Service Links:
-          <p v-for="service in linked_services">
-            {{ service.service_type }}:
-            <ul>
-              <li>Retrieves: {{ service.retrieve }}</li>
-              <li>As: {{ service.as }}</li>
-            </ul>
-          </p>
-        </li>
-        <hr/>
-        <li>
-          Docker Compose:
-          <br/>
-          <code>{{service.deploy_template}}</code>
-        </li>
-      </ul>
+<div class="section is-fullwidth">
+  <section class="hero is-primary">
+    <div class="hero-body">
+      <div class="container">
+        <h1 class="title">
+          {{service.name}}
+        </h1>
+        <h2 class="subtitle">
+          {{service.service_protocol_type}}, NGSI Ver. {{service.ngsi_version}}
+        </h2>
+      </div>
     </div>
-    <hr/>
-  </div>
+  </section>
+  <br/>
+  <ul>
+    <li v-show="env_variables">
+      <h2>Configuration Variables:</h2>
+      <div class="box is-fullwidth">
+        <p v-for="envVar in env_variables">
+          {{ envVar.name }}:
+          <ul>
+            <li>Variable: {{ envVar.variable }}</li>
+            <li>Description: {{ envVar.description }}</li>
+            <li>Required: {{ envVar.required }}</li>
+            <li>Default Value: {{ envVar.default }}</li>
+          </ul>
+        </p>
+      </div>
+    </li>
+    <br/>
+    <li v-show="linked_services">
+      <h2>Service Links:</h2>
+      <div class="box is-fullwidth">
+        <p v-for="service in linked_services">
+          {{ service.service_type }}:
+          <ul>
+            <li>Retrieves: {{ service.retrieve }}</li>
+            <li>As: {{ service.as }}</li>
+          </ul>
+        </p>
+      </div>
+    </li>
+    <br/>
+    <li>
+      <h2>Docker Compose:</h2>
+      <div class="box is-fullwidth">
+        <code style="white-space: pre-wrap">{{service.deploy_template}}</code>
+      </div>
+    </li>
+  </ul>
+</div>
 </template>
 
 <script type = "text/javascript" >

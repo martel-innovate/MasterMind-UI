@@ -43,34 +43,8 @@
             </span>
          </div>
       </nav>
-      <section class="hero is-small">
-         <!-- Hero content: will be in the middle -->
-         <div class="hero-body">
-            <div class="container">
-               <h1 class="title">
-                  MasterMind
-               </h1>
-               <h2 class="subtitle">
-
-               </h2>
-            </div>
-         </div>
-         <!-- Hero footer: will stick at the bottom -->
-         <div class="hero-foot">
-            <nav class="level">
-               <div class="level-item has-text-centered">
-               </div>
-               <div class="level-item has-text-centered">
-               </div>
-               <div class="level-item has-text-centered">
-               </div>
-               <div class="level-item has-text-centered">
-               </div>
-            </nav>
-         </div>
-      </section>
       <div class="columns is-mobile">
-         <div class="column is-half is-offset-2">
+         <div class="column is-three-quarters is-offset-1">
             <router-view></router-view>
          </div>
          </section>
