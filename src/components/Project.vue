@@ -1,117 +1,73 @@
 <template>
 <!--new style start-->
-<div class="card is-fullwidth">
-  <header class="card-header">
-    <p class="card-header-title">
-      Project Details
-    </p>
-  </header>
-  <div class="card-content">
-    <article class="media">
-      <div class="media-content">
-        <div class="content">
-          <p>
-            <strong>Project name:</strong> {{project.name}}
-            <br>
-            <strong>Project description:</strong>
-            {{project.description}}
-          </p>
-        </div>
+<div class="section is-fullwidth">
+  <section class="hero is-primary">
+    <div class="hero-body">
+      <div class="container">
+        <h1 class="title">
+          {{project.name}}
+        </h1>
+        <h2 class="subtitle">
+          {{project.description}}
+        </h2>
       </div>
-    </article>
+    </div>
+  </section>
+  <br/>
+  <div class="box is-fullwidth">
+    <h2 class="notification is-info">Registered Clusters:</h2>
+    <div class="box is-fullwidth">
+      <ul>
+        <li v-for="cluster in clusters">
+          <router-link :to='"/projects/"+project.id+"/clusters/"+cluster.id'>{{cluster.name}}</router-link>
+        </li>
+      </ul>
+    </div>
+    <router-link class="button" :to='"/projects/"+project.id+"/clusters/new"'>Register Cluster</router-link>
   </div>
-  <hr>
-  <header class="card-header">
-    <p class="card-header-title">
-      Registered Clusters
-    </p>
-  </header>
-  <div class="card-content">
-    <article class="media">
-      <div class="media-content">
-        <div class="content">
-          <p>
-            <ul>
-              <li v-for="cluster in clusters">
-                <router-link :to='"/projects/"+project.id+"/clusters/"+cluster.id'>{{cluster.name}}</router-link>
-              </li>
-            </ul>
-          </p>
+  <div class="box is-fullwidth">
+    <h2 class="notification is-info">Registered Services:</h2>
+    <div class="box is-fullwidth">
+      <ul>
+        <li v-for="service in services">
+          <router-link :to='"/projects/"+project.id+"/services/"+service.id'>{{service.name}}</router-link>
+        </li>
+      </ul>
+    </div>
+    <router-link class="button" :to='"/projects/"+project.id+"/services/new"'>Register Service</router-link>
+  </div>
+  <div class="box is-fullwidth">
+    <h2 class="notification is-info">Registered Actors:</h2>
+    <div class="box is-fullwidth">
+      <p v-for="actor in actors">
+        <button class="button is-danger" v-on:click="removeActor(actor.roleId)">-</button>
+        {{actor.actor.fullname}}:
+        <select v-model="actor.role" @change="changeActorRole(actor.roleId, $event)">
+          <option v-bind:value="'Admin'">
+            Admin
+          </option>
+          <option v-bind:value="'User'">
+            User
+          </option>
+        </select>
+      </p>
+    </div>
+    <button class="button" v-show="!isAddingActor" v-on:click="showAddActor">Add Actor</button>
+    <div class="actor-add" v-show="isAddingActor">
+      <form id="actor">
+        <p>
+          Full Name: <input type="text" v-model="actorName">
+          <button v-on:click="addActor">Add</button>
+        </p>
+        <div v-show="actorDoesNotExistError" class="notification is-danger">
+          Actor does not exist...
         </div>
-      </div>
-    </article>
+      </form>
+    </div>
   </div>
-  <hr>
-  <header class="card-header">
-    <p class="card-header-title">
-      Registered Services
-    </p>
-  </header>
-  <div class="card-content">
-    <article class="media">
-      <div class="media-content">
-        <div class="content">
-          <p>
-            <ul>
-              <li v-for="service in services">
-                <router-link :to='"/projects/"+project.id+"/services/"+service.id'>{{service.name}}</router-link>
-              </li>
-            </ul>
-          </p>
-        </div>
-      </div>
-    </article>
-  </div>
-  <hr>
-  <header class="card-header">
-    <p class="card-header-title">
-      Registered Actors
-    </p>
-  </header>
-  <div class="card-content">
-    <article class="media">
-      <div class="media-content">
-        <div class="content">
-          <p>
-            <ul>
-              <li v-for="actor in actors">
-                <button class="button is-danger" v-on:click="removeActor(actor.roleId)">-</button>
-                {{actor.actor.fullname}}:
-                <select v-model="actor.role" @change="changeActorRole(actor.roleId, $event)">
-                  <option v-bind:value="'Admin'">
-                    Admin
-                  </option>
-                  <option v-bind:value="'User'">
-                    User
-                  </option>
-                </select>
-              </li>
-            </ul>
-            <div class="content">
-              <button class="button" v-show="!isAddingActor" v-on:click="showAddActor">Add Actor</button>
-              <div class="actor-add" v-show="isAddingActor">
-                <form id="actor">
-                  <p>
-                    Full Name: <input type="text" v-model="actorName">
-                    <button v-on:click="addActor">Add</button>
-                  </p>
-                  <div v-show="actorDoesNotExistError" class="notification is-danger">
-                    Actor does not exist...
-                  </div>
-                </form>
-              </div>
-            </div>
-           </p>
-        </div>
-      </div>
-    </article>
-  </div>
-  <footer class="card-footer">
-    <router-link class="card-footer-item" :to='"/projects/"+project.id+"/clusters/new"'>Register Cluster</router-link>
-    <router-link class="card-footer-item" :to='"/projects/"+project.id+"/edit"'>Edit Project</router-link>
-    <a href="#" v-on:click="deleteProject" class="card-footer-item">Delete project</a>
-    <router-link class="card-footer-item" :to='"/projects/"+project.id+"/services/new"'>Register Service</router-link>
-  </footer>
+  <router-link class="button" :to='"/projects/"+project.id+"/edit"'>Edit Project</router-link>
+  <hr/>
+  <a href="#" v-on:click="deleteProject" class="button is-danger">Delete project</a>
 </div>
 </template>
 

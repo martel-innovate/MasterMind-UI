@@ -15,7 +15,7 @@
   <br/>
   <ul>
     <li v-show="env_variables">
-      <h2>Configuration Variables:</h2>
+      <h2 class="notification is-info">Configuration Variables:</h2>
       <div class="box is-fullwidth">
         <p v-for="envVar in env_variables">
           {{ envVar.name }}:
@@ -30,7 +30,7 @@
     </li>
     <br/>
     <li v-show="linked_services">
-      <h2>Service Links:</h2>
+      <h2 class="notification is-info">Service Links:</h2>
       <div class="box is-fullwidth">
         <p v-for="service in linked_services">
           {{ service.service_type }}:
@@ -43,7 +43,7 @@
     </li>
     <br/>
     <li>
-      <h2>Docker Compose:</h2>
+      <h2 class="notification is-info">Docker Compose:</h2>
       <div class="box is-fullwidth">
         <code style="white-space: pre-wrap">{{service.deploy_template}}</code>
       </div>
