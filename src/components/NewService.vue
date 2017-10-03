@@ -1,7 +1,7 @@
 <template>
-  <section class="panel">
+  <section class="box">
     <p class="panel-heading">Register Service</p>
-    <div class="panel-block" id="service">
+    <div class="box" id="service">
       <label class="label">
         Name:
       </label>
@@ -42,40 +42,41 @@
           </select>
         </span>
       </p>
+      <p class="text-danger" v-if="clusters.length === 0">You need to register a cluster before registering or deploying services</p>
       <label class="label">
          Service Type:
       </label>
       <p class="control">
         <span class="select">
           <select v-model="service_type_id" @change="getConfigTemplate">
-            <option disabled value="">Select a service type</option>
             <option v-for="service_type in service_types" v-bind:value="service_type.id">
               {{ service_type.name }}
             </option>
           </select>
         </span>
       </p>
-      <div class="notification">
+      <p class="text-danger" v-if="service_types.length === 0">No services to deploy</p>
+      <div class="notification" v-if="env_variables">
         <p class="control" v-for="envVar in env_variables">
-        {{ envVar.name }}: <input class="input" type="text" v-model="configuration[envVar.variable]">
-      </p>
+          {{ envVar.name }} <b v-if="envVar.required">(Required)</b>: <input class="input" type="text" v-model="configuration[envVar.variable]" v-validate.initial="checkIfEnvRequired(envVar)">
+        </p>
       </div>
-
-      <div class="notification">
+      <div class="notification" v-if="linked_services">
         <p class="control" v-for="linkedService in linked_services">
-          {{ linkedService.as }}
+          {{ linkedService.name }} <b v-if="linkedService.required">(Required)</b>
+          <br/>
           <span class="select">
             <select v-model="configuration[linkedService.as]">
-              <option disabled value="">Select a service</option>
               <option v-for="service in services" v-bind:value="service[linkedService.retrieve]">
                 {{ service.name }}
               </option>
             </select>
           </span>
         </p>
+        <p class="text-danger" v-if="services.length === 0">You must register some services to link to this one</p>
       </div>
-      <button class="button is-primary" v-on:click="submit" :disabled="errors.any()">Register Service</button>
     </div>
+    <button class="button is-primary" v-on:click="submit" :disabled="errors.any() || cannotRegister || noLinkableServices">Register Service</button>
   </section>
 </template>
 
@@ -88,15 +89,34 @@
     name: 'new-service',
     created () {
       var projectId = this.$route.params.id
-      axios.get(auth.getAPIUrl() + 'v1/service_types', {headers: {'Authorization': auth.getAuthHeader()}})
-      .then(response => { this.service_types = response.data })
-      .catch(error => { console.log(error) })
-      axios.get(auth.getAPIUrl() + 'v1/projects/' + projectId + '/clusters', {headers: {'Authorization': auth.getAuthHeader()}})
-      .then(response => { this.clusters = response.data })
-      .catch(error => { console.log(error) })
-      axios.get(auth.getAPIUrl() + 'v1/projects/' + projectId + '/services', {headers: {'Authorization': auth.getAuthHeader()}})
-      .then(response => { this.services = response.data })
-      .catch(error => { console.log(error) })
+      var getConfigTemplate = this.getConfigTemplate
+      var promises = []
+      promises.push(axios.get(auth.getAPIUrl() + 'v1/service_types', {headers: {'Authorization': auth.getAuthHeader()}})
+      .then(response => {
+        this.service_types = response.data
+        if (this.service_types.length > 0) {
+          this.service_type_id = this.service_types[0].id
+        } else {
+          this.cannotRegister = true
+        }
+      })
+      .catch(error => { console.log(error) }))
+      promises.push(axios.get(auth.getAPIUrl() + 'v1/projects/' + projectId + '/clusters', {headers: {'Authorization': auth.getAuthHeader()}})
+      .then(response => {
+        this.clusters = response.data
+        if (this.clusters.length > 0) {
+          this.cluster_id = this.clusters[0].id
+        } else {
+          this.cannotRegister = true
+        }
+      })
+      .catch(error => { console.log(error) }))
+      promises.push(axios.get(auth.getAPIUrl() + 'v1/projects/' + projectId + '/services', {headers: {'Authorization': auth.getAuthHeader()}})
+      .then(response => {
+        this.services = response.data
+      })
+      .catch(error => { console.log(error) }))
+      axios.all(promises).then(response => { getConfigTemplate() }).catch(error => { console.log(error) })
     },
     data () {
       return {
@@ -108,20 +128,29 @@
         latitude: 0,
         longitude: 0,
         docker_service_id: '',
-        service_type_id: 1,
-        cluster_id: 1,
+        service_type_id: 0,
+        cluster_id: 0,
         service_types: [],
         env_variables: [],
         linked_services: [],
         clusters: [],
-        services: []
+        services: [],
+        cannotRegister: false,
+        noLinkableServices: false
       }
     },
     methods: {
-      getConfigTemplate: function (event) {
+      checkIfEnvRequired: function (envVar) {
+        if (envVar.required) {
+          return ('required')
+        }
+        return ('')
+      },
+      getConfigTemplate: function () {
         const yaml = require('js-yaml')
         // var projectId = this.$route.params.id
         var currentServiceType = {}
+        var allServices = this.services
         var currentServiceTypeId = this.service_type_id
         this.configuration = {}
         var configuration = this.configuration
@@ -137,6 +166,18 @@
           config.environment_variables.forEach(function (envVar) {
             configuration[envVar.variable] = envVar.default
           })
+        }
+        if (config.services) {
+          if (allServices.length > 0) {
+            config.services.forEach(function (ser) {
+              configuration[ser.as] = allServices[0][ser.retrieve]
+            })
+            this.noLinkableServices = false
+          } else {
+            this.noLinkableServices = true
+          }
+        } else {
+          this.noLinkableServices = false
         }
       },
       submit: function (event) {
