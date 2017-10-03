@@ -7,7 +7,6 @@ import CatalogEntry from '@/components/CatalogEntry'
 import Project from '@/components/Project'
 import Cluster from '@/components/Cluster'
 import Service from '@/components/Service'
-import NewProject from '@/components/NewProject'
 import NewCluster from '@/components/NewCluster'
 import NewService from '@/components/NewService'
 import EditProject from '@/components/EditProject'
@@ -42,11 +41,6 @@ export default new Router({
       path: '/projects',
       name: 'ProjectList',
       component: ProjectList
-    },
-    {
-      path: '/projects/new',
-      name: 'NewProject',
-      component: NewProject
     },
     {
       path: '/projects/:id',

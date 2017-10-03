@@ -1,12 +1,8 @@
 <template>
-  <div class="service-catalog">
-    <div>
-      <ul>
-        <li v-for="service in catalog">
-          <router-link :to='"/catalog/"+service.id'>{{service.name}}</router-link>
-        </li>
-      </ul>
-    </div>
+  <div class="section is-fullwidth">
+    <h3 class="box" v-for="service in catalog">
+      <router-link :to='"/catalog/"+service.id'>{{service.name}}</router-link>
+    </h3>
   </div>
 </template>
 

@@ -8,12 +8,14 @@
         <label class="radio" for="two">Unmanaged</label>
       </p>
       <p class="control">
-        Latitude: <input class="input" type="text" v-model="latitude">
+        Latitude: <input class="input" name="latitude" type="text" v-model="latitude" v-validate.initial="'required|numeric'">
+        <p class="text-danger" v-if="errors.has('latitude')">{{ errors.first('latitude') }}</p>
       </p>
       <p>
-        Longitude: <input class="input" type="text" v-model="longitude">
+        Longitude: <input class="input" name="longitude" type="text" v-model="longitude" v-validate.initial="'required|numeric'">
+        <p class="text-danger" v-if="errors.has('longitude')">{{ errors.first('longitude') }}</p>
       </p>
-      <button class="button is-primary" v-on:click="submit">Edit Cluster</button>
+      <button class="button is-primary" v-on:click="submit" :disabled="errors.any()">Edit Cluster</button>
   </div>
 </template>
 
@@ -21,6 +23,10 @@
   import axios from 'axios'
   import auth from '../auth'
   import router from '../router'
+  import Vue from 'vue'
+  import VeeValidate from 'vee-validate'
+
+  Vue.use(VeeValidate)
 
   export default {
     name: 'edit-service',
@@ -42,6 +48,10 @@
     },
     methods: {
       submit: function (event) {
+        if (this.errors.any()) {
+          console.log('Form not valid')
+          return
+        }
         var projectId = this.$route.params.project_id
         var serviceId = this.$route.params.service_id
         axios({

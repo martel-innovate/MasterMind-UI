@@ -3,24 +3,30 @@
     <p class="panel-heading">Edit Cluster</h1>
     <div id="cluster">
       <p class="control">
-        Cluster Name: <input class="input" type="text" v-model="name">
+        Cluster Name: <input class="input" name="name" type="text" v-model="name" v-validate.initial="'required|alpha_dash'">
+        <p class="text-danger" v-if="errors.has('name')">{{ errors.first('name') }}</p>
       </p>
       <p class="control">
-        Cluster Description: <input class="input" type="text" v-model="description">
+        Cluster Description: <input class="input" name="description" type="text" v-model="description" v-validate.initial="'required'">
+        <p class="text-danger" v-if="errors.has('description')">{{ errors.first('description') }}</p>
       </p>
       <p class="control">
-        Cluster Endpoint: <input class="input" type="text" v-model="endpoint">
+        Cluster Endpoint: <input class="input" name="endpoint" type="text" v-model="endpoint" v-validate.initial="'required'">
+        <p class="text-danger" v-if="errors.has('endpoint')">{{ errors.first('endpoint') }}</p>
       </p>
       <p class="control">
-        Cert: <textarea class="textarea" rows="4" cols="50" v-model="cert"/>
+        Cert: <textarea class="textarea" name="cert" rows="4" cols="50" v-model="cert" v-validate.initial="'required'"/>
+        <p class="text-danger" v-if="errors.has('cert')">{{ errors.first('cert') }}</p>
       </p>
       <p class="control">
-        Key: <textarea class="textarea" rows="4" cols="50" v-model="key"/>
+        Key: <textarea class="textarea" name="key" rows="4" cols="50" v-model="key" v-validate.initial="'required'"/>
+        <p class="text-danger" v-if="errors.has('key')">{{ errors.first('key') }}</p>
       </p>
       <p class="control">
-        Ca: <textarea class="textarea" rows="4" cols="50" v-model="ca"/>
+        Ca: <textarea class="textarea" name="ca" rows="4" cols="50" v-model="ca" v-validate.initial="'required'"/>
+        <p class="text-danger" v-if="errors.has('ca')">{{ errors.first('ca') }}</p>
       </p>
-      <button v-on:click="submit">Edit Cluster</button>
+      <button class="button is-primary" v-on:click="submit" :disabled="errors.any()">Edit Cluster</button>
     </div>
   </div>
 </template>
@@ -29,6 +35,10 @@
   import axios from 'axios'
   import auth from '../auth'
   import router from '../router'
+  import Vue from 'vue'
+  import VeeValidate from 'vee-validate'
+
+  Vue.use(VeeValidate)
 
   export default {
     name: 'edit-cluster',
@@ -56,6 +66,10 @@
     },
     methods: {
       submit: function (event) {
+        if (this.errors.any()) {
+          console.log('Form not valid')
+          return
+        }
         var projectId = this.$route.params.project_id
         axios({
           method: 'put',

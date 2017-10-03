@@ -1,48 +1,54 @@
 <template>
-  <div class="panel-block">
-    <p class="panel-heading">Service Details:</p>
-      <ul>
-        <li>
-          <b>{{service.name}}</b>:
-        </li>
-        <li>
-          Service Type: {{this.service_type.name}}
-        </li>
-        <li>
-          Cluster: {{this.cluster}}
-        </li>
-        <li>
-          Status: {{service.status}}
-        </li>
-        <li>
-          Managed: {{service.managed}}
-        </li>
-        <li>
-          Latitude: {{service.latitude}}
-        </li>
-        <li>
-          Longitude: {{service.longitude}}
-        </li>
-        <li>
-          Endpoint: {{service.endpoint}}
-        </li>
-        <li>
-          Docker Service ID: {{service.docker_service_id}}
-        </li>
-        <li>
-          Configuration: {{service.configuration}}
-        </li>
-      </ul>
-    <hr/>
-    <div class="panel-block">
-      <router-link :to='"/projects/"+this.$route.params.project_id+"/services/"+service.id+"/edit"'>Edit Service</router-link>
+  <div class="section is-fullwidth">
+    <section class="hero is-primary">
+      <div class="hero-body">
+        <div class="container">
+          <h1 class="title">
+            {{service.name}}
+          </h1>
+          <h2 class="subtitle">
+            {{service.endpoint}}, {{service.status}}
+          </h2>
+        </div>
+      </div>
+    </section>
+    <br/>
+    <div class="box is-fullwidth">
+      <p>
+        Service Type: {{this.service_type.name}}
+      </p>
+      <p>
+        Cluster: {{this.cluster}}
+      </p>
+      <p>
+        Docker Service ID: {{service.docker_service_id}}
+      </p>
+      <p>
+        Managed: {{service.managed}}
+      </p>
+      <p>
+        Latitude: {{service.latitude}}
+      </p>
+      <p>
+        Longitude: {{service.longitude}}
+      </p>
     </div>
-    <hr/>
+    <div class="box is-fullwidth">
+      <p>
+        <ul>
+          <li v-for="envVar in configuration">
+            {{envVar.name}}: {{envVar.value}}
+          </li>
+        </ul>
+      </p>
+    </div>
+    <div class="panel-block">
+      <router-link class="button" :to='"/projects/"+this.$route.params.project_id+"/services/"+service.id+"/edit"'>Edit Service</router-link>
+    </div>
     <div class="panel-block">
       <button class="button is-primary" v-show="!deploying" v-on:click="deployService"><b>DEPLOY</b></button>
       <button class="button is-primary" v-show="deploying" disabled><b>DEPLOYING...</b></button>
     </div>
-    <hr/>
     <div class="panel-block">
       <button class="button is-danger" v-on:click="deleteService"><b>DELETE SERVICE</b></button>
     </div>
@@ -60,6 +66,13 @@
       .then(response => {
         var service = response.data
         this.service = service
+        var configurationJSON = JSON.parse(service.configuration)
+        var configurationArray = []
+        for (var envVar in configurationJSON) {
+          configurationArray.push({name: envVar, value: configurationJSON[envVar]})
+        }
+        this.configuration = configurationArray
+        console.log(configurationArray)
         axios.get(auth.getAPIUrl() + 'v1/service_types/' + service.service_type_id, {headers: {'Authorization': auth.getAuthHeader()}})
         .then(response => { this.service_type = response.data })
         .catch(error => { console.log(error) })
@@ -72,6 +85,7 @@
     data () {
       return {
         service: {},
+        configuration: [],
         service_type: '',
         cluster: '',
         deploying: false

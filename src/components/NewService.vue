@@ -4,9 +4,10 @@
     <div class="panel-block" id="service">
       <label class="label">
         Name:
-      </label>  
+      </label>
       <p class="control">
-        <input class="input" type="text" v-model="name" placeholder="Name">
+        <input class="input" name="name" type="text" v-model="name" placeholder="Name" v-validate.initial="'required|alpha_dash'">
+        <p class="text-danger" v-if="errors.has('name')">{{ errors.first('name') }}</p>
       </p>
       <p class="control">
         <input  type="radio" id="one" value="true" v-model="managed">
@@ -16,19 +17,21 @@
       </p>
       <label class="label">
         Latitude:
-      </label>  
+      </label>
       <p class="control">
-        <input class="input" type="text" v-model="latitude">
+        <input class="input" name="latitude" type="text" v-model="latitude" v-validate.initial="'required|numeric'">
+        <p class="text-danger" v-if="errors.has('latitude')">{{ errors.first('latitude') }}</p>
       </p>
       <label class="label">
         Longitude:
-      </label>  
+      </label>
       <p class="control">
-        <input class="input" type="text" v-model="longitude">
+        <input class="input" name="longitude" type="text" v-model="longitude" v-validate.initial="'required|numeric'">
+        <p class="text-danger" v-if="errors.has('longitude')">{{ errors.first('longitude') }}</p>
       </p>
       <label class="label">
         Cluster
-      </label>  
+      </label>
       <p class="control">
         <span class="select">
           <select v-model="cluster_id">
@@ -36,13 +39,13 @@
             <option v-for="cluster in clusters" v-bind:value="cluster.id">
               {{ cluster.name }}
             </option>
-          </select>  
+          </select>
         </span>
       </p>
       <label class="label">
          Service Type:
-      </label>  
-      <p class="control"> 
+      </label>
+      <p class="control">
         <span class="select">
           <select v-model="service_type_id" @change="getConfigTemplate">
             <option disabled value="">Select a service type</option>
@@ -50,30 +53,28 @@
               {{ service_type.name }}
             </option>
           </select>
-        </span>      
+        </span>
       </p>
       <div class="notification">
         <p class="control" v-for="envVar in env_variables">
         {{ envVar.name }}: <input class="input" type="text" v-model="configuration[envVar.variable]">
-      </p>  
-      </div>
-      
-      <div class="notification">
-      <p class="control" v-for="linkedService in linked_services">
-        {{ linkedService.as }}
-        <span class="select">
-          <select v-model="configuration[linkedService.as]">
-            <option disabled value="">Select a service</option>
-            <option v-for="service in services" v-bind:value="service[linkedService.retrieve]">
-              {{ service.name }}
-            </option>
-          </select>  
-        </span>
       </p>
       </div>
 
-      
-      <button class="button is-primary" v-on:click="submit">Register Service</button>
+      <div class="notification">
+        <p class="control" v-for="linkedService in linked_services">
+          {{ linkedService.as }}
+          <span class="select">
+            <select v-model="configuration[linkedService.as]">
+              <option disabled value="">Select a service</option>
+              <option v-for="service in services" v-bind:value="service[linkedService.retrieve]">
+                {{ service.name }}
+              </option>
+            </select>
+          </span>
+        </p>
+      </div>
+      <button class="button is-primary" v-on:click="submit" :disabled="errors.any()">Register Service</button>
     </div>
   </section>
 </template>
@@ -122,6 +123,7 @@
         // var projectId = this.$route.params.id
         var currentServiceType = {}
         var currentServiceTypeId = this.service_type_id
+        this.configuration = {}
         var configuration = this.configuration
         this.service_types.forEach(function (st) {
           if (currentServiceTypeId === st.id) {
@@ -138,6 +140,10 @@
         }
       },
       submit: function (event) {
+        if (this.errors.any()) {
+          console.log('Form not valid')
+          return
+        }
         var projectId = this.$route.params.id
         axios({
           method: 'post',

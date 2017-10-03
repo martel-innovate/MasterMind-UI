@@ -7,40 +7,50 @@
     <div class="field">
       <label class="label">Cluster name</label>
       <div class="control">
-        <input class="input" type="text"v-model="name" placeholder="Cluster Name">
+        <input class="input" name="name" type="text"v-model="name" placeholder="Cluster Name" v-validate.initial="'required|alpha_dash'">
+        <p class="text-danger" v-if="errors.has('name')">{{ errors.first('name') }}</p>
       </div>
     </div>
     <div class="field">
       <label class="label">Cluster description</label>
       <div class="control">
-        <input class="input" type="text"v-model="description" placeholder="Cluster description">
+        <input class="input" name="description" type="text"v-model="description" placeholder="Cluster description" v-validate.initial="'required'">
+        <p class="text-danger" v-if="errors.has('description')">{{ errors.first('description') }}</p>
       </div>
     </div>
     <div class="field">
       <label class="label">Cluster endpoint</label>
       <div class="control">
-        <input class="input" type="text"v-model="endpoint" placeholder="Cluster endpoint">
+        <input class="input" name="endpoint" type="text"v-model="endpoint" placeholder="Cluster endpoint" v-validate.initial="'required'">
+        <p class="text-danger" v-if="errors.has('endpoint')">{{ errors.first('endpoint') }}</p>
       </div>
     </div>
     <div class="field">
       <label class="label">Cert</label>
       <div class="control">
-        <textarea class="textarea" type="text"v-model="cert" placeholder="Cert"/>
+        <p class="text">Cert</p>
+        <input name="cert" type="file" @change='readCertFile("cert", $event)' v-validate.initial="'required'">
+        <p class="text-danger" v-if="errors.has('cert')">{{ errors.first('cert') }}</p>
       </div>
     </div>
     <div class="field">
       <label class="label">Key</label>
       <div class="control">
-        <textarea class="textarea" type="text"v-model="key" placeholder="Key"/>
+        <p class="text">Key</p>
+        <input name="key" type="file" @change='readCertFile("key", $event)' v-validate.initial="'required'">
+        <p class="text-danger" v-if="errors.has('key')">{{ errors.first('key') }}</p>
       </div>
     </div>
     <div class="field">
       <label class="label">Ca</label>
       <div class="control">
-        <textarea class="textarea" type="text"v-model="ca" placeholder="Ca"/>
+        <p class="text">Ca</p>
+        <input name="ca" type="file" @change='readCertFile("ca", $event)' v-validate.initial="'required'">
+        <p class="text-danger" v-if="errors.has('ca')">{{ errors.first('ca') }}</p>
       </div>
     </div>
-    <button class="button is-primary" v-on:click="submit">Register Cluster</button>
+    <br/>
+    <button class="button is-primary" v-on:click="submit" :disabled="errors.any()">Register Cluster</button>
   </section>
 
   <!-- end -->
@@ -50,6 +60,10 @@
   import axios from 'axios'
   import auth from '../auth'
   import router from '../router'
+  import Vue from 'vue'
+  import VeeValidate from 'vee-validate'
+
+  Vue.use(VeeValidate)
 
   export default {
     name: 'new-project',
@@ -64,7 +78,32 @@
       }
     },
     methods: {
+      readCertFile: function (cert, event) {
+        var reader = new FileReader()
+        var file = (event.target.files || event.dataTransfer.files)[0]
+        reader.onload = (e) => {
+          var fileContent = e.target.result
+          if (cert === 'cert') {
+            this.cert = fileContent
+            return
+          }
+          if (cert === 'ca') {
+            this.ca = fileContent
+            return
+          }
+          if (cert === 'key') {
+            this.key = fileContent
+            return
+          }
+          console.log('Failed to read cert ' + cert)
+        }
+        reader.readAsBinaryString(file)
+      },
       submit: function (event) {
+        if (this.errors.any()) {
+          console.log('Form not valid')
+          return
+        }
         var projectId = this.$route.params.id
         axios({
           method: 'post',
