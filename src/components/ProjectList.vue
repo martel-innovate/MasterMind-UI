@@ -59,8 +59,7 @@
             </div>
           </section>
           <footer class="modal-card-foot">
-            <button v-on:click="submit" v-if="errors.any()" class="button is-success" disabled>Create Project</button>
-            <button v-on:click="submit" v-if="!errors.any()"class="button is-success">Create Project</button>
+            <button v-on:click="submit" class="button is-success" :disabled="errors.any()">Create Project</button>
             <button v-on:click="isActive = !isActive" class="button">Cancel</button>
           </footer>
         </div>

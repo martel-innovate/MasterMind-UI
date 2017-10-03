@@ -50,8 +50,7 @@
       </div>
     </div>
     <br/>
-    <button class="button is-primary" v-if="errors.any()" v-on:click="submit" disabled>Register Cluster</button>
-    <button class="button is-primary" v-if="!errors.any()" v-on:click="submit">Register Cluster</button>
+    <button class="button is-primary" v-on:click="submit" :disabled="errors.any()">Register Cluster</button>
   </section>
 
   <!-- end -->

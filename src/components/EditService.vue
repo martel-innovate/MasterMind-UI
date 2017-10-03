@@ -8,15 +8,14 @@
         <label class="radio" for="two">Unmanaged</label>
       </p>
       <p class="control">
-        Latitude: <input class="input" name="latitude" type="text" v-model="latitude" v-validate.initial="'required'">
+        Latitude: <input class="input" name="latitude" type="text" v-model="latitude" v-validate.initial="'required|numeric'">
         <p class="text-danger" v-if="errors.has('latitude')">{{ errors.first('latitude') }}</p>
       </p>
       <p>
-        Longitude: <input class="input" name="longitude" type="text" v-model="longitude" v-validate.initial="'required'">
+        Longitude: <input class="input" name="longitude" type="text" v-model="longitude" v-validate.initial="'required|numeric'">
         <p class="text-danger" v-if="errors.has('longitude')">{{ errors.first('longitude') }}</p>
       </p>
-      <button class="button is-primary" v-if="errors.any()" v-on:click="submit" disabled>Edit Cluster</button>
-      <button class="button is-primary" v-if="!errors.any()" v-on:click="submit">Edit Cluster</button>
+      <button class="button is-primary" v-on:click="submit" :disabled="errors.any()">Edit Cluster</button>
   </div>
 </template>
 

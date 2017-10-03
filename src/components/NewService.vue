@@ -62,22 +62,19 @@
       </div>
 
       <div class="notification">
-      <p class="control" v-for="linkedService in linked_services">
-        {{ linkedService.as }}
-        <span class="select">
-          <select v-model="configuration[linkedService.as]">
-            <option disabled value="">Select a service</option>
-            <option v-for="service in services" v-bind:value="service[linkedService.retrieve]">
-              {{ service.name }}
-            </option>
-          </select>
-        </span>
-      </p>
+        <p class="control" v-for="linkedService in linked_services">
+          {{ linkedService.as }}
+          <span class="select">
+            <select v-model="configuration[linkedService.as]">
+              <option disabled value="">Select a service</option>
+              <option v-for="service in services" v-bind:value="service[linkedService.retrieve]">
+                {{ service.name }}
+              </option>
+            </select>
+          </span>
+        </p>
       </div>
-
-
-      <button class="button is-primary" v-if="errors.any()" v-on:click="submit" disabled>Register Service</button>
-      <button class="button is-primary" v-if="!errors.any()" v-on:click="submit">Register Service</button>
+      <button class="button is-primary" v-on:click="submit" :disabled="errors.any()">Register Service</button>
     </div>
   </section>
 </template>

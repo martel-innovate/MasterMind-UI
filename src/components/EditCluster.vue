@@ -26,8 +26,7 @@
         Ca: <textarea class="textarea" name="ca" rows="4" cols="50" v-model="ca" v-validate.initial="'required'"/>
         <p class="text-danger" v-if="errors.has('ca')">{{ errors.first('ca') }}</p>
       </p>
-      <button class="button is-primary" v-on:click="submit" v-if="errors.any()" disabled>Edit Cluster</button>
-      <button class="button is-primary" v-on:click="submit" v-if="!errors.any()">Edit Cluster</button>
+      <button class="button is-primary" v-on:click="submit" :disabled="errors.any()">Edit Cluster</button>
     </div>
   </div>
 </template>

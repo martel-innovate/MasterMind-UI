@@ -10,8 +10,7 @@
         <input class="input" name="description" type="text" v-model="description" placeholder="Description" v-validate.initial="'required'">
         <p class="text-danger" v-if="errors.has('description')">{{ errors.first('description') }}</p>
       </p>
-      <button class="button is-primary" v-if="errors.any()" v-on:click="submit" disabled>Edit Project</button>
-      <button class="button is-primary" v-if="!errors.any()" v-on:click="submit">Edit Project</button>
+      <button class="button is-primary" v-on:click="submit" :disabled="errors.any()">Edit Project</button>
     </div>
   </div>
 </template>
