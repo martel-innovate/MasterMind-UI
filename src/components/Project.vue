@@ -68,6 +68,8 @@
   <router-link class="button" :to='"/projects/"+project.id+"/edit"'>Edit Project</router-link>
   <hr/>
   <a href="#" v-on:click="deleteProject" class="button is-danger">Delete project</a>
+  <hr/>
+  <router-link class="button" :to='"/"'>Back</router-link>
 </div>
 </template>
 

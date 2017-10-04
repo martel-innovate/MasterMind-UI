@@ -27,6 +27,7 @@
         <p class="text-danger" v-if="errors.has('ca')">{{ errors.first('ca') }}</p>
       </p>
       <button class="button is-primary" v-on:click="submit" :disabled="errors.any()">Edit Cluster</button>
+      <router-link class="button" :to='"/projects/"+this.$route.params.project_id+"/clusters/"+this.$route.params.cluster_id'>Back</router-link>
     </div>
   </div>
 </template>

@@ -51,6 +51,7 @@
     </div>
     <br/>
     <button class="button is-primary" v-on:click="submit" :disabled="errors.any()">Register Cluster</button>
+    <router-link class="button" :to='"/projects/"+this.$route.params.id'>Back</router-link>
   </section>
 
   <!-- end -->

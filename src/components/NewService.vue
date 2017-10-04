@@ -79,6 +79,7 @@
     <button class="button is-primary" v-show="!deploying" v-on:click="submit" :disabled="errors.any() || cannotRegister || noLinkableServices">Register Service</button>
     <button class="button is-primary" v-show="!deploying" v-on:click="submitAndDeploy" :disabled="errors.any() || cannotRegister || noLinkableServices">Register and Deploy Service</button>
     <button class="button is-primary" v-show="deploying" disabled><b>DEPLOYING...</b></button>
+    <router-link class="button" :to='"/projects/"+this.$route.params.id'>Back</router-link>
   </section>
 </template>
 

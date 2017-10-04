@@ -49,6 +49,7 @@
       </div>
     </li>
   </ul>
+  <router-link class="button" :to='"/catalog"'>Back</router-link>
 </div>
 </template>
 

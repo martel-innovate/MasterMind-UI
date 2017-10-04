@@ -25,6 +25,7 @@
        <router-link class="card-footer-item" :to='"/projects/"+this.$route.params.project_id+"/clusters/"+cluster.id+"/edit"'>Edit Cluster</router-link>
        <a href="#" v-on:click="deleteCluster" class="card-footer-item">Delete</a>
     </footer>
+    <router-link class="button" :to='"/projects/"+this.$route.params.project_id'>Back</router-link>
   </div>
 </template>
 

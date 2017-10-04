@@ -52,6 +52,7 @@
     <div class="panel-block">
       <button class="button is-danger" v-on:click="deleteService"><b>DELETE SERVICE</b></button>
     </div>
+    <router-link class="button" :to='"/projects/"+this.$route.params.project_id'>Back</router-link>
   </div>
 </template>
 

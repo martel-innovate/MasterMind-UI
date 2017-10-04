@@ -16,6 +16,7 @@
         <p class="text-danger" v-if="errors.has('longitude')">{{ errors.first('longitude') }}</p>
       </p>
       <button class="button is-primary" v-on:click="submit" :disabled="errors.any()">Edit Cluster</button>
+      <router-link class="button" :to='"/projects/"+this.$route.params.project_id+"/services/"+this.$route.params.service_id'>Back</router-link>
   </div>
 </template>
 

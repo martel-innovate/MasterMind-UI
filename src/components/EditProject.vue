@@ -11,6 +11,7 @@
         <p class="text-danger" v-if="errors.has('description')">{{ errors.first('description') }}</p>
       </p>
       <button class="button is-primary" v-on:click="submit" :disabled="errors.any()">Edit Project</button>
+      <router-link class="button" :to='"/projects/"+this.$route.params.id'>Back</router-link>
     </div>
   </div>
 </template>
