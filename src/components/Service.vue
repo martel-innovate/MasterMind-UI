@@ -33,7 +33,7 @@
         Longitude: {{service.longitude}}
       </p>
     </div>
-    <div class="box is-fullwidth">
+    <div v-show="configuration.length > 0" class="box is-fullwidth">
       <p>
         <ul>
           <li v-for="envVar in configuration">
@@ -43,16 +43,16 @@
       </p>
     </div>
     <div class="panel-block">
-      <router-link class="button" :to='"/projects/"+this.$route.params.project_id+"/services/"+service.id+"/edit"'>Edit Service</router-link>
-    </div>
-    <div class="panel-block">
       <button class="button is-primary" v-show="!deploying" v-on:click="deployService"><b>DEPLOY</b></button>
       <button class="button is-primary" v-show="deploying" disabled><b>DEPLOYING...</b></button>
     </div>
     <div class="panel-block">
+      <router-link class="button" :to='"/projects/"+this.$route.params.project_id+"/services/"+service.id+"/edit"'>Edit Service</router-link>
       <button class="button is-danger" v-on:click="deleteService"><b>DELETE SERVICE</b></button>
     </div>
-    <router-link class="button" :to='"/projects/"+this.$route.params.project_id'>Back</router-link>
+    <div class="panel-block">
+      <router-link class="button" :to='"/projects/"+this.$route.params.project_id'>Back</router-link>
+    </div>
   </div>
 </template>
 

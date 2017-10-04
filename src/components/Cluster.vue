@@ -1,31 +1,29 @@
 <template>
-  <div class="card">
-    <header class="card-header">
-      <p class="card-header-title">
-        Cluster Details
-      </p>
-    </header>
-    <div class="card-content">
-      <div class="content">
-         <ul>
-        <li>
-          <b>{{cluster.name}}</b>:
-        </li>
-        <li>
-          Description: {{cluster.description}}
-        </li>
-        <li>
-          Endpoint: {{cluster.endpoint}}
-        </li>
-      </ul>
-    <hr/>
+  <div class="section is-fullwidth">
+    <section class="hero is-primary">
+      <div class="hero-body">
+        <div class="container">
+          <h1 class="title">
+            {{cluster.name}}
+          </h1>
+          <h2 class="subtitle">
+            {{cluster.endpoint}}
+          </h2>
+        </div>
       </div>
+    </section>
+    <div class="box is-fullwidth">
+      <p>
+        Description: {{cluster.description}}
+      </p>
     </div>
-    <footer class="card-footer">
-       <router-link class="card-footer-item" :to='"/projects/"+this.$route.params.project_id+"/clusters/"+cluster.id+"/edit"'>Edit Cluster</router-link>
-       <a href="#" v-on:click="deleteCluster" class="card-footer-item">Delete</a>
-    </footer>
-    <router-link class="button" :to='"/projects/"+this.$route.params.project_id'>Back</router-link>
+    <div class="panel-block">
+      <router-link class="button" :to='"/projects/"+this.$route.params.project_id+"/clusters/"+cluster.id+"/edit"'>Edit Cluster</router-link>
+      <button v-on:click="deleteCluster" class="button is-danger">Delete</button>
+    </div>
+    <div class="panel-block">
+       <router-link class="button" :to='"/projects/"+this.$route.params.project_id'>Back</router-link>
+    </div>
   </div>
 </template>
 
