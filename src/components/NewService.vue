@@ -76,7 +76,9 @@
         <p class="text-danger" v-if="services.length === 0">You must register some services to link to this one</p>
       </div>
     </div>
-    <button class="button is-primary" v-on:click="submit" :disabled="errors.any() || cannotRegister || noLinkableServices">Register Service</button>
+    <button class="button is-primary" v-show="!deploying" v-on:click="submit" :disabled="errors.any() || cannotRegister || noLinkableServices">Register Service</button>
+    <button class="button is-primary" v-show="!deploying" v-on:click="submitAndDeploy" :disabled="errors.any() || cannotRegister || noLinkableServices">Register and Deploy Service</button>
+    <button class="button is-primary" v-show="deploying" disabled><b>DEPLOYING...</b></button>
   </section>
 </template>
 
@@ -136,7 +138,8 @@
         clusters: [],
         services: [],
         cannotRegister: false,
-        noLinkableServices: false
+        noLinkableServices: false,
+        deploying: false
       }
     },
     methods: {
@@ -206,6 +209,46 @@
         .then(function (response) {
           console.log(response.data)
           router.push('/projects/' + projectId)
+        })
+        .catch(function (error) {
+          console.log(error)
+        })
+      },
+      submitAndDeploy: function (event) {
+        if (this.errors.any()) {
+          console.log('Form not valid')
+          return
+        }
+        var projectId = this.$route.params.id
+        var clusterId = this.cluster_id
+        var name = this.name
+        this.deploying = true
+        axios({
+          method: 'post',
+          url: auth.getAPIUrl() + 'v1/projects/' + projectId + '/services',
+          headers: { 'Authorization': auth.getAuthHeader() },
+          data: {
+            name: this.name,
+            service_type_id: this.service_type_id,
+            configuration: JSON.stringify(this.configuration),
+            latitude: this.latitude,
+            longitude: this.longitude,
+            managed: this.managed,
+            cluster_id: this.cluster_id,
+            status: 'Inactive',
+            endpoint: 'Not deployed',
+            docker_service_id: 'Not Deployed'
+          }
+        })
+        .then(function (response) {
+          console.log(response.data)
+          var serviceId = response.data.id
+          axios.get(auth.getAPIUrl() + 'v1/projects/' + projectId + '/clusters/' + clusterId + '/deploy?service_id=' + serviceId + '&service_name=' + name, {headers: {'Authorization': auth.getAuthHeader()}})
+          .then(response => {
+            console.log(response.data)
+            router.push('/projects/' + projectId)
+          })
+          .catch(error => { console.log(error) })
         })
         .catch(function (error) {
           console.log(error)
