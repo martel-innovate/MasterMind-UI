@@ -32,27 +32,53 @@
         <p class="text-danger" v-if="errors.has('throttling')">{{ errors.first('throttling') }}</p>
       </div>
     </div>
-    <span class="select">
+    <hr/>
+    <div class="field">
+      <p>
+        Entities
+      </p>
+      <div class="control" v-for="(entity, i) in subject.entities" v>
+        <input class="input" name="entityId" type="text"v-model="subject.entities[i]['id']" placeholder="Id" v-validate.initial="'required'">
+        <input class="input" name="entityType" type="text"v-model="subject.entities[i]['type']" placeholder="Type" v-validate.initial="'required'">
+      </div>
+      <button class="button is-primary" v-on:click="subject.entities.push({})">+</button>
+      <p class="text-danger" v-if="errors.has('entityId')">{{ errors.first('entityId') }}</p>
+      <p class="text-danger" v-if="errors.has('entityType')">{{ errors.first('entityType') }}</p>
+    </div>
+    <hr/>
+    <div class="field">
+      <p>
+        Condition
+      </p>
+      <div class="control" v-for="(condition, i) in subject.condition.attrs" v>
+        <input class="input" name="condition" type="text"v-model="subject.condition.attrs[i]" placeholder="Value" v-validate.initial="'required'">
+      </div>
+      <button class="button is-primary" v-on:click="subject.condition.attrs.push('')">+</button>
+      <p class="text-danger" v-if="errors.has('condition')">{{ errors.first('condition') }}</p>
+    </div>
+    <hr/>
+    <span class="field">
+      <p>
+        Subscription Service
+      </p>
       <select v-model="service_id">
         <option v-for="service in services" v-bind:value="service.id">
           {{ service.name }}
         </option>
       </select>
     </span>
-    <div class="field">
-      <label class="label">Subscription subject</label>
-      <div class="control">
-        <textarea class="textarea" name="subject" rows="4" cols="50" v-model="subject" v-validate.initial="'required|checkIfValidJson'"/>
-        <p class="text-danger" v-if="errors.has('subject')">{{ errors.first('subject') }}</p>
-      </div>
-    </div>
-    <div class="field">
-      <label class="label">Subscription notification</label>
-      <div class="control">
-        <textarea class="textarea" name="notification" rows="4" cols="50" v-model="notification" v-validate.initial="'required|checkIfValidJson'"/>
-        <p class="text-danger" v-if="errors.has('notification')">{{ errors.first('notification') }}</p>
-      </div>
-    </div>
+    <hr/>
+    <span class="field">
+      <p>
+        Notification endpoint
+      </p>
+      <select v-model="notification['http']['url']">
+        <option v-for="service in services" v-bind:value="'http://'+service.endpoint">
+          {{ service.name }}
+        </option>
+      </select>
+    </span>
+    <hr/>
     <br/>
     <button class="button is-primary" v-on:click="submit" :disabled="errors.any() || service_id === 0">Register Subscription</button>
     <router-link class="button" :to='"/projects/"+this.$route.params.id'>Back</router-link>
@@ -92,6 +118,7 @@
       .then(response => {
         this.services = response.data
         this.service_id = this.services[0].id
+        this.notification.http.url = 'http://' + this.services[0].endpoint
       })
       .catch(error => { console.log(error) })
     },
@@ -99,8 +126,8 @@
       return {
         name: '',
         description: '',
-        subject: '',
-        notification: '',
+        subject: {entities: [{}], condition: {attrs: ['']}},
+        notification: {http: {url: ''}},
         expires: '',
         throttling: '',
         service_id: 0,
@@ -119,13 +146,15 @@
           url: auth.getAPIUrl() + 'v1/projects/' + projectId + '/ngsi_subscriptions',
           headers: { 'Authorization': auth.getAuthHeader() },
           data: {
+            subscription_id: 'Pending',
             name: this.name,
             description: this.description,
-            subject: this.subject,
-            notification: this.notification,
+            subject: JSON.stringify(this.subject),
+            notification: JSON.stringify(this.notification),
             expires: this.expires,
             throttling: this.throttling,
-            service_id: this.service_id
+            service_id: this.service_id,
+            status: 'Inactive'
           }
         })
         .then(function (response) {

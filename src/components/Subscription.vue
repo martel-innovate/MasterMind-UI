@@ -6,6 +6,9 @@
           <h1 class="title">
             {{subscription.name}}
           </h1>
+          <h2 class="subtitle">
+            {{subscription.subscription_id}}, {{subscription.status}}
+          </h2>
         </div>
       </div>
     </section>
@@ -42,6 +45,9 @@
       </p>
     </div>
     <div class="panel-block">
+      <button class="button is-primary" v-show="this.subscription.status === 'Inactive'" v-on:click="registerSubscription"><b>Register Subscription</b></button>
+    </div>
+    <div class="panel-block">
       <router-link class="button" :to='"/projects/"+this.$route.params.project_id+"/subscriptions/"+subscription.id+"/edit"'>Edit Subscription</router-link>
       <button v-on:click="deleteSubscription" class="button is-danger">Delete</button>
     </div>
@@ -68,6 +74,16 @@
       }
     },
     methods: {
+      registerSubscription: function (event) {
+        var projectId = this.$route.params.project_id
+        var subscriptionId = this.subscription.id
+        axios.get(auth.getAPIUrl() + 'v1/projects/' + projectId + '/ngsi_subscriptions/' + subscriptionId + '/register', {headers: {'Authorization': auth.getAuthHeader()}})
+        .then(response => {
+          console.log(response.data)
+          router.push('/projects/' + projectId + '/subscriptions/' + subscriptionId)
+        })
+        .catch(error => { console.log(error) })
+      },
       deleteSubscription: function (event) {
         var projectId = this.$route.params.project_id
         axios({
