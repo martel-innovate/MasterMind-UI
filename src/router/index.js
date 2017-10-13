@@ -6,11 +6,14 @@ import ServiceCatalog from '@/components/ServiceCatalog'
 import CatalogEntry from '@/components/CatalogEntry'
 import Project from '@/components/Project'
 import Cluster from '@/components/Cluster'
+import Subscription from '@/components/Subscription'
 import Service from '@/components/Service'
 import NewCluster from '@/components/NewCluster'
+import NewSubscription from '@/components/NewSubscription'
 import NewService from '@/components/NewService'
 import EditProject from '@/components/EditProject'
 import EditCluster from '@/components/EditCluster'
+import EditSubscription from '@/components/EditSubscription'
 import EditService from '@/components/EditService'
 
 Vue.use(Router)
@@ -53,6 +56,11 @@ export default new Router({
       component: NewCluster
     },
     {
+      path: '/projects/:id/subscriptions/new',
+      name: 'NewSubscription',
+      component: NewSubscription
+    },
+    {
       path: '/projects/:id/services/new',
       name: 'NewService',
       component: NewService
@@ -68,6 +76,11 @@ export default new Router({
       component: Cluster
     },
     {
+      path: '/projects/:project_id/subscriptions/:subscription_id',
+      name: 'Subscription',
+      component: Subscription
+    },
+    {
       path: '/projects/:project_id/services/:service_id',
       name: 'Service',
       component: Service
@@ -76,6 +89,11 @@ export default new Router({
       path: '/projects/:project_id/clusters/:cluster_id/edit',
       name: 'EditCluster',
       component: EditCluster
+    },
+    {
+      path: '/projects/:project_id/subscriptions/:subscription_id/edit',
+      name: 'EditSubscription',
+      component: EditSubscription
     },
     {
       path: '/projects/:project_id/services/:service_id/edit',

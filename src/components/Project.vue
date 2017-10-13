@@ -37,6 +37,17 @@
     <router-link class="button" :to='"/projects/"+project.id+"/services/new"'>Register Service</router-link>
   </div>
   <div class="box is-fullwidth">
+    <h2 class="notification is-info">Registered Subscriptions:</h2>
+    <div class="box is-fullwidth">
+      <ul>
+        <li v-for="subscription in subscriptions">
+          <router-link :to='"/projects/"+project.id+"/subscriptions/"+subscription.id'>{{subscription.name}}</router-link>
+        </li>
+      </ul>
+    </div>
+    <router-link class="button" :to='"/projects/"+project.id+"/subscriptions/new"'>Register Subscription</router-link>
+  </div>
+  <div class="box is-fullwidth">
     <h2 class="notification is-info">Registered Actors:</h2>
     <div class="box is-fullwidth">
       <p v-for="actor in actors">
@@ -89,6 +100,9 @@
       axios.get(auth.getAPIUrl() + 'v1/projects/' + this.$route.params.id + '/services', {headers: {'Authorization': auth.getAuthHeader()}})
       .then(response => { this.services = response.data })
       .catch(error => { console.log(error) })
+      axios.get(auth.getAPIUrl() + 'v1/projects/' + this.$route.params.id + '/ngsi_subscriptions', {headers: {'Authorization': auth.getAuthHeader()}})
+      .then(response => { this.subscriptions = response.data })
+      .catch(error => { console.log(error) })
       this.updateActors()
     },
     data () {
@@ -96,6 +110,7 @@
         project: {},
         clusters: [],
         services: [],
+        subscriptions: [],
         roles: [],
         actors: [],
         isAddingActor: false,
