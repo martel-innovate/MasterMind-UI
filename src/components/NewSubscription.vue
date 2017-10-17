@@ -80,7 +80,7 @@
     </span>
     <hr/>
     <br/>
-    <button class="button is-primary" v-on:click="submit" :disabled="errors.any() || service_id === 0">Register Subscription</button>
+    <button class="button is-primary" v-on:click="submit" :disabled="errors.any() || service_id === 0">New Subscription</button>
     <router-link class="button" :to='"/projects/"+this.$route.params.id'>Back</router-link>
   </section>
 
@@ -146,7 +146,7 @@
           url: auth.getAPIUrl() + 'v1/projects/' + projectId + '/ngsi_subscriptions',
           headers: { 'Authorization': auth.getAuthHeader() },
           data: {
-            subscription_id: 'Pending',
+            subscription_id: 'pending',
             name: this.name,
             description: this.description,
             subject: JSON.stringify(this.subject),
@@ -154,7 +154,7 @@
             expires: this.expires,
             throttling: this.throttling,
             service_id: this.service_id,
-            status: 'Inactive'
+            status: 'inactive'
           }
         })
         .then(function (response) {
