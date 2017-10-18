@@ -80,6 +80,7 @@
         axios.get(auth.getAPIUrl() + 'v1/projects/' + this.$route.params.project_id + '/clusters/' + service.cluster_id, {headers: {'Authorization': auth.getAuthHeader()}})
         .then(response => { this.cluster = response.data.name })
         .catch(error => { console.log(error) })
+        this.getService()
       })
       .catch(error => { console.log(error) })
     },
@@ -93,9 +94,18 @@
       }
     },
     methods: {
-      deleteService: function (event) {
+      deleteService: function () {
         var projectId = this.$route.params.project_id
         var serviceId = this.$route.params.service_id
+        var serviceName = this.service.name
+        if (this.service.endpoint !== 'Not deployed') {
+          axios.get(auth.getAPIUrl() + 'v1/projects/' + projectId + '/clusters/' + this.service.cluster_id + '/removestack?service_id=' + serviceId + '&service_name=' + serviceName, {headers: {'Authorization': auth.getAuthHeader()}})
+          .then(response => {
+            console.log(response.data)
+            router.push('/projects/' + projectId)
+          })
+          .catch(error => { console.log(error) })
+        }
         axios({
           method: 'delete',
           url: auth.getAPIUrl() + 'v1/projects/' + projectId + '/services/' + serviceId,
@@ -109,7 +119,7 @@
           console.log(error)
         })
       },
-      deployService: function (event) {
+      deployService: function () {
         this.deploying = true
         var projectId = this.$route.params.project_id
         var serviceId = this.$route.params.service_id
@@ -120,6 +130,38 @@
           router.push('/projects/' + projectId)
         })
         .catch(error => { console.log(error) })
+      },
+      getService: function () {
+        if (this.service.endpoint === 'Not deployed') {
+          return
+        }
+        var projectId = this.$route.params.project_id
+        var serviceId = this.$route.params.service_id
+        var serviceName = this.service.name
+        console.log(serviceName)
+        axios.get(auth.getAPIUrl() + 'v1/projects/' + projectId + '/clusters/' + this.service.cluster_id + '/getstack?service_id=' + serviceId + '&service_name=' + serviceName, {headers: {'Authorization': auth.getAuthHeader()}})
+        .then(response => {
+          console.log(response.data)
+        })
+        .catch(error => {
+          console.log(error)
+          axios({
+            method: 'put',
+            url: auth.getAPIUrl() + 'v1/projects/' + projectId + '/services/' + serviceId,
+            headers: { 'Authorization': auth.getAuthHeader() },
+            data: {
+              endpoint: 'Not deployed',
+              status: 'Inactive'
+            }
+          })
+          .then(function (response) {
+            console.log(response.data)
+            location.reload()
+          })
+          .catch(function (error) {
+            console.log(error)
+          })
+        })
       }
     }
   }
