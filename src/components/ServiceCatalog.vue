@@ -1,8 +1,19 @@
 <template>
   <div class="section is-fullwidth">
-    <h3 class="box" v-for="service in catalog">
-      <router-link :to='"/catalog/"+service.id'>{{service.name}}</router-link>
-    </h3>
+    <section class="hero is-primary">
+      <div class="hero-body has-text-centered">
+        <h1 class="title">
+          Service Catalog
+        </h1>
+        <h2 class="subtitle">
+          A list of available services for MasterMind to deploy
+        </h2>
+      </div>
+    </section>
+    <br/>
+    <p v-for="service in catalog">
+      <router-link class="button is-primary is-large is-outlined is-fullwidth" :to='"/catalog/"+service.id'>{{service.name}}</router-link>
+    </p>
   </div>
 </template>
 

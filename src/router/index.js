@@ -2,12 +2,16 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Login from '@/components/Login'
 import ProjectList from '@/components/ProjectList'
+import ActorList from '@/components/ActorList'
 import ServiceCatalog from '@/components/ServiceCatalog'
 import CatalogEntry from '@/components/CatalogEntry'
 import Project from '@/components/Project'
 import Cluster from '@/components/Cluster'
+import ClusterList from '@/components/ClusterList'
 import Subscription from '@/components/Subscription'
+import SubscriptionList from '@/components/SubscriptionList'
 import Service from '@/components/Service'
+import ServiceList from '@/components/ServiceList'
 import NewCluster from '@/components/NewCluster'
 import NewSubscription from '@/components/NewSubscription'
 import NewService from '@/components/NewService'
@@ -51,6 +55,11 @@ export default new Router({
       component: Project
     },
     {
+      path: '/projects/:id/actors',
+      name: 'ActorList',
+      component: ActorList
+    },
+    {
       path: '/projects/:id/clusters/new',
       name: 'NewCluster',
       component: NewCluster
@@ -76,14 +85,29 @@ export default new Router({
       component: Cluster
     },
     {
+      path: '/projects/:id/clusters',
+      name: 'ClusterList',
+      component: ClusterList
+    },
+    {
       path: '/projects/:project_id/subscriptions/:subscription_id',
       name: 'Subscription',
       component: Subscription
     },
     {
+      path: '/projects/:id/subscriptions',
+      name: 'SubscriptionList',
+      component: SubscriptionList
+    },
+    {
       path: '/projects/:project_id/services/:service_id',
       name: 'Service',
       component: Service
+    },
+    {
+      path: '/projects/:id/services',
+      name: 'ServiceList',
+      component: ServiceList
     },
     {
       path: '/projects/:project_id/clusters/:cluster_id/edit',

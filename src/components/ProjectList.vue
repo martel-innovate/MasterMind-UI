@@ -2,27 +2,10 @@
   <div>
     <div class="box">
       <table class="table">
-        <thead>
-          <tr>
-            <th>Project Name</th>
-            <th></th>
-            <th></th>
-            <th>Details</th>
-          </tr>
-        </thead>
         <tbody v-for="project in projects">
           <tr>
             <td>
-              <span class="button is-primary">{{project.name}}</span>
-            </td>
-            <td></td>
-            <td></td>
-            <td class="is-icon">
-              <router-link :to='"/projects/"+project.id'>
-                <span class="icon">
-                  <i class="fa fa-eye"></i>
-                </span>
-              </router-link>
+              <router-link class="button is-primary is-large is-outlined is-fullwidth" :to='"/projects/"+project.id'>{{project.name}}</router-link>
             </td>
           </tr>
         </tbody>

@@ -1,5 +1,5 @@
 <template>
-  <div class="section is-fullwidth">
+  <div class="box is-fullwidth">
     <section class="hero is-primary">
       <div class="hero-body">
         <div class="container">
@@ -12,17 +12,18 @@
         </div>
       </div>
     </section>
-    <div class="box is-fullwidth">
-      <p>
-        Description: {{cluster.description}}
-      </p>
-    </div>
+    <br/>
+    <p class="title">
+      Description
+    </p>
+    <p class="subtitle">
+      {{cluster.description}}
+    </p>
+    <hr/>
     <div class="panel-block">
+      <router-link class="button" :to='"/projects/"+this.$route.params.project_id'>Back</router-link>
       <router-link class="button" :to='"/projects/"+this.$route.params.project_id+"/clusters/"+cluster.id+"/edit"'>Edit Cluster</router-link>
       <button v-on:click="deleteCluster" class="button is-danger">Delete</button>
-    </div>
-    <div class="panel-block">
-       <router-link class="button" :to='"/projects/"+this.$route.params.project_id'>Back</router-link>
     </div>
   </div>
 </template>

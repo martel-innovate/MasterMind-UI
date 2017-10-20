@@ -1,5 +1,5 @@
 <template>
-  <div class="section is-fullwidth">
+  <div class="box is-fullwidth">
     <section class="hero is-primary">
       <div class="hero-body">
         <div class="container">
@@ -13,45 +13,65 @@
       </div>
     </section>
     <br/>
-    <div class="box is-fullwidth">
-      <p>
-        Service Type: {{this.service_type.name}}
-      </p>
-      <p>
-        Cluster: {{this.cluster}}
-      </p>
-      <p>
-        Docker Service ID: {{service.docker_service_id}}
-      </p>
-      <p>
-        Managed: {{service.managed}}
-      </p>
-      <p>
-        Latitude: {{service.latitude}}
-      </p>
-      <p>
-        Longitude: {{service.longitude}}
-      </p>
-    </div>
-    <div v-show="configuration.length > 0" class="box is-fullwidth">
-      <p>
-        <ul>
-          <li v-for="envVar in configuration">
-            {{envVar.name}}: {{envVar.value}}
-          </li>
-        </ul>
-      </p>
-    </div>
-    <div class="panel-block">
-      <button class="button is-primary" v-show="!deploying" v-on:click="deployService"><b>DEPLOY</b></button>
-      <button class="button is-primary" v-show="deploying" disabled><b>DEPLOYING...</b></button>
-    </div>
-    <div class="panel-block">
-      <router-link class="button" :to='"/projects/"+this.$route.params.project_id+"/services/"+service.id+"/edit"'>Edit Service</router-link>
-      <button class="button is-danger" v-on:click="deleteService"><b>DELETE SERVICE</b></button>
+    <p class="title">
+      Service Type
+    </p>
+    <p class="subtitle">
+      {{this.service_type.name}}
+    </p>
+    <hr/>
+    <p class="title">
+      Cluster
+    </p>
+    <p class="subtitle">
+      {{this.cluster}}
+    </p>
+    <hr/>
+    <p class="title">
+      Docker Service ID
+    </p>
+    <p class="subtitle">
+      {{service.docker_service_id}}
+    </p>
+    <hr/>
+    <p class="title">
+      Managed
+    </p>
+    <p class="subtitle">
+      {{service.managed}}
+    </p>
+    <hr/>
+    <p class="title">
+      Latitude
+    </p>
+    <p class="subtitle">
+      {{service.latitude}}
+    </p>
+    <hr/>
+    <p class="title">
+      Longitude
+    </p>
+    <p class="subtitle">
+      {{service.longitude}}
+    </p>
+    <hr/>
+    <div v-show="configuration.length > 0">
+      <div v-for="envVar in configuration">
+        <p class="title">
+          {{envVar.name}}
+        </p>
+        <p class="subtitle">
+          {{envVar.value}}
+        </p>
+        <hr/>
+      </div>
     </div>
     <div class="panel-block">
       <router-link class="button" :to='"/projects/"+this.$route.params.project_id'>Back</router-link>
+      <router-link class="button" :to='"/projects/"+this.$route.params.project_id+"/services/"+service.id+"/edit"'>Edit Service</router-link>
+      <button class="button is-primary" v-show="!deploying" v-on:click="deployService"><b>DEPLOY</b></button>
+      <button class="button is-primary" v-show="deploying" disabled><b>DEPLOYING...</b></button>
+      <button class="button is-danger" v-on:click="deleteService"><b>DELETE SERVICE</b></button>
     </div>
   </div>
 </template>
