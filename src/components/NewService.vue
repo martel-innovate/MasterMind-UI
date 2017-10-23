@@ -109,7 +109,6 @@
   import router from '../router'
 
   export default {
-    name: 'new-service',
     created () {
       var projectId = this.$route.params.id
       var getConfigTemplate = this.getConfigTemplate

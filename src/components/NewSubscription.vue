@@ -11,7 +11,7 @@
     </section>
     <br/>
     <div class="field">
-      <p class="subtitle">
+      <p class="title">
         Subscription name
       </p>
       <div class="control">
@@ -21,7 +21,7 @@
     </div>
     <hr/>
     <div class="field">
-      <p class="subtitle">
+      <p class="title">
         Subscription description
       </p>
       <div class="control">
@@ -31,7 +31,7 @@
     </div>
     <hr/>
     <div class="field">
-      <p class="subtitle">
+      <p class="title">
         Subscription expires
       </p>
       <div class="control">
@@ -41,7 +41,7 @@
     </div>
     <hr/>
     <div class="field">
-      <p class="subtitle">
+      <p class="title">
         Subscription throttling
       </p>
       <div class="control">
@@ -51,7 +51,7 @@
     </div>
     <hr/>
     <div class="field">
-      <p class="subtitle">
+      <p class="title">
         Entities
       </p>
       <div class="control" v-for="(entity, i) in subject.entities" v>
@@ -64,7 +64,7 @@
     </div>
     <hr/>
     <div class="field">
-      <p class="subtitle">
+      <p class="title">
         Condition
       </p>
       <div class="control" v-for="(condition, i) in subject.condition.attrs" v>
@@ -75,7 +75,7 @@
     </div>
     <hr/>
     <span class="field">
-      <p class="subtitle">
+      <p class="title">
         Subscription Service
       </p>
       <select v-model="service_id">
@@ -86,7 +86,7 @@
     </span>
     <hr/>
     <span class="field">
-      <p class="subtitle">
+      <p class="title">
         Notification endpoint
       </p>
       <select v-model="notification['http']['url']">
@@ -100,8 +100,6 @@
     <button class="button is-primary" v-on:click="submit" :disabled="errors.any() || service_id === 0">New Subscription</button>
     <router-link class="button" :to='"/projects/"+this.$route.params.id'>Back</router-link>
   </section>
-
-  <!-- end -->
 </template>
 
 <script type = "text/javascript" >
@@ -129,7 +127,6 @@
   Vue.use(VeeValidate)
 
   export default {
-    name: 'new-project',
     created () {
       axios.get(auth.getAPIUrl() + 'v1/projects/' + this.$route.params.id + '/services', {headers: {'Authorization': auth.getAuthHeader()}})
       .then(response => {

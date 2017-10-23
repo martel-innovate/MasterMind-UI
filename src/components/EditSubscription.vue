@@ -98,7 +98,6 @@
   Vue.use(VeeValidate)
 
   export default {
-    name: 'edit-subscription',
     data () {
       return {
         name: '',

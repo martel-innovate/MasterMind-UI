@@ -81,7 +81,6 @@
   import auth from '../auth'
   import router from '../router'
   export default {
-    name: 'service',
     created () {
       axios.get(auth.getAPIUrl() + 'v1/projects/' + this.$route.params.project_id + '/services/' + this.$route.params.service_id, {headers: {'Authorization': auth.getAuthHeader()}})
       .then(response => {

@@ -11,7 +11,7 @@
     </section>
     <br/>
     <div class="field">
-      <p class="subtitle">
+      <p class="title">
         Cluster name
       </p>
       <div class="control">
@@ -21,7 +21,7 @@
     </div>
     <hr/>
     <div class="field">
-      <p class="subtitle">
+      <p class="title">
         Cluster description
       </p>
       <div class="control">
@@ -31,7 +31,7 @@
     </div>
     <hr/>
     <div class="field">
-      <p class="subtitle">
+      <p class="title">
         Cluster endpoint
       </p>
       <div class="control">
@@ -41,7 +41,7 @@
     </div>
     <hr/>
     <div class="field">
-      <p class="subtitle">
+      <p class="title">
         Cert
       </p>
       <div class="control">
@@ -51,7 +51,7 @@
     </div>
     <hr/>
     <div class="field">
-      <p class="subtitle">
+      <p class="title">
         Key
       </p>
       <div class="control">
@@ -61,7 +61,7 @@
     </div>
     <hr/>
     <div class="field">
-      <p class="subtitle">
+      <p class="title">
         Ca
       </p>
       <div class="control">
@@ -73,8 +73,6 @@
     <button class="button is-primary" v-on:click="submit" :disabled="errors.any()">Register Cluster</button>
     <router-link class="button" :to='"/projects/"+this.$route.params.id'>Back</router-link>
   </section>
-
-  <!-- end -->
 </template>
 
 <script type = "text/javascript" >
@@ -87,7 +85,6 @@
   Vue.use(VeeValidate)
 
   export default {
-    name: 'new-project',
     data () {
       return {
         name: '',

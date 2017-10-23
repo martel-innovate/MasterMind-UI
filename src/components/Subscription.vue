@@ -94,7 +94,6 @@
   import auth from '../auth'
   import router from '../router'
   export default {
-    name: 'subscription',
     created () {
       axios.get(auth.getAPIUrl() + 'v1/projects/' + this.$route.params.project_id + '/ngsi_subscriptions/' + this.$route.params.subscription_id, {headers: {'Authorization': auth.getAuthHeader()}})
       .then(response => {

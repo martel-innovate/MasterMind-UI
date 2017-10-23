@@ -58,7 +58,6 @@
   import axios from 'axios'
   import auth from '../auth'
   export default {
-    name: 'catalog-entry',
     created () {
       axios.get(auth.getAPIUrl() + 'v1/service_types/' + this.$route.params.id, {headers: {'Authorization': auth.getAuthHeader()}})
       .then(response => {

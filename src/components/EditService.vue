@@ -51,7 +51,6 @@
   Vue.use(VeeValidate)
 
   export default {
-    name: 'edit-service',
     data () {
       return {
         managed: false,

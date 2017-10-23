@@ -11,7 +11,7 @@
     </section>
     <br/>
     <div id="cluster">
-      <p class="subtitle">
+      <p class="title">
         Description
       </p>
       <p class="control">
@@ -19,7 +19,7 @@
         <p class="text-danger" v-if="errors.has('name')">{{ errors.first('name') }}</p>
       </p>
       <hr/>
-      <p class="subtitle">
+      <p class="title">
         Cluster Description
       </p>
       <p class="control">
@@ -27,7 +27,7 @@
         <p class="text-danger" v-if="errors.has('description')">{{ errors.first('description') }}</p>
       </p>
       <hr/>
-      <p class="subtitle">
+      <p class="title">
         Cluster Endpoint
       </p>
       <p class="control">
@@ -35,7 +35,7 @@
         <p class="text-danger" v-if="errors.has('endpoint')">{{ errors.first('endpoint') }}</p>
       </p>
       <hr/>
-      <p class="subtitle">
+      <p class="title">
         Cert
       </p>
       <p class="control">
@@ -43,7 +43,7 @@
         <p class="text-danger" v-if="errors.has('cert')">{{ errors.first('cert') }}</p>
       </p>
       <hr/>
-      <p class="subtitle">
+      <p class="title">
         Key
       </p>
       <p class="control">
@@ -51,7 +51,7 @@
         <p class="text-danger" v-if="errors.has('key')">{{ errors.first('key') }}</p>
       </p>
       <hr/>
-      <p class="subtitle">
+      <p class="title">
         Ca
       </p>
       <p class="control">
@@ -75,7 +75,6 @@
   Vue.use(VeeValidate)
 
   export default {
-    name: 'edit-cluster',
     data () {
       return {
         name: '',

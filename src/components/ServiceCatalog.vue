@@ -21,7 +21,6 @@
   import axios from 'axios'
   import auth from '../auth'
   export default {
-    name: 'service-catalog',
     created () {
       axios.get(auth.getAPIUrl() + 'v1/service_types', {headers: {'Authorization': auth.getAuthHeader()}})
       .then(response => { this.catalog = response.data })
