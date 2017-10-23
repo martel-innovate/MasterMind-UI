@@ -1,32 +1,49 @@
 <template>
-  <!-- start -->
-  <section class="panel">
-    <p class="panel-heading">
-      Register Subscription
-    </p>
+  <section class="box">
+    <section class="hero is-primary">
+      <div class="hero-body">
+        <div class="container">
+          <h1 class="title">
+            Register Subscription
+          </h1>
+        </div>
+      </div>
+    </section>
+    <br/>
     <div class="field">
-      <label class="label">Subscription name</label>
+      <p class="subtitle">
+        Subscription name
+      </p>
       <div class="control">
         <input class="input" name="name" type="text"v-model="name" placeholder="Subscription Name" v-validate.initial="'required|alpha_dash'">
         <p class="text-danger" v-if="errors.has('name')">{{ errors.first('name') }}</p>
       </div>
     </div>
+    <hr/>
     <div class="field">
-      <label class="label">Subscription description</label>
+      <p class="subtitle">
+        Subscription description
+      </p>
       <div class="control">
         <input class="input" name="description" type="text"v-model="description" placeholder="Subscription description" v-validate.initial="'required'">
         <p class="text-danger" v-if="errors.has('description')">{{ errors.first('description') }}</p>
       </div>
     </div>
+    <hr/>
     <div class="field">
-      <label class="label">Subscription expires</label>
+      <p class="subtitle">
+        Subscription expires
+      </p>
       <div class="control">
         <input class="input" name="expires" type="text"v-model="expires" placeholder="Subscription expires" v-validate.initial="'required'">
         <p class="text-danger" v-if="errors.has('expires')">{{ errors.first('expires') }}</p>
       </div>
     </div>
+    <hr/>
     <div class="field">
-      <label class="label">Subscription throttling</label>
+      <p class="subtitle">
+        Subscription throttling
+      </p>
       <div class="control">
         <input class="input" name="throttling" type="text"v-model="throttling" placeholder="Subscription throttling" v-validate.initial="'required|numeric'">
         <p class="text-danger" v-if="errors.has('throttling')">{{ errors.first('throttling') }}</p>
@@ -34,7 +51,7 @@
     </div>
     <hr/>
     <div class="field">
-      <p>
+      <p class="subtitle">
         Entities
       </p>
       <div class="control" v-for="(entity, i) in subject.entities" v>
@@ -47,7 +64,7 @@
     </div>
     <hr/>
     <div class="field">
-      <p>
+      <p class="subtitle">
         Condition
       </p>
       <div class="control" v-for="(condition, i) in subject.condition.attrs" v>
@@ -58,7 +75,7 @@
     </div>
     <hr/>
     <span class="field">
-      <p>
+      <p class="subtitle">
         Subscription Service
       </p>
       <select v-model="service_id">
@@ -69,7 +86,7 @@
     </span>
     <hr/>
     <span class="field">
-      <p>
+      <p class="subtitle">
         Notification endpoint
       </p>
       <select v-model="notification['http']['url']">

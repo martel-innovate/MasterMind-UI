@@ -39,7 +39,7 @@
   </div>
   <hr/>
   <router-link class="button" :to='"/projects/"+$route.params.id'>Back</router-link>
-  <button class="button" v-show="!isAddingActor" v-on:click="isAddingActor = isAddingActor ? false : true">Add Actor</button>
+  <button class="button" v-show="!isAddingActor" v-on:click="isAddingActor = !isAddingActor">Add Actor</button>
 </div>
 </template>
 

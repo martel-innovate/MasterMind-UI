@@ -4,11 +4,8 @@
       <div class="hero-body">
         <div class="container">
           <h1 class="title">
-            {{subscription.name}}
+            Register Subscription
           </h1>
-          <h2 class="subtitle">
-            {{subscription.subscription_id}}, {{subscription.status}}
-          </h2>
         </div>
       </div>
     </section>
@@ -28,7 +25,7 @@
     </p>
     <hr/>
     <p class="title">
-      Expires
+      Throttling
     </p>
     <p class="subtitle">
       {{subscription.throttling}}
@@ -84,7 +81,7 @@
     <div class="panel-block">
       <router-link class="button" :to='"/projects/"+this.$route.params.project_id'>Back</router-link>
       <router-link class="button" :to='"/projects/"+this.$route.params.project_id+"/subscriptions/"+subscription.id+"/edit"'>Edit Subscription</router-link>
-      <button class="button is-primary" v-show="this.subscription.subscription_id === 'pending'" v-on:click="registerSubscription"><b>Register Subscription</b></button>
+      <button class="button is-primary" v-show="this.subscription.subscription_id === 'pending'" v-on:click="registerSubscription"><b>Activate Subscription</b></button>
       <button class="button is-primary" v-show="this.subscription.subscription_id !== 'pending' && this.subscription.status === 'inactive'" v-on:click="activateSubscription"><b>Activate Subscription</b></button>
       <button class="button is-primary" v-show="this.subscription.subscription_id !== 'pending' && this.subscription.status === 'active'" v-on:click="deactivateSubscription"><b>Deactivate Subscription</b></button>
       <button v-on:click="deleteSubscription" class="button is-danger">Delete</button>

@@ -1,5 +1,5 @@
 <template>
-  <div class="section is-fullwidth">
+  <div class="box is-fullwidth">
     <section class="hero is-primary">
       <div class="hero-body has-text-centered">
         <h1 class="title">
