@@ -1,22 +1,43 @@
 <template>
-  <div class="panel-block">
-    <p class="panel-heading">Edit Service</p>
-      <p class="control">
-        <input type="radio" id="one" value="true" v-model="managed">
-        <label class="radio" for="one">Managed</label>
-        <input type="radio" id="two" value="false" v-model="managed">
-        <label class="radio" for="two">Unmanaged</label>
-      </p>
-      <p class="control">
-        Latitude: <input class="input" name="latitude" type="text" v-model="latitude" v-validate.initial="'required|numeric'">
-        <p class="text-danger" v-if="errors.has('latitude')">{{ errors.first('latitude') }}</p>
-      </p>
-      <p>
-        Longitude: <input class="input" name="longitude" type="text" v-model="longitude" v-validate.initial="'required|numeric'">
-        <p class="text-danger" v-if="errors.has('longitude')">{{ errors.first('longitude') }}</p>
-      </p>
-      <button class="button is-primary" v-on:click="submit" :disabled="errors.any()">Edit Cluster</button>
-      <router-link class="button" :to='"/projects/"+this.$route.params.project_id+"/services/"+this.$route.params.service_id'>Back</router-link>
+  <div class="box">
+    <section class="hero is-primary">
+      <div class="hero-body">
+        <div class="container">
+          <h1 class="title">
+            Edit Service
+          </h1>
+        </div>
+      </div>
+    </section>
+    <br/>
+    <p class="title">
+      Managed
+    </p>
+    <p class="subtitle">
+      <input type="radio" id="one" value="true" v-model="managed">
+      <label class="radio" for="one">Managed</label>
+      <input type="radio" id="two" value="false" v-model="managed">
+      <label class="radio" for="two">Unmanaged</label>
+    </p>
+    <hr/>
+    <p class="title">
+      Latitude
+    </p>
+    <p class="control">
+      <input class="input" name="latitude" type="text" v-model="latitude" v-validate.initial="'required|numeric'">
+      <p class="text-danger" v-if="errors.has('latitude')">{{ errors.first('latitude') }}</p>
+    </p>
+    <hr/>
+    <p class="title">
+      Longitude
+    </p>
+    <p>
+      <input class="input" name="longitude" type="text" v-model="longitude" v-validate.initial="'required|numeric'">
+      <p class="text-danger" v-if="errors.has('longitude')">{{ errors.first('longitude') }}</p>
+    </p>
+    <hr/>
+    <button class="button is-primary" v-on:click="submit" :disabled="errors.any()">Edit Cluster</button>
+    <router-link class="button" :to='"/projects/"+this.$route.params.project_id+"/services/"+this.$route.params.service_id'>Back</router-link>
   </div>
 </template>
 
@@ -30,7 +51,6 @@
   Vue.use(VeeValidate)
 
   export default {
-    name: 'edit-service',
     data () {
       return {
         managed: false,

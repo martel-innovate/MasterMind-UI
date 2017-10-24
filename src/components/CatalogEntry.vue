@@ -1,5 +1,5 @@
 <template>
-<div class="section is-fullwidth">
+<div class="box is-fullwidth">
   <section class="hero is-primary">
     <div class="hero-body">
       <div class="container">
@@ -49,6 +49,7 @@
       </div>
     </li>
   </ul>
+  <hr/>
   <router-link class="button" :to='"/catalog"'>Back</router-link>
 </div>
 </template>
@@ -57,7 +58,6 @@
   import axios from 'axios'
   import auth from '../auth'
   export default {
-    name: 'catalog-entry',
     created () {
       axios.get(auth.getAPIUrl() + 'v1/service_types/' + this.$route.params.id, {headers: {'Authorization': auth.getAuthHeader()}})
       .then(response => {

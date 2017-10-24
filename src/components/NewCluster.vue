@@ -1,60 +1,78 @@
 <template>
-  <!-- start -->
-  <section class="panel">
-    <p class="panel-heading">
-                 Register Cluster
-               </p>
+  <section class="box">
+    <section class="hero is-primary">
+      <div class="hero-body">
+        <div class="container">
+          <h1 class="title">
+            Register Cluster
+          </h1>
+        </div>
+      </div>
+    </section>
+    <br/>
     <div class="field">
-      <label class="label">Cluster name</label>
+      <p class="title">
+        Cluster name
+      </p>
       <div class="control">
         <input class="input" name="name" type="text"v-model="name" placeholder="Cluster Name" v-validate.initial="'required|alpha_dash'">
         <p class="text-danger" v-if="errors.has('name')">{{ errors.first('name') }}</p>
       </div>
     </div>
+    <hr/>
     <div class="field">
-      <label class="label">Cluster description</label>
+      <p class="title">
+        Cluster description
+      </p>
       <div class="control">
         <input class="input" name="description" type="text"v-model="description" placeholder="Cluster description" v-validate.initial="'required'">
         <p class="text-danger" v-if="errors.has('description')">{{ errors.first('description') }}</p>
       </div>
     </div>
+    <hr/>
     <div class="field">
-      <label class="label">Cluster endpoint</label>
+      <p class="title">
+        Cluster endpoint
+      </p>
       <div class="control">
         <input class="input" name="endpoint" type="text"v-model="endpoint" placeholder="Cluster endpoint" v-validate.initial="'required'">
         <p class="text-danger" v-if="errors.has('endpoint')">{{ errors.first('endpoint') }}</p>
       </div>
     </div>
+    <hr/>
     <div class="field">
-      <label class="label">Cert</label>
+      <p class="title">
+        Cert
+      </p>
       <div class="control">
-        <p class="text">Cert</p>
         <input name="cert" type="file" @change='readCertFile("cert", $event)' v-validate.initial="'required'">
         <p class="text-danger" v-if="errors.has('cert')">{{ errors.first('cert') }}</p>
       </div>
     </div>
+    <hr/>
     <div class="field">
-      <label class="label">Key</label>
+      <p class="title">
+        Key
+      </p>
       <div class="control">
-        <p class="text">Key</p>
         <input name="key" type="file" @change='readCertFile("key", $event)' v-validate.initial="'required'">
         <p class="text-danger" v-if="errors.has('key')">{{ errors.first('key') }}</p>
       </div>
     </div>
+    <hr/>
     <div class="field">
-      <label class="label">Ca</label>
+      <p class="title">
+        Ca
+      </p>
       <div class="control">
-        <p class="text">Ca</p>
         <input name="ca" type="file" @change='readCertFile("ca", $event)' v-validate.initial="'required'">
         <p class="text-danger" v-if="errors.has('ca')">{{ errors.first('ca') }}</p>
       </div>
     </div>
-    <br/>
+    <hr/>
     <button class="button is-primary" v-on:click="submit" :disabled="errors.any()">Register Cluster</button>
     <router-link class="button" :to='"/projects/"+this.$route.params.id'>Back</router-link>
   </section>
-
-  <!-- end -->
 </template>
 
 <script type = "text/javascript" >
@@ -67,7 +85,6 @@
   Vue.use(VeeValidate)
 
   export default {
-    name: 'new-project',
     data () {
       return {
         name: '',

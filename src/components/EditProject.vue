@@ -1,16 +1,32 @@
 <template>
-  <div class="panel-block">
-    <p class="panel-heading">Edit Project</p>
+  <div class="box">
+    <section class="hero is-primary">
+      <div class="hero-body">
+        <div class="container">
+          <h1 class="title">
+            Edit Project
+          </h1>
+        </div>
+      </div>
+    </section>
     <div id="project">
+      <p class="title">
+        Name
+      </p>
       <p class="control">
         <input class="input" name="name" type="text" v-model="name" placeholder="Name" v-validate.initial="'required|alpha_dash'">
         <p class="text-danger" v-if="errors.has('name')">{{ errors.first('name') }}</p>
+      </p>
+      <hr/>
+      <p class="title">
+        Description
       </p>
       <p class="control">
         <input class="input" name="description" type="text" v-model="description" placeholder="Description" v-validate.initial="'required'">
         <p class="text-danger" v-if="errors.has('description')">{{ errors.first('description') }}</p>
       </p>
       <button class="button is-primary" v-on:click="submit" :disabled="errors.any()">Edit Project</button>
+      <hr/>
       <router-link class="button" :to='"/projects/"+this.$route.params.id'>Back</router-link>
     </div>
   </div>
@@ -26,7 +42,6 @@
   Vue.use(VeeValidate)
 
   export default {
-    name: 'edit-project',
     data () {
       return {
         name: '',

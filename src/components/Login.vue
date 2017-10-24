@@ -1,7 +1,11 @@
 <template>
-  <div class="login">
-    <button v-on:click="login">Login</button>
-    <button v-on:click="logout">Logout</button>
+  <div class="section is-fullwidth">
+    <p>
+      <button class="button is-primary is-large is-outlined is-fullwidth" v-on:click="login">Login</button>
+    </p>
+    <p>
+      <button class="button is-primary is-large is-outlined is-fullwidth" v-on:click="logout">Logout</button>
+    </p>
   </div>
 </template>
 

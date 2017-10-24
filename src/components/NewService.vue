@@ -1,80 +1,100 @@
 <template>
   <section class="box">
-    <p class="panel-heading">Register Service</p>
-    <div class="box" id="service">
-      <label class="label">
-        Name:
-      </label>
-      <p class="control">
-        <input class="input" name="name" type="text" v-model="name" placeholder="Name" v-validate.initial="'required|alpha_dash'">
-        <p class="text-danger" v-if="errors.has('name')">{{ errors.first('name') }}</p>
-      </p>
-      <p class="control">
-        <input  type="radio" id="one" value="true" v-model="managed">
-        <label class="radio" for="one">Managed</label>
-        <input type="radio" id="two" value="false" v-model="managed">
-        <label class="radio" for="two">Unmanaged</label>
-      </p>
-      <label class="label">
-        Latitude:
-      </label>
-      <p class="control">
-        <input class="input" name="latitude" type="text" v-model="latitude" v-validate.initial="'required|numeric'">
-        <p class="text-danger" v-if="errors.has('latitude')">{{ errors.first('latitude') }}</p>
-      </p>
-      <label class="label">
-        Longitude:
-      </label>
-      <p class="control">
-        <input class="input" name="longitude" type="text" v-model="longitude" v-validate.initial="'required|numeric'">
-        <p class="text-danger" v-if="errors.has('longitude')">{{ errors.first('longitude') }}</p>
-      </p>
-      <label class="label">
-        Cluster
-      </label>
-      <p class="control">
-        <span class="select">
-          <select v-model="cluster_id">
-            <option disabled value="">Select a cluster</option>
-            <option v-for="cluster in clusters" v-bind:value="cluster.id">
-              {{ cluster.name }}
-            </option>
-          </select>
-        </span>
-      </p>
-      <p class="text-danger" v-if="clusters.length === 0">You need to register a cluster before registering or deploying services</p>
-      <label class="label">
-         Service Type:
-      </label>
-      <p class="control">
-        <span class="select">
-          <select v-model="service_type_id" @change="getConfigTemplate">
-            <option v-for="service_type in service_types" v-bind:value="service_type.id">
-              {{ service_type.name }}
-            </option>
-          </select>
-        </span>
-      </p>
-      <p class="text-danger" v-if="service_types.length === 0">No services to deploy</p>
-      <div class="notification" v-if="env_variables">
-        <p class="control" v-for="envVar in env_variables">
-          {{ envVar.name }} <b v-if="envVar.required">(Required)</b>: <input class="input" type="text" v-model="configuration[envVar.variable]" v-validate.initial="checkIfEnvRequired(envVar)">
-        </p>
+    <section class="hero is-primary">
+      <div class="hero-body">
+        <div class="container">
+          <h1 class="title">
+            Register Service
+          </h1>
+        </div>
       </div>
-      <div class="notification" v-if="linked_services">
-        <p class="control" v-for="linkedService in linked_services">
-          {{ linkedService.name }} <b v-if="linkedService.required">(Required)</b>
-          <br/>
-          <span class="select">
-            <select v-model="configuration[linkedService.as]">
-              <option v-for="service in services" v-bind:value="service[linkedService.retrieve]">
-                {{ service.name }}
-              </option>
-            </select>
-          </span>
-        </p>
-        <p class="text-danger" v-if="services.length === 0">You must register some services to link to this one</p>
-      </div>
+    </section>
+    <br/>
+    <p class="title">
+      Name
+    </p>
+    <p class="control">
+      <input class="input" name="name" type="text" v-model="name" placeholder="Name" v-validate.initial="'required|alpha_dash'">
+      <p class="text-danger" v-if="errors.has('name')">{{ errors.first('name') }}</p>
+    </p>
+    <hr/>
+    <p class="title">
+      Managed
+    </p>
+    <p class="control">
+      <input  type="radio" id="one" value="true" v-model="managed">
+      <label class="radio" for="one">Managed</label>
+      <input type="radio" id="two" value="false" v-model="managed">
+      <label class="radio" for="two">Unmanaged</label>
+    </p>
+    <hr/>
+    <p class="title">
+      Latitude
+    </p>
+    <p class="control">
+      <input class="input" name="latitude" type="text" v-model="latitude" v-validate.initial="'required|numeric'">
+      <p class="text-danger" v-if="errors.has('latitude')">{{ errors.first('latitude') }}</p>
+    </p>
+    <hr/>
+    <p class="title">
+      Longitude
+    </p>
+    <p class="control">
+      <input class="input" name="longitude" type="text" v-model="longitude" v-validate.initial="'required|numeric'">
+      <p class="text-danger" v-if="errors.has('longitude')">{{ errors.first('longitude') }}</p>
+    </p>
+    <hr/>
+    <p class="title">
+      Cluster
+    </p>
+    <p class="control">
+      <span class="select">
+        <select v-model="cluster_id">
+          <option disabled value="">Select a cluster</option>
+          <option v-for="cluster in clusters" v-bind:value="cluster.id">
+            {{ cluster.name }}
+          </option>
+        </select>
+      </span>
+    </p>
+    <p class="text-danger" v-if="clusters.length === 0">You need to register a cluster before registering or deploying services</p>
+    <hr/>
+    <p class="title">
+      Service Type
+    </p>
+    <p class="control">
+      <span class="select">
+        <select v-model="service_type_id" @change="getConfigTemplate">
+          <option v-for="service_type in service_types" v-bind:value="service_type.id">
+            {{ service_type.name }}
+          </option>
+        </select>
+      </span>
+    </p>
+    <p class="text-danger" v-if="service_types.length === 0">No services to deploy</p>
+    <hr/>
+    <div v-if="env_variables" v-for="envVar in env_variables">
+      <p class="title">
+        {{ envVar.name }} <b v-if="envVar.required">(Required)</b>
+      </p>
+      <p class="control">
+        <input class="input" type="text" v-model="configuration[envVar.variable]" v-validate.initial="checkIfEnvRequired(envVar)">
+      </p>
+      <hr/>
+    </div>
+    <div v-if="linked_services" v-for="linkedService in linked_services">
+      <p class="title">
+        {{ linkedService.name }} <b v-if="linkedService.required">(Required)</b>
+      </p>
+      <span class="select">
+        <select v-model="configuration[linkedService.as]">
+          <option v-for="service in services" v-bind:value="service[linkedService.retrieve]">
+            {{ service.name }}
+          </option>
+        </select>
+      </span>
+      <p class="text-danger" v-if="services.length === 0">You must register some services to link to this one</p>
+      <hr/>
     </div>
     <button class="button is-primary" v-show="!deploying" v-on:click="submit" :disabled="errors.any() || cannotRegister || noLinkableServices">Register Service</button>
     <button class="button is-primary" v-show="!deploying" v-on:click="submitAndDeploy" :disabled="errors.any() || cannotRegister || noLinkableServices">Register and Deploy Service</button>
@@ -89,7 +109,6 @@
   import router from '../router'
 
   export default {
-    name: 'new-service',
     created () {
       var projectId = this.$route.params.id
       var getConfigTemplate = this.getConfigTemplate

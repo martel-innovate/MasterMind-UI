@@ -1,31 +1,64 @@
 <template>
-  <div class="panel-block">
-    <p class="panel-heading">Edit Cluster</h1>
+  <div class="box">
+    <section class="hero is-primary">
+      <div class="hero-body">
+        <div class="container">
+          <h1 class="title">
+            Edit Cluster
+          </h1>
+        </div>
+      </div>
+    </section>
+    <br/>
     <div id="cluster">
+      <p class="title">
+        Description
+      </p>
       <p class="control">
-        Cluster Name: <input class="input" name="name" type="text" v-model="name" v-validate.initial="'required|alpha_dash'">
+        <input class="input" name="name" type="text" v-model="name" v-validate.initial="'required|alpha_dash'">
         <p class="text-danger" v-if="errors.has('name')">{{ errors.first('name') }}</p>
       </p>
+      <hr/>
+      <p class="title">
+        Cluster Description
+      </p>
       <p class="control">
-        Cluster Description: <input class="input" name="description" type="text" v-model="description" v-validate.initial="'required'">
+        <input class="input" name="description" type="text" v-model="description" v-validate.initial="'required'">
         <p class="text-danger" v-if="errors.has('description')">{{ errors.first('description') }}</p>
       </p>
+      <hr/>
+      <p class="title">
+        Cluster Endpoint
+      </p>
       <p class="control">
-        Cluster Endpoint: <input class="input" name="endpoint" type="text" v-model="endpoint" v-validate.initial="'required'">
+        <input class="input" name="endpoint" type="text" v-model="endpoint" v-validate.initial="'required'">
         <p class="text-danger" v-if="errors.has('endpoint')">{{ errors.first('endpoint') }}</p>
       </p>
+      <hr/>
+      <p class="title">
+        Cert
+      </p>
       <p class="control">
-        Cert: <textarea class="textarea" name="cert" rows="4" cols="50" v-model="cert" v-validate.initial="'required'"/>
+        <textarea class="textarea" name="cert" rows="4" cols="50" v-model="cert" v-validate.initial="'required'"/>
         <p class="text-danger" v-if="errors.has('cert')">{{ errors.first('cert') }}</p>
       </p>
+      <hr/>
+      <p class="title">
+        Key
+      </p>
       <p class="control">
-        Key: <textarea class="textarea" name="key" rows="4" cols="50" v-model="key" v-validate.initial="'required'"/>
+        <textarea class="textarea" name="key" rows="4" cols="50" v-model="key" v-validate.initial="'required'"/>
         <p class="text-danger" v-if="errors.has('key')">{{ errors.first('key') }}</p>
       </p>
+      <hr/>
+      <p class="title">
+        Ca
+      </p>
       <p class="control">
-        Ca: <textarea class="textarea" name="ca" rows="4" cols="50" v-model="ca" v-validate.initial="'required'"/>
+        <textarea class="textarea" name="ca" rows="4" cols="50" v-model="ca" v-validate.initial="'required'"/>
         <p class="text-danger" v-if="errors.has('ca')">{{ errors.first('ca') }}</p>
       </p>
+      <hr/>
       <button class="button is-primary" v-on:click="submit" :disabled="errors.any()">Edit Cluster</button>
       <router-link class="button" :to='"/projects/"+this.$route.params.project_id+"/clusters/"+this.$route.params.cluster_id'>Back</router-link>
     </div>
@@ -42,7 +75,6 @@
   Vue.use(VeeValidate)
 
   export default {
-    name: 'edit-cluster',
     data () {
       return {
         name: '',

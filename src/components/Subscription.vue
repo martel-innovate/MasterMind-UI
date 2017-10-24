@@ -1,60 +1,90 @@
 <template>
-  <div class="section is-fullwidth">
+  <div class="box is-fullwidth">
     <section class="hero is-primary">
       <div class="hero-body">
         <div class="container">
           <h1 class="title">
-            {{subscription.name}}
+            Register Subscription
           </h1>
-          <h2 class="subtitle">
-            {{subscription.subscription_id}}, {{subscription.status}}
-          </h2>
         </div>
       </div>
     </section>
     <br/>
-    <div class="box is-fullwidth">
-      <p>
-        Description: {{subscription.description}}
-      </p>
+    <p class="title">
+      Description
+    </p>
+    <p class="subtitle">
+      {{subscription.description}}
+    </p>
+    <hr/>
+    <p class="title">
+      Expires
+    </p>
+    <p class="subtitle">
+      {{subscription.expires}}
+    </p>
+    <hr/>
+    <p class="title">
+      Throttling
+    </p>
+    <p class="subtitle">
+      {{subscription.throttling}}
+    </p>
+    <hr/>
+    <div>
+      <div v-show="!showJSON">
+        <div v-if="subscription.subject">
+          <p class="title">
+            Entities
+          </p>
+          <p v-for="entity in subscription.subject.entities" class="subtitle">
+            {{ entity.id }}, {{ entity.type }}
+          </p>
+        </div>
+        <hr/>
+        <div v-if="subscription.subject">
+          <p class="title">
+            Condition
+          </p>
+          <p v-for="attr in subscription.subject.condition.attrs" class="subtitle">
+            {{ attr }}
+          </p>
+        </div>
+      </div>
+      <div v-show="showJSON">
+        <p>
+          <code style="white-space: pre-wrap">{{subscription.subject}}</code>
+        </p>
+      </div>
     </div>
-    <div class="box is-fullwidth">
-      <p>
-        Expires: {{subscription.expires}}
-      </p>
+    <hr/>
+    <div>
+      <div v-show="!showJSON">
+        <p class="title">
+          Notification endpoint
+        </p>
+        <p class="subtitle" v-if="subscription.notification">
+          {{subscription.notification.http.url}}
+        </p>
+        </p>
+      </div>
+      <div v-show="showJSON">
+        <p>
+          <code style="white-space: pre-wrap">{{subscription.notification}}</code>
+        </p>
+      </div>
     </div>
-    <div class="box is-fullwidth">
-      <p>
-        Throttling: {{subscription.throttling}}
-      </p>
-    </div>
-    <div class="box is-fullwidth">
-      <p>
-        Subject:
-      </p>
-      <p>
-        <code style="white-space: pre-wrap">{{subscription.subject}}</code>
-      </p>
-    </div>
-    <div class="box is-fullwidth">
-      <p>
-        Notification:
-      </p>
-      <p>
-        <code style="white-space: pre-wrap">{{subscription.notification}}</code>
-      </p>
-    </div>
+    <hr/>
+    <button class="button" v-show="!showJSON" v-on:click="showJSON = true">Show JSON</button>
+    <button class="button" v-show="showJSON" v-on:click="showJSON = false">Hide JSON</button>
+    <hr/>
     <div class="panel-block">
-      <button class="button is-primary" v-show="this.subscription.subscription_id === 'pending'" v-on:click="registerSubscription"><b>Register Subscription</b></button>
+      <router-link class="button" :to='"/projects/"+this.$route.params.project_id'>Back</router-link>
+      <router-link class="button" :to='"/projects/"+this.$route.params.project_id+"/subscriptions/"+subscription.id+"/edit"'>Edit Subscription</router-link>
+      <button class="button is-primary" v-show="this.subscription.subscription_id === 'pending'" v-on:click="registerSubscription"><b>Activate Subscription</b></button>
       <button class="button is-primary" v-show="this.subscription.subscription_id !== 'pending' && this.subscription.status === 'inactive'" v-on:click="activateSubscription"><b>Activate Subscription</b></button>
       <button class="button is-primary" v-show="this.subscription.subscription_id !== 'pending' && this.subscription.status === 'active'" v-on:click="deactivateSubscription"><b>Deactivate Subscription</b></button>
-    </div>
-    <div class="panel-block">
-      <router-link class="button" :to='"/projects/"+this.$route.params.project_id+"/subscriptions/"+subscription.id+"/edit"'>Edit Subscription</router-link>
       <button v-on:click="deleteSubscription" class="button is-danger">Delete</button>
-    </div>
-    <div class="panel-block">
-       <router-link class="button" :to='"/projects/"+this.$route.params.project_id'>Back</router-link>
     </div>
   </div>
 </template>
@@ -64,15 +94,19 @@
   import auth from '../auth'
   import router from '../router'
   export default {
-    name: 'subscription',
     created () {
       axios.get(auth.getAPIUrl() + 'v1/projects/' + this.$route.params.project_id + '/ngsi_subscriptions/' + this.$route.params.subscription_id, {headers: {'Authorization': auth.getAuthHeader()}})
-      .then(response => { this.subscription = response.data })
+      .then(response => {
+        this.subscription = response.data
+        this.subscription.subject = JSON.parse(this.subscription.subject)
+        this.subscription.notification = JSON.parse(this.subscription.notification)
+      })
       .catch(error => { console.log(error) })
     },
     data () {
       return {
-        subscription: {}
+        subscription: {},
+        showJSON: false
       }
     },
     methods: {

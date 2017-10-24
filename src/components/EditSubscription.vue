@@ -1,43 +1,72 @@
 <template>
-  <div class="panel-block">
-    <p class="panel-heading">Edit Subscription</h1>
+  <div class="box">
+    <section class="hero is-primary">
+      <div class="hero-body">
+        <div class="container">
+          <h1 class="title">
+            Edit Subscription
+          </h1>
+        </div>
+      </div>
+    </section>
+    <br/>
     <div id="cluster">
+      <p class="title">
+        Subscription Name
+      </p>
       <p class="control">
-        Subscription Name: <input class="input" name="name" type="text" v-model="name" v-validate.initial="'required|alpha_dash'">
+        <input class="input" name="name" type="text" v-model="name" v-validate.initial="'required|alpha_dash'">
         <p class="text-danger" v-if="errors.has('name')">{{ errors.first('name') }}</p>
       </p>
+      <hr/>
+      <p class="title">
+        Subscription Description
+      </p>
       <p class="control">
-        Subscription Description: <input class="input" name="description" type="text" v-model="description" v-validate.initial="'required'">
+        <input class="input" name="description" type="text" v-model="description" v-validate.initial="'required'">
         <p class="text-danger" v-if="errors.has('description')">{{ errors.first('description') }}</p>
       </p>
+      <hr/>
       <div class="field">
-        <label class="label">Subscription expires</label>
+        <p class="title">
+          Subscription Expires
+        </p>
         <div class="control">
           <input class="input" name="expires" type="text"v-model="expires" placeholder="Subscription expires" v-validate.initial="'required'">
           <p class="text-danger" v-if="errors.has('expires')">{{ errors.first('expires') }}</p>
         </div>
       </div>
+      <hr/>
       <div class="field">
-        <label class="label">Subscription throttling</label>
+        <p class="title">
+          Subscription Throttling
+        </p>
         <div class="control">
           <input class="input" name="throttling" type="text"v-model="throttling" placeholder="Subscription throttling" v-validate.initial="'required|numeric'">
           <p class="text-danger" v-if="errors.has('throttling')">{{ errors.first('throttling') }}</p>
         </div>
       </div>
+      <hr/>
       <div class="field">
-        <label class="label">Subscription subject</label>
+        <p class="title">
+          Subscription subject
+        </p>
         <div class="control">
           <textarea class="textarea" name="subject" rows="4" cols="50" v-model="subject" v-validate.initial="'required|checkIfValidJson'"/>
           <p class="text-danger" v-if="errors.has('subject')">{{ errors.first('subject') }}</p>
         </div>
       </div>
+      <hr/>
       <div class="field">
-        <label class="label">Subscription notification</label>
+        <p class="title">
+          Subscription notification
+        </p>
         <div class="control">
           <textarea class="textarea" name="notification" rows="4" cols="50" v-model="notification" v-validate.initial="'required|checkIfValidJson'"/>
           <p class="text-danger" v-if="errors.has('notification')">{{ errors.first('notification') }}</p>
         </div>
       </div>
+      <hr/>
       <button class="button is-primary" v-on:click="submit" :disabled="errors.any()">Edit Subscription</button>
       <router-link class="button" :to='"/projects/"+this.$route.params.project_id+"/subscriptions/"+this.$route.params.subscription_id'>Back</router-link>
     </div>
@@ -69,7 +98,6 @@
   Vue.use(VeeValidate)
 
   export default {
-    name: 'edit-subscription',
     data () {
       return {
         name: '',
