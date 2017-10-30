@@ -1,6 +1,6 @@
 <template>
   <div id="app" class="columns">
-    <aside class="column is-3 aside hero is-fullheight is-hidden-mobile">
+    <aside class="column is-2 aside hero is-fullheight is-hidden-mobile">
       <div>
         <div class="main">
           <div class="title">MasterMind</div>
@@ -22,7 +22,7 @@
         </div>
       </nav>
       <div class="columns is-mobile">
-        <div class="column is-three-quarters is-offset-1">
+        <div class="column is-10 is-offset-1">
           <br/>
           <router-view></router-view>
         </div>

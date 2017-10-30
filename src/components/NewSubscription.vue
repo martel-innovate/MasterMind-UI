@@ -168,12 +168,12 @@
             expires: this.expires,
             throttling: this.throttling,
             service_id: this.service_id,
-            status: 'inactive'
+            status: 'unregistered'
           }
         })
         .then(function (response) {
           console.log(response.data)
-          router.push('/projects/' + projectId)
+          router.push('/projects/' + projectId + '/subscriptions')
         })
         .catch(function (error) {
           console.log(error)

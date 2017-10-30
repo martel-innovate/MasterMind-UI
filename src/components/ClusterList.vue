@@ -3,7 +3,7 @@
   <section class="hero is-primary">
     <div class="hero-body has-text-centered">
       <h1 class="title">
-        Registered Clusters
+        {{project.name}} Clusters
       </h1>
       <h2 class="subtitle">
         The clusters registered to deploy services on
@@ -11,14 +11,26 @@
     </div>
   </section>
   <br/>
-  <div>
-    <ul>
-      <li v-for="cluster in clusters">
-        <router-link class="button is-primary is-large is-outlined is-fullwidth" :to='"/projects/"+$route.params.id+"/clusters/"+cluster.id'>{{cluster.name}}</router-link>
-        <br/>
-      </li>
-    </ul>
-  </div>
+  <input v-model="searchQuery" placeholder="Search...">
+  <hr/>
+  <table class="table">
+    <thead>
+      <tr class="subtitle">
+        <td>Name</td>
+        <td>Endpoint</td>
+      </tr>
+    </thead>
+    <tbody>
+      <tr v-for="cluster in filterClusters(clusters, searchQuery)">
+        <td>
+          <router-link :to='"/projects/"+$route.params.id+"/clusters/"+cluster.id'>{{cluster.name}}</router-link>
+        </td>
+        <td>
+          {{cluster.endpoint}}
+        </td>
+      </tr>
+    </tbody>
+  </table>
   <hr/>
   <router-link class="button" :to='"/projects/"+$route.params.id'>Back</router-link>
   <router-link class="button" :to='"/projects/"+$route.params.id+"/clusters/new"'>Register Cluster</router-link>
@@ -30,13 +42,25 @@
   import auth from '../auth'
   export default {
     created () {
+      axios.get(auth.getAPIUrl() + 'v1/projects/' + this.$route.params.id, {headers: {'Authorization': auth.getAuthHeader()}})
+      .then(response => { this.project = response.data })
+      .catch(error => { console.log(error) })
       axios.get(auth.getAPIUrl() + 'v1/projects/' + this.$route.params.id + '/clusters', {headers: {'Authorization': auth.getAuthHeader()}})
       .then(response => { this.clusters = response.data })
       .catch(error => { console.log(error) })
     },
     data () {
       return {
-        clusters: []
+        project: {},
+        clusters: [],
+        searchQuery: ''
+      }
+    },
+    methods: {
+      filterClusters: function (clusters, searchQuery) {
+        return clusters.filter(function (cluster) {
+          return cluster.name.includes(searchQuery)
+        })
       }
     }
   }

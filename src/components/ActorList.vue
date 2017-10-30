@@ -3,7 +3,7 @@
   <section class="hero is-primary">
     <div class="hero-body has-text-centered">
       <h1 class="title">
-        Registered Actors
+        {{project.name}} Actors
       </h1>
       <h2 class="subtitle">
         The actors registered to this project, and their roles within it
@@ -11,31 +11,46 @@
     </div>
   </section>
   <br/>
-  <div>
-    <p v-for="actor in actors" class="subtitle">
-      <button class="button is-danger" v-on:click="removeActor(actor.roleId)">-</button>
-      {{actor.actor.fullname}}:
-      <select v-model="actor.role" @change="changeActorRole(actor.roleId, $event)">
-        <option v-bind:value="'Admin'">
-          Admin
-        </option>
-        <option v-bind:value="'User'">
-          User
-        </option>
-      </select>
-    </p>
-    <div class="actor-add" v-show="isAddingActor">
-      <hr/>
-      <form id="actor">
-        <p>
-          Full Name: <input type="text" v-model="actorName">
-          <button v-on:click="addActor">Add</button>
-        </p>
-        <div v-show="actorDoesNotExistError" class="notification is-danger">
-          Actor does not exist...
-        </div>
-      </form>
-    </div>
+  <table class="table">
+    <thead>
+      <tr class="subtitle">
+        <td></td>
+        <td>Name</td>
+        <td>Role</td>
+      </tr>
+    </thead>
+    <tbody>
+      <tr v-for="actor in actors">
+        <td>
+          <button class="button is-danger" v-on:click="removeActor(actor.roleId)">-</button>
+        </td>
+        <td>
+          {{actor.actor.fullname}}
+        </td>
+        <td>
+          <select v-model="actor.role" @change="changeActorRole(actor.roleId, $event)">
+            <option v-bind:value="'Admin'">
+              Admin
+            </option>
+            <option v-bind:value="'User'">
+              User
+            </option>
+          </select>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="actor-add" v-show="isAddingActor">
+    <hr/>
+    <form id="actor">
+      <p>
+        Full Name: <input type="text" v-model="actorName">
+        <button v-on:click="addActor">Add</button>
+      </p>
+      <div v-show="actorDoesNotExistError" class="notification is-danger">
+        Actor does not exist...
+      </div>
+    </form>
   </div>
   <hr/>
   <router-link class="button" :to='"/projects/"+$route.params.id'>Back</router-link>
