@@ -4,8 +4,11 @@
       <div class="hero-body">
         <div class="container">
           <h1 class="title">
-            Register Subscription
+            {{subscription.name}}
           </h1>
+          <h2 class="subtitle">
+            {{subscription.status}}
+          </h2>
         </div>
       </div>
     </section>
@@ -79,7 +82,7 @@
     <button class="button" v-show="showJSON" v-on:click="showJSON = false">Hide JSON</button>
     <hr/>
     <div class="panel-block">
-      <router-link class="button" :to='"/projects/"+this.$route.params.project_id'>Back</router-link>
+      <router-link class="button" :to='"/projects/"+this.$route.params.project_id+"/subscriptions"'>Back</router-link>
       <router-link class="button" :to='"/projects/"+this.$route.params.project_id+"/subscriptions/"+subscription.id+"/edit"'>Edit Subscription</router-link>
       <button class="button is-primary" v-show="this.subscription.subscription_id === 'pending'" v-on:click="registerSubscription"><b>Activate Subscription</b></button>
       <button class="button is-primary" v-show="this.subscription.subscription_id !== 'pending' && this.subscription.status === 'inactive'" v-on:click="activateSubscription"><b>Activate Subscription</b></button>
