@@ -16,6 +16,9 @@
   <table class="table">
     <thead>
       <tr class="subtitle">
+        <td>
+          <input type="checkbox" v-model="allChecked" @click="checkAll">
+        </td>
         <td>Name</td>
         <td>Endpoint</td>
         <td>Service</td>
@@ -103,6 +106,7 @@
         subscriptions: [],
         searchQuery: '',
         checked: {},
+        allChecked: false,
         buttonsActive: true
       }
     },
@@ -116,6 +120,18 @@
         return subscriptions.filter(function (subscription) {
           return subscription.name.includes(searchQuery)
         })
+      },
+      checkAll: function () {
+        var filteredSubs = this.filterSubscriptions(this.subscriptions, this.searchQuery)
+        if (this.allChecked) {
+          filteredSubs.forEach(function (subscription) {
+            subscription.checked = true
+          })
+        } else {
+          filteredSubs.forEach(function (subscription) {
+            subscription.checked = false
+          })
+        }
       },
       activateSubscription: function (event) {
         this.buttonsActive = false
