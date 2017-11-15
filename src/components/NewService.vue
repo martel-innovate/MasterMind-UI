@@ -22,43 +22,49 @@
       Managed
     </p>
     <p class="control">
-      <input  type="radio" id="one" value="true" v-model="managed">
-      <label class="radio" for="one">Managed</label>
-      <input type="radio" id="two" value="false" v-model="managed">
-      <label class="radio" for="two">Unmanaged</label>
-    </p>
-    <hr/>
-    <p class="title">
-      Latitude
-    </p>
-    <p class="control">
-      <input class="input" name="latitude" type="text" v-model="latitude" v-validate.initial="'required|numeric'">
-      <p class="text-danger" v-if="errors.has('latitude')">{{ errors.first('latitude') }}</p>
-    </p>
-    <hr/>
-    <p class="title">
-      Longitude
-    </p>
-    <p class="control">
-      <input class="input" name="longitude" type="text" v-model="longitude" v-validate.initial="'required|numeric'">
-      <p class="text-danger" v-if="errors.has('longitude')">{{ errors.first('longitude') }}</p>
-    </p>
-    <hr/>
-    <p class="title">
-      Cluster
-    </p>
-    <p class="control">
       <span class="select">
-        <select v-model="cluster_id">
-          <option disabled value="">Select a cluster</option>
-          <option v-for="cluster in clusters" v-bind:value="cluster.id">
-            {{ cluster.name }}
-          </option>
+        <select v-model="managed" @change="getConfigTemplate">
+          <option value="true">Managed</option>
+          <option value="false">Unmanaged</option>
         </select>
       </span>
     </p>
-    <p class="text-danger" v-if="clusters.length === 0">You need to register a cluster before registering or deploying services</p>
     <hr/>
+    <div v-if='managed == "true"'>
+      <p class="title">
+        Cluster
+      </p>
+      <p class="control">
+        <span class="select">
+          <select v-model="cluster_id">
+            <option disabled value="">Select a cluster</option>
+            <option v-for="cluster in clusters" v-bind:value="cluster.id">
+              {{ cluster.name }}
+            </option>
+          </select>
+        </span>
+      </p>
+      <p class="text-danger" v-if="clusters.length === 0">You need to register a cluster before registering or deploying services</p>
+      <hr/>
+    </div>
+    <div v-if='managed == "false"'>
+      <p class="title">
+        Service Endpoint
+      </p>
+      <p class="control">
+        <input class="input" name="endpoint" type="text" v-model="endpoint" placeholder="Endpoint" v-validate.initial="'required'">
+        <p class="text-danger" v-if="errors.has('endpoint')">{{ errors.first('endpoint') }}</p>
+      </p>
+      <hr/>
+      <p class="title">
+        Docker Service ID
+      </p>
+      <p class="control">
+        <input class="input" name="docker_service_id" type="text" v-model="docker_service_id" placeholder="Docker Service ID" v-validate.initial="'required'">
+        <p class="text-danger" v-if="errors.has('docker_service_id')">{{ errors.first('docker_service_id') }}</p>
+      </p>
+      <hr/>
+    </div>
     <p class="title">
       Service Type
     </p>
@@ -97,8 +103,9 @@
       <hr/>
     </div>
     <button class="button is-primary" v-show="!deploying" v-on:click="submit" :disabled="errors.any() || cannotRegister || noLinkableServices">Register Service</button>
-    <button class="button is-primary" v-show="!deploying" v-on:click="submitAndDeploy" :disabled="errors.any() || cannotRegister || noLinkableServices">Register and Deploy Service</button>
+    <button class="button is-primary" v-show='!deploying && managed == "true"' v-on:click="submitAndDeploy" :disabled="errors.any() || cannotRegister || noLinkableServices">Register and Deploy Service</button>
     <button class="button is-primary" v-show="deploying" disabled><b>DEPLOYING...</b></button>
+    <button class="button is-primary" v-on:click="printConfig">TEST</button>
     <router-link class="button" :to='"/projects/"+this.$route.params.id'>Back</router-link>
   </section>
 </template>
@@ -145,7 +152,7 @@
         name: '',
         configuration: {},
         status: 'Inactive',
-        managed: false,
+        managed: 'true',
         endpoint: '',
         latitude: 0,
         longitude: 0,
@@ -163,6 +170,9 @@
       }
     },
     methods: {
+      printConfig: function () {
+        console.log(this.endpoint)
+      },
       checkIfEnvRequired: function (envVar) {
         if (envVar.required) {
           return ('required')
@@ -171,29 +181,34 @@
       },
       getConfigTemplate: function () {
         const yaml = require('js-yaml')
-        // var projectId = this.$route.params.id
         var currentServiceType = {}
+        var managed = this.managed
         var allServices = this.services
         var currentServiceTypeId = this.service_type_id
-        this.configuration = {}
-        var configuration = this.configuration
         this.service_types.forEach(function (st) {
           if (currentServiceTypeId === st.id) {
             currentServiceType = st
           }
         })
         const config = yaml.safeLoad(currentServiceType.configuration_template)
-        this.env_variables = config.environment_variables
-        this.linked_services = config.services
+        var configuration = {}
+        var envVariables = []
+        var linkedServices = []
         if (config.environment_variables) {
           config.environment_variables.forEach(function (envVar) {
-            configuration[envVar.variable] = envVar.default
+            if (envVar.managed === (managed === 'true')) {
+              envVariables.push(envVar)
+              configuration[envVar.variable] = envVar.default
+            }
           })
         }
         if (config.services) {
           if (allServices.length > 0) {
             config.services.forEach(function (ser) {
-              configuration[ser.as] = allServices[0][ser.retrieve]
+              if (ser.managed === (managed === 'true')) {
+                linkedServices.push(ser)
+                configuration[ser.as] = allServices[0][ser.retrieve]
+              }
             })
             this.noLinkableServices = false
           } else {
@@ -202,6 +217,9 @@
         } else {
           this.noLinkableServices = false
         }
+        this.env_variables = envVariables
+        this.linked_services = linkedServices
+        this.configuration = configuration
       },
       submit: function (event) {
         if (this.errors.any()) {
@@ -209,6 +227,14 @@
           return
         }
         var projectId = this.$route.params.id
+        var endpoint = 'Not Deployed'
+        if (this.endpoint !== '') {
+          endpoint = this.endpoint
+        }
+        var dockerServiceId = 'Not Deployed'
+        if (this.docker_service_id !== '') {
+          dockerServiceId = this.docker_service_id
+        }
         axios({
           method: 'post',
           url: auth.getAPIUrl() + 'v1/projects/' + projectId + '/services',
@@ -222,8 +248,8 @@
             managed: this.managed,
             cluster_id: this.cluster_id,
             status: 'Inactive',
-            endpoint: 'Not deployed',
-            docker_service_id: 'Not Deployed'
+            endpoint: endpoint,
+            docker_service_id: dockerServiceId
           }
         })
         .then(function (response) {
