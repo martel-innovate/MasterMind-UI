@@ -15,6 +15,9 @@ export default {
     axios.get(LOGIN_URL)
     .then(response => {
       localStorage.setItem('api_token', response.data.auth_token)
+      var d = new Date()
+      d.setDate(d.getDate() + 1)
+      localStorage.setItem('api_token_expires', d)
       this.user.authenticated = true
     })
     .catch(error => { console.log(error) })
@@ -22,14 +25,19 @@ export default {
 
   logout () {
     localStorage.removeItem('api_token')
+    localStorage.removeItem('api_token_expires')
     this.user.authenticated = false
   },
 
   checkAuth () {
-    if (localStorage.getItem('api_token')) {
+    const currentTime = new Date()
+    const expirationTime = new Date(localStorage.getItem('api_token_expires'))
+    if (localStorage.getItem('api_token') && expirationTime > currentTime) {
       this.user.authenticated = true
+      return true
     } else {
       this.user.authenticated = false
+      return false
     }
   },
 

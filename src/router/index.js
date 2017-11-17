@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+import auth from '../auth'
 import Login from '@/components/Login'
 import ServiceCatalog from '@/components/ServiceCatalog'
 import ProjectList from '@/components/ProjectList'
@@ -22,7 +23,7 @@ import EditService from '@/components/EditService'
 
 Vue.use(Router)
 
-export default new Router({
+var router = new Router({
   routes: [
     {
       path: '/',
@@ -126,3 +127,13 @@ export default new Router({
     }
   ]
 })
+
+router.beforeEach((to, from, next) => {
+  if (auth.checkAuth() || to.path === '/login') {
+    next()
+  } else {
+    next('/login')
+  }
+})
+
+export default router
