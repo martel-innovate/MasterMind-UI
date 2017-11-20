@@ -1,8 +1,4 @@
-import axios from 'axios'
-
 const API_URL = process.env.API_URL
-
-const LOGIN_URL = API_URL + 'auth/login'
 
 export default {
 
@@ -10,17 +6,13 @@ export default {
     authenticated: false
   },
 
-  login (context, creds, redirect) {
+  login (token) {
     console.log('Env: ' + process.env.API_URL)
-    axios.get(LOGIN_URL)
-    .then(response => {
-      localStorage.setItem('api_token', response.data.auth_token)
-      var d = new Date()
-      d.setDate(d.getDate() + 1)
-      localStorage.setItem('api_token_expires', d)
-      this.user.authenticated = true
-    })
-    .catch(error => { console.log(error) })
+    localStorage.setItem('api_token', token)
+    var d = new Date()
+    d.setDate(d.getDate() + 1)
+    localStorage.setItem('api_token_expires', d)
+    this.user.authenticated = true
   },
 
   logout () {
