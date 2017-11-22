@@ -1,6 +1,17 @@
 <template>
   <div>
     <div class="box">
+      <section class="hero is-primary">
+        <div class="hero-body has-text-centered">
+          <h1 class="title">
+            Projects
+          </h1>
+          <h2 class="subtitle">
+            List of all projects available
+          </h2>
+        </div>
+      </section>
+      <br/>
       <table class="table">
         <tbody v-for="project in projects">
           <tr>

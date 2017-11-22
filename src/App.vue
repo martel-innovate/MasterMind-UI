@@ -3,10 +3,13 @@
     <aside class="column is-2 aside hero is-fullheight is-hidden-mobile">
       <div>
         <div class="main">
-          <div class="title">MasterMind</div>
-          <router-link class="item" to="/projects"><span class="name">Projects</span></router-link>
-          <router-link class="item" to="/login"><span class="name">Login</span></router-link>
-          <router-link class="item" to="/catalog"><span class="name">Service Catalog</span></router-link>
+          <div class="title">MASTERMIND</div>
+          <br/>
+          <router-link v-if="!actorIsAuthenticated()" class="item" to="/login"><span class="name">Login</span></router-link>
+          <router-link v-if="actorIsAuthenticated()" class="item" to="/login"><span class="name">Logout</span></router-link>
+          <hr/>
+          <router-link v-if="actorIsAuthenticated()" class="item" to="/projects"><span class="name">Projects</span></router-link>
+          <router-link v-if="actorIsAuthenticated()" class="item" to="/catalog"><span class="name">Service Catalog</span></router-link>
         </div>
       </div>
     </aside>
@@ -32,7 +35,13 @@
 </template>
 
 <script>
+import auth from './auth'
 export default {
-  name: 'app'
+  name: 'app',
+  methods: {
+    actorIsAuthenticated: function () {
+      return auth.checkAuth()
+    }
+  }
 }
 </script>
