@@ -105,7 +105,6 @@
     <button class="button is-primary" v-show="!deploying" v-on:click="submit" :disabled="errors.any() || cannotRegister || noLinkableServices">Register Service</button>
     <button class="button is-primary" v-show='!deploying && managed == "true"' v-on:click="submitAndDeploy" :disabled="errors.any() || cannotRegister || noLinkableServices">Register and Deploy Service</button>
     <button class="button is-primary" v-show="deploying" disabled><b>DEPLOYING...</b></button>
-    <button class="button is-primary" v-on:click="printConfig">TEST</button>
     <router-link class="button" :to='"/projects/"+this.$route.params.id'>Back</router-link>
   </section>
 </template>
@@ -170,9 +169,6 @@
       }
     },
     methods: {
-      printConfig: function () {
-        console.log(this.endpoint)
-      },
       checkIfEnvRequired: function (envVar) {
         if (envVar.required) {
           return ('required')

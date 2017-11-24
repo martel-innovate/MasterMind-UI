@@ -12,6 +12,7 @@
 
 <script type = "text/javascript" >
   import auth from '../auth'
+  import router from '../router'
   export default {
     name: 'login',
     created () {
@@ -19,6 +20,7 @@
       if (token) {
         auth.login(token)
         this.logged = true
+        router.push('/projects')
       }
     },
     data () {

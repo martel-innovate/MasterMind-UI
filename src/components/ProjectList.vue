@@ -73,6 +73,7 @@
   import auth from '../auth'
   import Vue from 'vue'
   import VeeValidate from 'vee-validate'
+  import router from '../router'
 
   Vue.use(VeeValidate)
 
@@ -108,7 +109,7 @@
         })
         .then(function (response) {
           console.log(response.data)
-          location.reload()
+          router.push('/projects/' + response.data.id)
         })
         .catch(function (error) {
           console.log(error)
