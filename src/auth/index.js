@@ -1,4 +1,4 @@
-const API_URL = process.env.API_URL
+const MASTERMIND_API_URI = process.env.MASTERMIND_API_URI
 
 export default {
 
@@ -7,7 +7,6 @@ export default {
   },
 
   login (token) {
-    console.log('Env: ' + process.env.API_URL)
     localStorage.setItem('api_token', token)
     var d = new Date()
     d.setDate(d.getDate() + 1)
@@ -38,6 +37,6 @@ export default {
   },
 
   getAPIUrl () {
-    return API_URL
+    return MASTERMIND_API_URI
   }
 }
