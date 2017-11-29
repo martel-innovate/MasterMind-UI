@@ -1,4 +1,4 @@
-const MASTERMIND_API_URI = process.env.MASTERMIND_API_URI
+const MASTERMIND_API_URI = 'http://' + process.env.MASTERMIND_API_HOST + ':' + process.env.MASTERMIND_API_PORT + '/'
 
 export default {
 

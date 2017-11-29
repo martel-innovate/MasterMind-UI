@@ -52,6 +52,7 @@
   import router from '../router'
   export default {
     created () {
+      console.log(auth.getAPIUrl())
       axios.get(auth.getAPIUrl() + 'v1/projects/' + this.$route.params.id, {headers: {'Authorization': auth.getAuthHeader()}})
       .then(response => { this.project = response.data })
       .catch(error => { console.log(error) })

@@ -164,6 +164,7 @@
         })
         .catch(error => {
           console.log(error)
+          /*
           axios({
             method: 'put',
             url: auth.getAPIUrl() + 'v1/projects/' + projectId + '/services/' + serviceId,
@@ -180,6 +181,7 @@
           .catch(function (error) {
             console.log(error)
           })
+          */
         })
       }
     }
