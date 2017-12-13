@@ -22,6 +22,23 @@
     </p>
     <hr/>
     <p class="title">
+      Service Type
+    </p>
+    <p class="subtitle">
+      The Type of Service to deploy. The available Types can be found in the MasterMind Catalog
+    </p>
+    <p class="control">
+      <span class="select">
+        <select v-model="service_type_id" @change="getConfigTemplate">
+          <option v-for="service_type in service_types" v-bind:value="service_type.id">
+            {{ service_type.name }}
+          </option>
+        </select>
+      </span>
+    </p>
+    <p class="text-danger" v-if="service_types.length === 0">No services to deploy</p>
+    <hr/>
+    <p class="title">
       Managed
     </p>
     <p class="subtitle">
@@ -84,23 +101,6 @@
       </p>
       <hr/>
     </div>
-    <p class="title">
-      Service Type
-    </p>
-    <p class="subtitle">
-      The Type of Service to deploy. The available Types can be found in the MasterMind Catalog
-    </p>
-    <p class="control">
-      <span class="select">
-        <select v-model="service_type_id" @change="getConfigTemplate">
-          <option v-for="service_type in service_types" v-bind:value="service_type.id">
-            {{ service_type.name }}
-          </option>
-        </select>
-      </span>
-    </p>
-    <p class="text-danger" v-if="service_types.length === 0">No services to deploy</p>
-    <hr/>
     <div v-if="env_variables" v-for="envVar in env_variables">
       <p class="title">
         {{ envVar.name }} <b v-if="envVar.required">(Required)</b>
