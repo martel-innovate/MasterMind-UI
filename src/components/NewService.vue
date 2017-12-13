@@ -206,6 +206,7 @@
       getConfigTemplate: function () {
         const yaml = require('js-yaml')
         var currentServiceType = {}
+        this.noLinkableServices = false
         var managed = this.managed
         var allServices = this.services
         var currentServiceTypeId = this.service_type_id
@@ -227,19 +228,19 @@
           })
         }
         if (config.services) {
+          config.services.forEach(function (ser) {
+            if (ser.managed === (managed === 'true')) {
+              linkedServices.push(ser)
+            }
+          })
           if (allServices.length > 0) {
-            config.services.forEach(function (ser) {
-              if (ser.managed === (managed === 'true')) {
-                linkedServices.push(ser)
-                configuration[ser.as] = allServices[0][ser.retrieve]
-              }
-            })
             this.noLinkableServices = false
+            linkedServices.forEach(function (ser) {
+              configuration[ser.as] = allServices[0][ser.retrieve]
+            })
           } else {
             this.noLinkableServices = true
           }
-        } else {
-          this.noLinkableServices = false
         }
         this.env_variables = envVariables
         this.linked_services = linkedServices
