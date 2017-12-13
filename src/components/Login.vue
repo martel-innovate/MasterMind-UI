@@ -20,7 +20,7 @@
       if (token) {
         auth.login(token)
         this.logged = true
-        router.push('/projects')
+        router.push('/')
       }
     },
     data () {
@@ -32,6 +32,7 @@
       logout: function (event) {
         auth.logout()
         this.logged = false
+        location.reload()
       }
     }
   }
