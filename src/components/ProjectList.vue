@@ -12,7 +12,7 @@
         </div>
       </section>
       <br/>
-      <table class="table">
+      <table v-if="!noProjects()" class="table">
         <tbody v-for="project in projects">
           <tr>
             <td>
@@ -21,8 +21,15 @@
           </tr>
         </tbody>
       </table>
+      <p v-if="noProjects()" class="field">
+        <a v-on:click="isActive = !isActive" class="button is-large is-outlined is-fullwidth">
+         <span>
+           Create your first Project
+         </span>
+        </a>
+      </p>
       <hr/>
-      <p class="field">
+      <p v-if="!noProjects()" class="field">
         <a v-on:click="isActive = !isActive" class="button">
          <span>
            New Project
@@ -114,6 +121,9 @@
         .catch(function (error) {
           console.log(error)
         })
+      },
+      noProjects: function () {
+        return (this.projects.length === 0)
       }
     }
   }
