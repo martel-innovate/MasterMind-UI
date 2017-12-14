@@ -42,7 +42,7 @@
       Managed
     </p>
     <p class="subtitle">
-      Whether this Service is managed or unmanaged. Managed Services are Deployed
+      Whether this Service is managed or unmanaged. Managed Services are deployed
       directly from MasterMind, while Unmanaged Services are already deployed, and
       thus only need to be registered
     </p>
@@ -93,7 +93,7 @@
         Docker Service ID
       </p>
       <p class="subtitle">
-        The ID of the unmanaged Service within Docker (e.g. the name of the stack in Docker Swarm)
+        The ID of the unmanaged Service within Docker. This is generally the Docker Swarm stack name
       </p>
       <p class="control">
         <input class="input" name="docker_service_id" type="text" v-model="docker_service_id" placeholder="Docker Service ID" v-validate.initial="'required'">

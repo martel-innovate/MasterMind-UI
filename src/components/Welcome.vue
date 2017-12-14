@@ -18,6 +18,9 @@
     <p>
       If you're a new user, you may proceed to the Projects page to create a new Project.
     </p>
+    <p>
+      For more on MasterMind, see <a href="http://mastermind-main.readthedocs.io/en/latest/">the full documentation</a>
+    </p>
   </div>
 </template>
 
