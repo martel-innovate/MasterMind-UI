@@ -13,13 +13,38 @@
     <p class="title">
       Name
     </p>
+    <p class="subtitle">
+      The name to assign to this Service
+    </p>
     <p class="control">
       <input class="input" name="name" type="text" v-model="name" placeholder="Name" v-validate.initial="'required|alpha_dash'">
       <p class="text-danger" v-if="errors.has('name')">{{ errors.first('name') }}</p>
     </p>
     <hr/>
     <p class="title">
+      Service Type
+    </p>
+    <p class="subtitle">
+      The Type of Service to deploy. The available Types can be found in the MasterMind Catalog
+    </p>
+    <p class="control">
+      <span class="select">
+        <select v-model="service_type_id" @change="getConfigTemplate">
+          <option v-for="service_type in service_types" v-bind:value="service_type.id">
+            {{ service_type.name }}
+          </option>
+        </select>
+      </span>
+    </p>
+    <p class="text-danger" v-if="service_types.length === 0">No services to deploy</p>
+    <hr/>
+    <p class="title">
       Managed
+    </p>
+    <p class="subtitle">
+      Whether this Service is managed or unmanaged. Managed Services are deployed
+      directly from MasterMind, while Unmanaged Services are already deployed, and
+      thus only need to be registered
     </p>
     <p class="control">
       <span class="select">
@@ -33,6 +58,10 @@
     <div v-if='managed == "true"'>
       <p class="title">
         Cluster
+      </p>
+      <p class="subtitle">
+        The Cluster to deploy the managed Service on. At least one Cluster needs
+        to be registered within this Project in order to deploy a Service
       </p>
       <p class="control">
         <span class="select">
@@ -51,6 +80,10 @@
       <p class="title">
         Service Endpoint
       </p>
+      <p class="subtitle">
+        The endpoint of the unmanaged Service to register, including port and protocol
+        (e.g. http://192.168.99.100:8080)
+      </p>
       <p class="control">
         <input class="input" name="endpoint" type="text" v-model="endpoint" placeholder="Endpoint" v-validate.initial="'required'">
         <p class="text-danger" v-if="errors.has('endpoint')">{{ errors.first('endpoint') }}</p>
@@ -59,29 +92,21 @@
       <p class="title">
         Docker Service ID
       </p>
+      <p class="subtitle">
+        The ID of the unmanaged Service within Docker. This is generally the Docker Swarm stack name
+      </p>
       <p class="control">
         <input class="input" name="docker_service_id" type="text" v-model="docker_service_id" placeholder="Docker Service ID" v-validate.initial="'required'">
         <p class="text-danger" v-if="errors.has('docker_service_id')">{{ errors.first('docker_service_id') }}</p>
       </p>
       <hr/>
     </div>
-    <p class="title">
-      Service Type
-    </p>
-    <p class="control">
-      <span class="select">
-        <select v-model="service_type_id" @change="getConfigTemplate">
-          <option v-for="service_type in service_types" v-bind:value="service_type.id">
-            {{ service_type.name }}
-          </option>
-        </select>
-      </span>
-    </p>
-    <p class="text-danger" v-if="service_types.length === 0">No services to deploy</p>
-    <hr/>
     <div v-if="env_variables" v-for="envVar in env_variables">
       <p class="title">
         {{ envVar.name }} <b v-if="envVar.required">(Required)</b>
+      </p>
+      <p class="subtitle">
+        {{ envVar.description }}
       </p>
       <p class="control">
         <input class="input" type="text" v-model="configuration[envVar.variable]" v-validate.initial="checkIfEnvRequired(envVar)">
@@ -91,6 +116,9 @@
     <div v-if="linked_services" v-for="linkedService in linked_services">
       <p class="title">
         {{ linkedService.name }} <b v-if="linkedService.required">(Required)</b>
+      </p>
+      <p class="subtitle">
+        {{ linkedService.description }}
       </p>
       <span class="select">
         <select v-model="configuration[linkedService.as]">
@@ -178,6 +206,7 @@
       getConfigTemplate: function () {
         const yaml = require('js-yaml')
         var currentServiceType = {}
+        this.noLinkableServices = false
         var managed = this.managed
         var allServices = this.services
         var currentServiceTypeId = this.service_type_id
@@ -199,19 +228,19 @@
           })
         }
         if (config.services) {
+          config.services.forEach(function (ser) {
+            if (ser.managed === (managed === 'true')) {
+              linkedServices.push(ser)
+            }
+          })
           if (allServices.length > 0) {
-            config.services.forEach(function (ser) {
-              if (ser.managed === (managed === 'true')) {
-                linkedServices.push(ser)
-                configuration[ser.as] = allServices[0][ser.retrieve]
-              }
-            })
             this.noLinkableServices = false
+            linkedServices.forEach(function (ser) {
+              configuration[ser.as] = allServices[0][ser.retrieve]
+            })
           } else {
             this.noLinkableServices = true
           }
-        } else {
-          this.noLinkableServices = false
         }
         this.env_variables = envVariables
         this.linked_services = linkedServices

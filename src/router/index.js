@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import auth from '../auth'
 import Login from '@/components/Login'
+import Welcome from '@/components/Welcome'
 import ServiceCatalog from '@/components/ServiceCatalog'
 import ProjectList from '@/components/ProjectList'
 import ActorList from '@/components/ActorList'
@@ -27,8 +28,8 @@ var router = new Router({
   routes: [
     {
       path: '/',
-      name: 'ProjectList',
-      component: ProjectList
+      name: 'Welcome',
+      component: Welcome
     },
     {
       path: '/catalog',

@@ -7,9 +7,9 @@
           <br/>
           <router-link v-if="!actorIsAuthenticated()" class="item" to="/login"><span class="name">Login</span></router-link>
           <router-link v-if="actorIsAuthenticated()" class="item" to="/login"><span class="name">Logout</span></router-link>
-          <hr/>
-          <router-link class="item" to="/projects"><span class="name">Projects</span></router-link>
-          <router-link class="item" to="/catalog"><span class="name">Service Catalog</span></router-link>
+          <hr v-if="actorIsAuthenticated()"/>
+          <router-link v-if="actorIsAuthenticated()" class="item" to="/projects"><span class="name">Projects</span></router-link>
+          <router-link v-if="actorIsAuthenticated()" class="item" to="/catalog"><span class="name">Service Catalog</span></router-link>
         </div>
       </div>
     </aside>

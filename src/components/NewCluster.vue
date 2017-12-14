@@ -14,6 +14,9 @@
       <p class="title">
         Cluster name
       </p>
+      <p class="subtitle">
+        The name to assign to this Cluster
+      </p>
       <div class="control">
         <input class="input" name="name" type="text"v-model="name" placeholder="Cluster Name" v-validate.initial="'required|alpha_dash'">
         <p class="text-danger" v-if="errors.has('name')">{{ errors.first('name') }}</p>
@@ -23,6 +26,9 @@
     <div class="field">
       <p class="title">
         Cluster description
+      </p>
+      <p class="subtitle">
+        A description to assign to this Cluster
       </p>
       <div class="control">
         <input class="input" name="description" type="text"v-model="description" placeholder="Cluster description" v-validate.initial="'required'">
@@ -34,6 +40,9 @@
       <p class="title">
         Cluster endpoint
       </p>
+      <p class="subtitle">
+        The endpoint of the master node of this Cluster, including port and protocol (e.g. tcp://192.168.99.100:2376)
+      </p>
       <div class="control">
         <input class="input" name="endpoint" type="text"v-model="endpoint" placeholder="Cluster endpoint" v-validate.initial="'required'">
         <p class="text-danger" v-if="errors.has('endpoint')">{{ errors.first('endpoint') }}</p>
@@ -43,6 +52,9 @@
     <div class="field">
       <p class="title">
         Cert
+      </p>
+      <p class="subtitle">
+        The cert.pem file for Docker's TLS
       </p>
       <div class="control">
         <input name="cert" type="file" @change='readCertFile("cert", $event)' v-validate.initial="'required'">
@@ -54,6 +66,9 @@
       <p class="title">
         Key
       </p>
+      <p class="subtitle">
+        The key.pem file for Docker's TLS
+      </p>
       <div class="control">
         <input name="key" type="file" @change='readCertFile("key", $event)' v-validate.initial="'required'">
         <p class="text-danger" v-if="errors.has('key')">{{ errors.first('key') }}</p>
@@ -63,6 +78,9 @@
     <div class="field">
       <p class="title">
         Ca
+      </p>
+      <p class="subtitle">
+        The ca.pem file for Docker's TLS
       </p>
       <div class="control">
         <input name="ca" type="file" @change='readCertFile("ca", $event)' v-validate.initial="'required'">
