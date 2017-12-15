@@ -11,7 +11,8 @@
     </div>
   </section>
   <br/>
-  <input v-model="searchQuery" placeholder="Search...">
+  <router-link class="button" :to='"/projects/"+$route.params.id'>Back</router-link>
+  <input class="is-pulled-right" v-model="searchQuery" placeholder="Search...">
   <hr/>
   <table class="table">
     <thead>
@@ -65,8 +66,7 @@
   <button v-if="buttonsActive" class="button" v-on:click="deactivateSubscription"><b>Deactivate</b></button>
   <button v-if="buttonsActive" class="button is-danger" v-on:click="deleteSubscription"><b>Delete Selected</b></button>
   <hr/>
-  <router-link class="button" :to='"/projects/"+$route.params.id'>Back</router-link>
-  <router-link class="button" :to='"/projects/"+$route.params.id+"/subscriptions/new"'>Register Subscription</router-link>
+  <router-link class="button is-primary" :to='"/projects/"+$route.params.id+"/subscriptions/new"'>Register Subscription</router-link>
 </div>
 </template>
 

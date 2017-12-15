@@ -11,7 +11,8 @@
     </div>
   </section>
   <br/>
-  <input v-model="searchQuery" placeholder="Search...">
+  <router-link class="button" :to='"/projects/"+$route.params.id'>Back</router-link>
+  <input class="is-pulled-right" v-model="searchQuery" placeholder="Search...">
   <hr/>
   <table class="table">
     <thead>
@@ -48,8 +49,7 @@
     </tbody>
   </table>
   <hr/>
-  <router-link class="button" :to='"/projects/"+$route.params.id'>Back</router-link>
-  <router-link class="button" :to='"/projects/"+$route.params.id+"/services/new"'>Register Service</router-link>
+  <router-link class="button is-primary" :to='"/projects/"+$route.params.id+"/services/new"'>Register Service</router-link>
 </div>
 </template>
 
