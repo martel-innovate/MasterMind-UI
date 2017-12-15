@@ -319,10 +319,14 @@
             console.log(response.data)
             router.push('/projects/' + projectId)
           })
-          .catch(error => { console.log(error) })
+          .catch(error => {
+            alert('SERVICE WAS CREATED, BUT DEPLOY TO CLUSTER FAILED: ' + error.response.data.message)
+            console.log(error.response.data.message)
+            router.push('/projects/' + projectId)
+          })
         })
         .catch(function (error) {
-          console.log(error)
+          console.log(error.response.data.message)
         })
       }
     }

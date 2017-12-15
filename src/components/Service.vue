@@ -148,7 +148,11 @@
           console.log(response.data)
           router.push('/projects/' + projectId)
         })
-        .catch(error => { console.log(error) })
+        .catch(error => {
+          alert('DEPLOYMENT FAILED: ' + error.response.data.message)
+          console.log(error.response.data.message)
+          this.deploying = false
+        })
       },
       getService: function () {
         if (this.service.endpoint === 'Not deployed') {
