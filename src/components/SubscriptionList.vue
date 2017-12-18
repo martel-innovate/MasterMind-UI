@@ -64,7 +64,7 @@
   <button v-if="!buttonsActive" class="button is-danger is-loading" disabled></button>
   <button v-if="buttonsActive" class="button" v-on:click="activateSubscription"><b>Activate</b></button>
   <button v-if="buttonsActive" class="button" v-on:click="deactivateSubscription"><b>Deactivate</b></button>
-  <button v-if="buttonsActive" class="button is-danger" v-on:click="deleteSubscription"><b>Delete Selected</b></button>
+  <button v-if="buttonsActive" class="button is-danger" v-on:click="deleteSubscription"><b>Delete</b></button>
   <hr/>
   <router-link class="button is-primary" :to='"/projects/"+$route.params.id+"/subscriptions/new"'>Register Subscription</router-link>
 </div>

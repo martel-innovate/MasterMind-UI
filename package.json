@@ -19,7 +19,9 @@
     "indent-string": "^3.2.0",
     "vee-validate": "^2.0.0-rc.18",
     "vue": "^2.4.2",
-    "vue-router": "^2.7.0"
+    "vue-directive-tooltip": "^1.4.2",
+    "vue-router": "^2.7.0",
+    "vuejs-dialog": "^0.4.5"
   },
   "devDependencies": {
     "autoprefixer": "^7.1.2",

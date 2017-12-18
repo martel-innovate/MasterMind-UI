@@ -113,26 +113,33 @@
       }
     },
     methods: {
-      deleteService: function () {
+      deleteService: function (service) {
         var projectId = this.$route.params.project_id
-        var serviceId = this.$route.params.service_id
+        var serviceId = this.service.id
+        var clusterId = this.service.cluster_id
         var serviceName = this.service.name
-        if (this.service.endpoint !== 'Not deployed') {
-          axios.get(auth.getAPIUrl() + 'v1/projects/' + projectId + '/clusters/' + this.service.cluster_id + '/removestack?service_id=' + serviceId + '&service_name=' + serviceName, {headers: {'Authorization': auth.getAuthHeader()}})
-          .then(response => {
-            console.log(response.data)
-            router.push('/projects/' + projectId)
+        var serviceEndpoint = this.service.endpoint
+        this.$dialog.confirm('Are you sure you want to delete the Service?', {okText: 'DELETE', cancelText: 'CANCEL'})
+        .then(function () {
+          if (serviceEndpoint !== 'Not Deployed') {
+            axios.get(auth.getAPIUrl() + 'v1/projects/' + projectId + '/clusters/' + clusterId + '/removestack?service_id=' + serviceId + '&service_name=' + serviceName, {headers: {'Authorization': auth.getAuthHeader()}})
+            .then(response => {
+              console.log(response.data)
+            })
+            .catch(error => { console.log(error) })
+          }
+          axios({
+            method: 'delete',
+            url: auth.getAPIUrl() + 'v1/projects/' + projectId + '/services/' + serviceId,
+            headers: { 'Authorization': auth.getAuthHeader() }
           })
-          .catch(error => { console.log(error) })
-        }
-        axios({
-          method: 'delete',
-          url: auth.getAPIUrl() + 'v1/projects/' + projectId + '/services/' + serviceId,
-          headers: { 'Authorization': auth.getAuthHeader() }
-        })
-        .then(function (response) {
-          console.log(response.data)
-          router.push('/projects/' + projectId)
+          .then(function (response) {
+            console.log(response.data)
+            router.push('/projects/' + projectId + '/services')
+          })
+          .catch(function (error) {
+            console.log(error)
+          })
         })
         .catch(function (error) {
           console.log(error)

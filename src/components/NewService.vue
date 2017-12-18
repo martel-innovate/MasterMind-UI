@@ -279,7 +279,7 @@
         })
         .then(function (response) {
           console.log(response.data)
-          router.push('/projects/' + projectId)
+          router.push('/projects/' + projectId + '/services')
         })
         .catch(function (error) {
           console.log(error)
@@ -317,12 +317,12 @@
           axios.get(auth.getAPIUrl() + 'v1/projects/' + projectId + '/clusters/' + clusterId + '/deploy?service_id=' + serviceId + '&service_name=' + name, {headers: {'Authorization': auth.getAuthHeader()}})
           .then(response => {
             console.log(response.data)
-            router.push('/projects/' + projectId)
+            router.push('/projects/' + projectId + '/services')
           })
           .catch(error => {
             alert('SERVICE WAS CREATED, BUT DEPLOY TO CLUSTER FAILED: ' + error.response.data.message)
             console.log(error.response.data.message)
-            router.push('/projects/' + projectId)
+            router.push('/projects/' + projectId + '/services')
           })
         })
         .catch(function (error) {

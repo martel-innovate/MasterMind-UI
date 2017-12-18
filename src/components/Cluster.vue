@@ -23,7 +23,7 @@
     <div class="panel-block">
       <router-link class="button" :to='"/projects/"+this.$route.params.project_id'>Back</router-link>
       <router-link class="button" :to='"/projects/"+this.$route.params.project_id+"/clusters/"+cluster.id+"/edit"'>Edit Cluster</router-link>
-      <button v-on:click="deleteCluster" class="button is-danger">Delete</button>
+      <button v-on:click="deleteCluster" class="button is-danger">Delete Cluster</button>
     </div>
   </div>
 </template>
@@ -44,16 +44,24 @@
       }
     },
     methods: {
-      deleteCluster: function (event) {
+      deleteCluster: function () {
         var projectId = this.$route.params.project_id
-        axios({
-          method: 'delete',
-          url: auth.getAPIUrl() + 'v1/projects/' + this.$route.params.project_id + '/clusters/' + this.$route.params.cluster_id,
-          headers: { 'Authorization': auth.getAuthHeader() }
-        })
-        .then(function (response) {
-          console.log(response.data)
-          router.push('/projects/' + projectId)
+        var clusterId = this.$route.params.cluster_id
+        this.$dialog.confirm('Are you sure you want to delete the Cluster?', {okText: 'DELETE', cancelText: 'CANCEL'})
+        .then(function () {
+          axios({
+            method: 'delete',
+            url: auth.getAPIUrl() + 'v1/projects/' + projectId + '/clusters/' + clusterId,
+            headers: { 'Authorization': auth.getAuthHeader() }
+          })
+          .then(function (response) {
+            console.log(response.data)
+            router.push('/projects/' + projectId + '/clusters')
+          })
+          .catch(function (error) {
+            console.log(error)
+            alert(error)
+          })
         })
         .catch(function (error) {
           console.log(error)

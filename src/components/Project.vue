@@ -41,7 +41,7 @@
   <div class="buttons">
     <router-link class="button" :to='"/"'>Back</router-link>
     <router-link class="button" :to='"/projects/"+project.id+"/edit"'>Edit Project</router-link>
-    <a href="#" v-on:click="deleteProject" class="button is-danger">Delete project</a>
+    <a v-on:click="deleteProject" class="button is-danger">Delete project</a>
   </div>
 </div>
 </template>
@@ -80,14 +80,21 @@
     },
     methods: {
       deleteProject: function (event) {
-        axios({
-          method: 'delete',
-          url: auth.getAPIUrl() + 'v1/projects/' + this.$route.params.id,
-          headers: { 'Authorization': auth.getAuthHeader() }
-        })
-        .then(function (response) {
-          console.log(response.data)
-          router.push('/projects')
+        var projectId = this.$route.params.id
+        this.$dialog.confirm('Are you sure you want to delete the Project?', {okText: 'DELETE', cancelText: 'CANCEL'})
+        .then(function () {
+          axios({
+            method: 'delete',
+            url: auth.getAPIUrl() + 'v1/projects/' + projectId,
+            headers: { 'Authorization': auth.getAuthHeader() }
+          })
+          .then(function (response) {
+            console.log(response.data)
+            router.push('/projects')
+          })
+          .catch(function (error) {
+            console.log(error)
+          })
         })
         .catch(function (error) {
           console.log(error)

@@ -23,6 +23,7 @@
         <td>Docker ID</td>
         <td>Managed</td>
         <td>Status</td>
+        <td>Actions</td>
       </tr>
     </thead>
     <tbody>
@@ -45,6 +46,19 @@
         <td>
           {{service.status}}
         </td>
+        <td>
+          <span class="button" v-tooltip="'View Service details'">
+            <i class="fa fa-eye" v-on:click='serviceDetails(service.id)'></i>
+          </span>
+          &nbsp
+          <span class="button" v-tooltip="'Edit Service'">
+            <i class="fa fa-edit" v-on:click='editService(service.id)'></i>
+          </span>
+          &nbsp
+          <span class="button" v-tooltip="'Delete Service'">
+            <i class="fa fa-trash" v-on:click='deleteService(service)'></i>
+          </span>
+        </td>
       </tr>
     </tbody>
   </table>
@@ -56,6 +70,7 @@
 <script type = "text/javascript" >
   import axios from 'axios'
   import auth from '../auth'
+  import router from '../router'
   export default {
     created () {
       axios.get(auth.getAPIUrl() + 'v1/projects/' + this.$route.params.id, {headers: {'Authorization': auth.getAuthHeader()}})
@@ -95,6 +110,44 @@
         return services.filter(function (service) {
           return service.name.includes(searchQuery)
         })
+      },
+      serviceDetails: function (serviceId) {
+        router.push('/projects/' + this.$route.params.id + '/services/' + serviceId)
+      },
+      editService: function (serviceId) {
+        router.push('/projects/' + this.$route.params.id + '/services/' + serviceId + '/edit')
+      },
+      deleteService: function (service) {
+        var projectId = this.$route.params.id
+        var serviceId = service.id
+        var clusterId = service.cluster_id
+        var serviceName = service.name
+        this.$dialog.confirm('Are you sure you want to delete the Service?', {okText: 'DELETE', cancelText: 'CANCEL'})
+        .then(function () {
+          if (service.endpoint !== 'Not Deployed') {
+            axios.get(auth.getAPIUrl() + 'v1/projects/' + projectId + '/clusters/' + clusterId + '/removestack?service_id=' + serviceId + '&service_name=' + serviceName, {headers: {'Authorization': auth.getAuthHeader()}})
+            .then(response => {
+              console.log(response.data)
+              router.push('/projects/' + projectId)
+            })
+            .catch(error => { console.log(error) })
+          }
+          axios({
+            method: 'delete',
+            url: auth.getAPIUrl() + 'v1/projects/' + projectId + '/services/' + serviceId,
+            headers: { 'Authorization': auth.getAuthHeader() }
+          })
+          .then(function (response) {
+            console.log(response.data)
+            location.reload()
+          })
+          .catch(function (error) {
+            console.log(error)
+          })
+        })
+        .catch(function (error) {
+          console.log(error)
+        })
       }
     }
   }
@@ -117,5 +170,4 @@
   a {
     color: #42b983;
   }
-
 </style>

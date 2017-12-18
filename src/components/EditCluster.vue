@@ -119,7 +119,7 @@
         })
         .then(function (response) {
           console.log(response.data)
-          router.push('/projects/' + projectId)
+          router.push('/projects/' + projectId + '/clusters')
         })
         .catch(function (error) {
           console.log(error)
