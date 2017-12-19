@@ -122,14 +122,15 @@
       </p>
       <span class="select">
         <select v-model="configuration[linkedService.as]">
-          <option v-for="service in services" v-bind:value="service[linkedService.retrieve]">
+          <option v-for="service in filterServicesByType(linkedService.service_type)" v-bind:value="service[linkedService.retrieve]">
             {{ service.name }}
           </option>
         </select>
       </span>
-      <p class="text-danger" v-if="services.length === 0">You must register some services to link to this one</p>
       <hr/>
     </div>
+    <p class="text-danger" v-if="services.length === 0 || noLinkableServices">You don't have the required dependent Services registered in order to deploy this Service</p>
+    <hr v-if="services.length === 0 || noLinkableServices"/>
     <button class="button is-primary" v-show="!deploying" v-on:click="submit" :disabled="errors.any() || cannotRegister || noLinkableServices">Register Service</button>
     <button class="button is-primary" v-show='!deploying && managed == "true"' v-on:click="submitAndDeploy" :disabled="errors.any() || cannotRegister || noLinkableServices">Register and Deploy Service</button>
     <button class="button is-primary" v-show="deploying" disabled><b>DEPLOYING...</b></button>
@@ -172,7 +173,12 @@
         this.services = response.data
       })
       .catch(error => { console.log(error) }))
-      axios.all(promises).then(response => { getConfigTemplate() }).catch(error => { console.log(error) })
+      axios.all(promises).then(response => {
+        getConfigTemplate()
+      })
+      .catch(error => {
+        console.log(error)
+      })
     },
     data () {
       return {
@@ -202,6 +208,22 @@
           return ('required')
         }
         return ('')
+      },
+      filterServicesByType: function (type) {
+        var findServiceTypeById = this.findServiceTypeById
+        var filtered = this.services.filter(function (service) {
+          return findServiceTypeById(service.service_type_id).name === type
+        })
+        if (filtered.length === 0) {
+          this.noLinkableServices = true
+        }
+        return filtered
+      },
+      findServiceTypeById: function (id) {
+        var serviceType = this.service_types.find(function (type) {
+          return type.id === id
+        })
+        return serviceType
       },
       getConfigTemplate: function () {
         const yaml = require('js-yaml')
