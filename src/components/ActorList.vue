@@ -11,6 +11,8 @@
     </div>
   </section>
   <br/>
+  <router-link class="button" :to='"/projects/"+$route.params.id'>Back</router-link>
+  <hr/>
   <table class="table">
     <thead>
       <tr class="subtitle">
@@ -53,7 +55,6 @@
     </form>
   </div>
   <hr/>
-  <router-link class="button" :to='"/projects/"+$route.params.id'>Back</router-link>
   <button class="button" v-show="!isAddingActor" v-on:click="isAddingActor = !isAddingActor">Add Actor</button>
 </div>
 </template>
@@ -171,15 +172,22 @@
         .catch(error => { console.log(error) })
       },
       removeActor: function (roleId) {
+        var projectId = this.$route.params.id
         var updateActors = this.updateActors
-        axios({
-          method: 'delete',
-          url: auth.getAPIUrl() + 'v1/projects/' + this.$route.params.id + '/roles/' + roleId,
-          headers: { 'Authorization': auth.getAuthHeader() }
-        })
-        .then(function (response) {
-          console.log(response.data)
-          updateActors()
+        this.$dialog.confirm('Are you sure you want to delete the Project?', {okText: 'DELETE', cancelText: 'CANCEL'})
+        .then(function () {
+          axios({
+            method: 'delete',
+            url: auth.getAPIUrl() + 'v1/projects/' + projectId + '/roles/' + roleId,
+            headers: { 'Authorization': auth.getAuthHeader() }
+          })
+          .then(function (response) {
+            console.log(response.data)
+            updateActors()
+          })
+          .catch(function (error) {
+            console.log(error)
+          })
         })
         .catch(function (error) {
           console.log(error)
