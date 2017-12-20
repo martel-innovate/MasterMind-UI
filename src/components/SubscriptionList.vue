@@ -26,6 +26,7 @@
         <td>Entities</td>
         <td>Attributes</td>
         <td>Status</td>
+        <td>Actions</td>
       </tr>
     </thead>
     <tbody>
@@ -55,6 +56,11 @@
         <td>
           {{subscription.status}}
         </td>
+        <td>
+          <span class="button" v-tooltip="'View Subscription details'">
+            <i class="fa fa-eye" v-on:click='subscriptionDetails(subscription.id)'></i>
+          </span>
+        </td>
       </tr>
     </tbody>
   </table>
@@ -73,6 +79,7 @@
 <script type = "text/javascript" >
   import axios from 'axios'
   import auth from '../auth'
+  import router from '../router'
   export default {
     created () {
       axios.get(auth.getAPIUrl() + 'v1/projects/' + this.$route.params.id, {headers: {'Authorization': auth.getAuthHeader()}})
@@ -111,6 +118,9 @@
       }
     },
     methods: {
+      subscriptionDetails: function (subscription) {
+        router.push('/projects/' + this.$route.params.id + '/subscriptions/' + subscription)
+      },
       getServiceName: function (subscriptionId) {
         return this.services.find(function (service) {
           return service.id === subscriptionId
@@ -221,6 +231,7 @@
         axios.all(promises)
         .then(response => {
           console.log(response)
+          this.buttonsActive = true
         })
         .catch(error => {
           console.log(error)

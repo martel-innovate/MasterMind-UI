@@ -174,7 +174,7 @@
       removeActor: function (roleId) {
         var projectId = this.$route.params.id
         var updateActors = this.updateActors
-        this.$dialog.confirm('Are you sure you want to delete the Project?', {okText: 'DELETE', cancelText: 'CANCEL'})
+        this.$dialog.confirm('Are you sure you want to delete the Actor?', {okText: 'DELETE', cancelText: 'CANCEL'})
         .then(function () {
           axios({
             method: 'delete',
