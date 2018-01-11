@@ -11,7 +11,8 @@
     </div>
   </section>
   <br/>
-  <input v-model="searchQuery" placeholder="Search...">
+  <router-link class="button" :to='"/projects/"+$route.params.id'>Back</router-link>
+  <input class="is-pulled-right" v-model="searchQuery" placeholder="Search...">
   <hr/>
   <table class="table">
     <thead>
@@ -25,6 +26,7 @@
         <td>Entities</td>
         <td>Attributes</td>
         <td>Status</td>
+        <td>Actions</td>
       </tr>
     </thead>
     <tbody>
@@ -54,6 +56,11 @@
         <td>
           {{subscription.status}}
         </td>
+        <td>
+          <span class="button" v-tooltip="'View Subscription details'">
+            <i class="fa fa-eye" v-on:click='subscriptionDetails(subscription.id)'></i>
+          </span>
+        </td>
       </tr>
     </tbody>
   </table>
@@ -63,16 +70,16 @@
   <button v-if="!buttonsActive" class="button is-danger is-loading" disabled></button>
   <button v-if="buttonsActive" class="button" v-on:click="activateSubscription"><b>Activate</b></button>
   <button v-if="buttonsActive" class="button" v-on:click="deactivateSubscription"><b>Deactivate</b></button>
-  <button v-if="buttonsActive" class="button is-danger" v-on:click="deleteSubscription"><b>Delete Selected</b></button>
+  <button v-if="buttonsActive" class="button is-danger" v-on:click="deleteSubscription"><b>Delete</b></button>
   <hr/>
-  <router-link class="button" :to='"/projects/"+$route.params.id'>Back</router-link>
-  <router-link class="button" :to='"/projects/"+$route.params.id+"/subscriptions/new"'>Register Subscription</router-link>
+  <router-link class="button is-primary" :to='"/projects/"+$route.params.id+"/subscriptions/new"'>Register Subscription</router-link>
 </div>
 </template>
 
 <script type = "text/javascript" >
   import axios from 'axios'
   import auth from '../auth'
+  import router from '../router'
   export default {
     created () {
       axios.get(auth.getAPIUrl() + 'v1/projects/' + this.$route.params.id, {headers: {'Authorization': auth.getAuthHeader()}})
@@ -111,6 +118,9 @@
       }
     },
     methods: {
+      subscriptionDetails: function (subscription) {
+        router.push('/projects/' + this.$route.params.id + '/subscriptions/' + subscription)
+      },
       getServiceName: function (subscriptionId) {
         return this.services.find(function (service) {
           return service.id === subscriptionId
@@ -221,6 +231,7 @@
         axios.all(promises)
         .then(response => {
           console.log(response)
+          this.buttonsActive = true
         })
         .catch(error => {
           console.log(error)

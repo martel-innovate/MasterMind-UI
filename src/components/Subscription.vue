@@ -147,23 +147,28 @@
         var projectId = this.$route.params.project_id
         var subscriptionId = this.subscription.id
         var subId = this.subscription.subscription_id
+        this.$dialog.confirm('Are you sure you want to delete the Subscription?', {okText: 'DELETE', cancelText: 'CANCEL'})
+        .then(function () {
+          if (subId !== 'pending') {
+            axios.get(auth.getAPIUrl() + 'v1/projects/' + projectId + '/ngsi_subscriptions/' + subscriptionId + '/remove', {headers: {'Authorization': auth.getAuthHeader()}})
+            .then(response => {
+              console.log(response.data)
+            })
+            .catch(error => { console.log(error) })
+          }
 
-        if (subId !== 'pending') {
-          axios.get(auth.getAPIUrl() + 'v1/projects/' + projectId + '/ngsi_subscriptions/' + subscriptionId + '/remove', {headers: {'Authorization': auth.getAuthHeader()}})
-          .then(response => {
-            console.log(response.data)
+          axios({
+            method: 'delete',
+            url: auth.getAPIUrl() + 'v1/projects/' + projectId + '/ngsi_subscriptions/' + subscriptionId,
+            headers: { 'Authorization': auth.getAuthHeader() }
           })
-          .catch(error => { console.log(error) })
-        }
-
-        axios({
-          method: 'delete',
-          url: auth.getAPIUrl() + 'v1/projects/' + this.$route.params.project_id + '/ngsi_subscriptions/' + this.$route.params.subscription_id,
-          headers: { 'Authorization': auth.getAuthHeader() }
-        })
-        .then(function (response) {
-          console.log(response.data)
-          router.push('/projects/' + projectId)
+          .then(function (response) {
+            console.log(response.data)
+            router.push('/projects/' + projectId + '/subscriptions')
+          })
+          .catch(function (error) {
+            console.log(error)
+          })
         })
         .catch(function (error) {
           console.log(error)

@@ -11,6 +11,19 @@
     </div>
   </section>
   <br/>
+  <div>
+    <router-link class="button" :to='"/"'>Back</router-link>
+  </div>
+  <hr/>
+  <div v-if="services.length === 0 || clusters.length === 0">
+    <p class="text-warning" v-if="services.length === 0">
+      You may start registering Services by clicking on the corresponding button below.
+    </p>
+    <p class="text-warning" v-if="clusters.length === 0">
+      To start deploying managed Services, you need to register a Cluster first. Click on the corresponding button below to do so.
+    </p>
+    <hr/>
+  </div>
   <section>
     <div class="columns">
       <div class="column is-one-half">
@@ -39,9 +52,8 @@
   </section>
   <hr/>
   <div class="buttons">
-    <router-link class="button" :to='"/"'>Back</router-link>
     <router-link class="button" :to='"/projects/"+project.id+"/edit"'>Edit Project</router-link>
-    <a href="#" v-on:click="deleteProject" class="button is-danger">Delete project</a>
+    <a v-on:click="deleteProject" class="button is-danger">Delete project</a>
   </div>
 </div>
 </template>
@@ -80,14 +92,21 @@
     },
     methods: {
       deleteProject: function (event) {
-        axios({
-          method: 'delete',
-          url: auth.getAPIUrl() + 'v1/projects/' + this.$route.params.id,
-          headers: { 'Authorization': auth.getAuthHeader() }
-        })
-        .then(function (response) {
-          console.log(response.data)
-          router.push('/projects')
+        var projectId = this.$route.params.id
+        this.$dialog.confirm('Are you sure you want to delete the Project?', {okText: 'DELETE', cancelText: 'CANCEL'})
+        .then(function () {
+          axios({
+            method: 'delete',
+            url: auth.getAPIUrl() + 'v1/projects/' + projectId,
+            headers: { 'Authorization': auth.getAuthHeader() }
+          })
+          .then(function (response) {
+            console.log(response.data)
+            router.push('/projects')
+          })
+          .catch(function (error) {
+            console.log(error)
+          })
         })
         .catch(function (error) {
           console.log(error)
