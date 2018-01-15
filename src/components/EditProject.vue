@@ -49,6 +49,7 @@
       }
     },
     created () {
+      // Get project details
       axios.get(auth.getAPIUrl() + 'v1/projects/' + this.$route.params.id, {headers: {'Authorization': auth.getAuthHeader()}})
       .then(response => {
         this.name = response.data.name
@@ -57,11 +58,13 @@
       .catch(error => { console.log(error) })
     },
     methods: {
+      // Submit project edit
       submit: function (event) {
         if (this.errors.any()) {
           console.log('Form not valid')
           return
         }
+        // Send PUT to the API
         axios({
           method: 'put',
           url: auth.getAPIUrl() + 'v1/projects/' + this.$route.params.id,

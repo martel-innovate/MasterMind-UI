@@ -22,6 +22,7 @@
       </tr>
     </thead>
     <tbody>
+      <!-- Display list of actors -->
       <tr v-for="actor in actors">
         <td>
           <button class="button is-danger" v-on:click="removeActor(actor.roleId)">-</button>
@@ -30,6 +31,7 @@
           {{actor.actor.fullname}}
         </td>
         <td>
+          <!-- Change role of this actor, react on change event for dropdown menu -->
           <select v-model="actor.role" @change="changeActorRole(actor.roleId, $event)">
             <option v-bind:value="'Admin'">
               Admin
@@ -42,6 +44,7 @@
       </tr>
     </tbody>
   </table>
+  <!-- Adding actor form, shown if attempt to add actor -->
   <div class="actor-add" v-show="isAddingActor">
     <hr/>
     <form id="actor">
@@ -55,6 +58,7 @@
     </form>
   </div>
   <hr/>
+  <!-- Add actor button -->
   <button class="button" v-show="!isAddingActor" v-on:click="isAddingActor = !isAddingActor">Add Actor</button>
 </div>
 </template>
@@ -64,6 +68,7 @@
   import auth from '../auth'
   export default {
     created () {
+      // Get list of actors from API
       axios.get(auth.getAPIUrl() + 'v1/projects/' + this.$route.params.id, {headers: {'Authorization': auth.getAuthHeader()}})
       .then(response => { this.project = response.data })
       .catch(error => { console.log(error) })
@@ -80,13 +85,17 @@
       }
     },
     methods: {
+      // Update actors being listed
       updateActors: function (event) {
+        // Get actor roles
         axios.get(auth.getAPIUrl() + 'v1/projects/' + this.$route.params.id + '/roles', {headers: {'Authorization': auth.getAuthHeader()}})
         .then(response => {
           this.roles = response.data
           var actors = []
           var promises = []
+          // Get role levels of the actors, save them in data
           this.roles.forEach(function (role) {
+            // Push promise to a list
             promises.push(axios.get(auth.getAPIUrl() + 'v1/actors/' + role.actor_id, {headers: {'Authorization': auth.getAuthHeader()}})
             .then(response => {
               if (role.role_level_id === 1) {
@@ -98,10 +107,12 @@
             })
             .catch(error => { console.log(error) }))
           })
+          // Wait for all promises to resolve
           axios.all(promises).then(response => { this.actors = actors }).catch(error => { console.log(error) })
         })
         .catch(error => { console.log(error) })
       },
+      // Change the role of an actor
       changeActorRole: function (roleId, event) {
         var projectId = this.$route.params.id
         var role = 0
@@ -115,6 +126,7 @@
           console.log('Unable to select role')
           return
         }
+        // PUT action to the API
         axios({
           method: 'put',
           url: auth.getAPIUrl() + 'v1/projects/' + projectId + '/roles/' + roleId,
@@ -130,15 +142,20 @@
           console.log(error)
         })
       },
+      // Shows the form to add an actor
       showAddActor: function (event) {
         this.isAddingActor = true
       },
+      // Adds a new actor and role to the project
       addActor: function (event) {
         var actorName = this.actorName
         var projectId = this.$route.params.id
         var updateActors = this.updateActors
+        // Get actors again from API
         axios.get(auth.getAPIUrl() + 'v1/actors', {headers: {'Authorization': auth.getAuthHeader()}})
         .then(response => {
+          // Check if actor that was entered exists by fullname
+          // TODO: Check by email too
           var actors = response.data
           var actorId = ''
           actors.forEach(function (actor) {
@@ -146,6 +163,7 @@
               actorId = actor.id
             }
           })
+          // If actor exists, add it as a user role
           if (actorId !== '') {
             this.isAddingActor = false
             axios({
@@ -171,11 +189,13 @@
         })
         .catch(error => { console.log(error) })
       },
+      // Remove actor from project (delete its role within it)
       removeActor: function (roleId) {
         var projectId = this.$route.params.id
         var updateActors = this.updateActors
         this.$dialog.confirm('Are you sure you want to delete the Actor?', {okText: 'DELETE', cancelText: 'CANCEL'})
         .then(function () {
+          // Delete role corresponding to actor and project
           axios({
             method: 'delete',
             url: auth.getAPIUrl() + 'v1/projects/' + projectId + '/roles/' + roleId,

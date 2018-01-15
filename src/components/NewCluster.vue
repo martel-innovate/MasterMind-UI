@@ -57,6 +57,7 @@
         The cert.pem file for Docker's TLS
       </p>
       <div class="control">
+        <!-- When user selects a file, fill in the value with its contents on the change event -->
         <input name="cert" type="file" @change='readCertFile("cert", $event)' v-validate.initial="'required'">
         <p class="text-danger" v-if="errors.has('cert')">{{ errors.first('cert') }}</p>
       </div>
@@ -70,6 +71,7 @@
         The key.pem file for Docker's TLS
       </p>
       <div class="control">
+        <!-- When user selects a file, fill in the value with its contents on the change event -->
         <input name="key" type="file" @change='readCertFile("key", $event)' v-validate.initial="'required'">
         <p class="text-danger" v-if="errors.has('key')">{{ errors.first('key') }}</p>
       </div>
@@ -83,6 +85,7 @@
         The ca.pem file for Docker's TLS
       </p>
       <div class="control">
+        <!-- When user selects a file, fill in the value with its contents on the change event -->
         <input name="ca" type="file" @change='readCertFile("ca", $event)' v-validate.initial="'required'">
         <p class="text-danger" v-if="errors.has('ca')">{{ errors.first('ca') }}</p>
       </div>
@@ -114,9 +117,12 @@
       }
     },
     methods: {
+      // Read the cert file when one is selected
       readCertFile: function (cert, event) {
+        // Create file reader and open selected file
         var reader = new FileReader()
         var file = (event.target.files || event.dataTransfer.files)[0]
+        // On file load, read content into variable
         reader.onload = (e) => {
           var fileContent = e.target.result
           if (cert === 'cert') {
@@ -135,12 +141,14 @@
         }
         reader.readAsBinaryString(file)
       },
+      // Submit new Cluster
       submit: function (event) {
         if (this.errors.any()) {
           console.log('Form not valid')
           return
         }
         var projectId = this.$route.params.id
+        // Send POST to API to create new Cluster
         axios({
           method: 'post',
           url: auth.getAPIUrl() + 'v1/projects/' + projectId + '/clusters',

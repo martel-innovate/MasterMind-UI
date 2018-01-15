@@ -12,6 +12,7 @@
   </section>
   <br/>
   <router-link class="button" :to='"/projects/"+$route.params.id'>Back</router-link>
+  <!-- Search box -->
   <input class="is-pulled-right" v-model="searchQuery" placeholder="Search...">
   <hr/>
   <table class="table">
@@ -27,6 +28,7 @@
       </tr>
     </thead>
     <tbody>
+      <!-- List the services in this project, filtered by the search query string -->
       <tr v-for="service in filterServices(services, searchQuery)">
         <td>
           <router-link :to='"/projects/"+$route.params.id+"/services/"+service.id'>{{service.name}}</router-link>
@@ -46,6 +48,8 @@
         <td>
           {{service.status}}
         </td>
+        <!-- Display buttons for actions: details, edit, delete -->
+        <!-- TODO: Could add deploy/undeploy button? -->
         <td>
           <span class="button" v-tooltip="'View Service details'">
             <i class="fa fa-eye" v-on:click='serviceDetails(service.id)'></i>
@@ -73,6 +77,7 @@
   import router from '../router'
   export default {
     created () {
+      // Get services, clusters, project, service types
       axios.get(auth.getAPIUrl() + 'v1/projects/' + this.$route.params.id, {headers: {'Authorization': auth.getAuthHeader()}})
       .then(response => { this.project = response.data })
       .catch(error => { console.log(error) })
@@ -96,34 +101,43 @@
       }
     },
     methods: {
+      // Get the name of a cluster given the ID
       getClusterName: function (clusterId) {
         return this.clusters.find(function (cluster) {
           return cluster.id === clusterId
         })
       },
+      // Get the name of a service given the ID
       getServiceTypeName: function (typeId) {
         return this.service_types.find(function (type) {
           return type.id === typeId
         })
       },
+      // Filter services by name
       filterServices: function (services, searchQuery) {
         return services.filter(function (service) {
           return service.name.includes(searchQuery)
         })
       },
+      // Service details redirect
       serviceDetails: function (serviceId) {
         router.push('/projects/' + this.$route.params.id + '/services/' + serviceId)
       },
+      // Service edit redirect
       editService: function (serviceId) {
         router.push('/projects/' + this.$route.params.id + '/services/' + serviceId + '/edit')
       },
+      // Delete service
       deleteService: function (service) {
+        // Set these outside of axios functions
         var projectId = this.$route.params.id
         var serviceId = service.id
         var clusterId = service.cluster_id
         var serviceName = service.name
+        // Confirmation dialog box
         this.$dialog.confirm('Are you sure you want to delete the Service?', {okText: 'DELETE', cancelText: 'CANCEL'})
         .then(function () {
+          // If Service is deployed, remove stack from Docker Swarm cluster as well
           if (service.endpoint !== 'Not Deployed') {
             axios.get(auth.getAPIUrl() + 'v1/projects/' + projectId + '/clusters/' + clusterId + '/removestack?service_id=' + serviceId + '&service_name=' + serviceName, {headers: {'Authorization': auth.getAuthHeader()}})
             .then(response => {
@@ -132,6 +146,7 @@
             })
             .catch(error => { console.log(error) })
           }
+          // DELETE to API
           axios({
             method: 'delete',
             url: auth.getAPIUrl() + 'v1/projects/' + projectId + '/services/' + serviceId,

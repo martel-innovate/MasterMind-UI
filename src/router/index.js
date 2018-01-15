@@ -24,6 +24,7 @@ import EditService from '@/components/EditService'
 
 Vue.use(Router)
 
+// Setting up routes for UI
 var router = new Router({
   routes: [
     {
@@ -129,6 +130,7 @@ var router = new Router({
   ]
 })
 
+// Check if the user is logged in before accessing route
 router.beforeEach((to, from, next) => {
   if (auth.checkAuth() || to.path === '/login') {
     next()

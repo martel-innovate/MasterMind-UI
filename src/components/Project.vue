@@ -15,6 +15,7 @@
     <router-link class="button" :to='"/"'>Back</router-link>
   </div>
   <hr/>
+  <!-- Display some hints if there's no services or clusters registered already -->
   <div v-if="services.length === 0 || clusters.length === 0">
     <p class="text-warning" v-if="services.length === 0">
       You may start registering Services by clicking on the corresponding button below.
@@ -25,6 +26,7 @@
     <hr/>
   </div>
   <section>
+    <!-- Entries and counters for services, clusters, subs and actors (roles) -->
     <div class="columns">
       <div class="column is-one-half">
         <router-link class="button is-large has-text-centered is-info is-outlined is-fullwidth" :to='"/projects/"+this.$route.params.id+"/clusters"'>
@@ -64,6 +66,8 @@
   import router from '../router'
   export default {
     created () {
+      // Get project related data
+      // TODO: Optimise this on the UI or API side, cache this?
       console.log(auth.getAPIUrl())
       axios.get(auth.getAPIUrl() + 'v1/projects/' + this.$route.params.id, {headers: {'Authorization': auth.getAuthHeader()}})
       .then(response => { this.project = response.data })
@@ -91,9 +95,13 @@
       }
     },
     methods: {
+      // Delete the current project
       deleteProject: function (event) {
+        // Set this outside of axios functions
         var projectId = this.$route.params.id
+        // Confirm dialog box
         this.$dialog.confirm('Are you sure you want to delete the Project?', {okText: 'DELETE', cancelText: 'CANCEL'})
+        // DELETE to API
         .then(function () {
           axios({
             method: 'delete',

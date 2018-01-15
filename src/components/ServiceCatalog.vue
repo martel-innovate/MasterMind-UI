@@ -11,6 +11,7 @@
       </div>
     </section>
     <br/>
+    <!-- List the service types from the catalog -->
     <p v-for="service in catalog">
       <router-link class="button is-primary is-large is-outlined is-fullwidth" :to='"/catalog/"+service.id'>{{service.name}}</router-link>
     </p>
@@ -21,6 +22,7 @@
   import axios from 'axios'
   import auth from '../auth'
   export default {
+    // Get service types from API
     created () {
       axios.get(auth.getAPIUrl() + 'v1/service_types', {headers: {'Authorization': auth.getAuthHeader()}})
       .then(response => { this.catalog = response.data })

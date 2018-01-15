@@ -12,6 +12,7 @@
   </section>
   <br/>
   <router-link class="button" :to='"/projects/"+$route.params.id'>Back</router-link>
+  <!-- Search box to filter clusters list -->
   <input class="is-pulled-right" v-model="searchQuery" placeholder="Search...">
   <hr/>
   <table class="table">
@@ -23,6 +24,7 @@
       </tr>
     </thead>
     <tbody>
+      <!-- List all the clusters using filterClusters to filter by the search query -->
       <tr v-for="cluster in filterClusters(clusters, searchQuery)">
         <td>
           <router-link :to='"/projects/"+$route.params.id+"/clusters/"+cluster.id'>{{cluster.name}}</router-link>
@@ -30,6 +32,7 @@
         <td>
           {{cluster.endpoint}}
         </td>
+        <!-- Actions on the clusters (details, edit, delete) -->
         <td>
           <span class="button" v-tooltip="'View Cluster details'">
             <i class="fa fa-eye" v-on:click='clusterDetails(cluster.id)'></i>
@@ -57,6 +60,7 @@
   import router from '../router'
   export default {
     created () {
+      // Retrieve project, and the list of clusters for it
       axios.get(auth.getAPIUrl() + 'v1/projects/' + this.$route.params.id, {headers: {'Authorization': auth.getAuthHeader()}})
       .then(response => { this.project = response.data })
       .catch(error => { console.log(error) })
@@ -72,21 +76,27 @@
       }
     },
     methods: {
+      // Filter clusters list by search query (cluster names)
       filterClusters: function (clusters, searchQuery) {
         return clusters.filter(function (cluster) {
           return cluster.name.includes(searchQuery)
         })
       },
+      // Route to the details of selected cluster
       clusterDetails: function (clusterId) {
         router.push('/projects/' + this.$route.params.id + '/clusters/' + clusterId)
       },
+      // Route to edit page of selected cluster
       editCluster: function (clusterId) {
         router.push('/projects/' + this.$route.params.id + '/clusters/' + clusterId + '/edit')
       },
+      // Delete selected cluster
       deleteCluster: function (clusterId) {
+        // Setting this outside of axios function
         var projectId = this.$route.params.id
         this.$dialog.confirm('Are you sure you want to delete the Cluster?', {okText: 'DELETE', cancelText: 'CANCEL'})
         .then(function () {
+          // Sending delete to API
           axios({
             method: 'delete',
             url: auth.getAPIUrl() + 'v1/projects/' + projectId + '/clusters/' + clusterId,

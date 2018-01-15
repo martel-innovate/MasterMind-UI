@@ -10,6 +10,7 @@
       </div>
     </section>
     <br/>
+    <!-- TODO: Rework this -->
     <p class="title">
       Managed
     </p>
@@ -20,6 +21,7 @@
       <label class="radio" for="two">Unmanaged</label>
     </p>
     <hr/>
+    <!-- TODO: Remove Lat -->
     <p class="title">
       Latitude
     </p>
@@ -28,6 +30,7 @@
       <p class="text-danger" v-if="errors.has('latitude')">{{ errors.first('latitude') }}</p>
     </p>
     <hr/>
+    <!-- TODO: Remove Long -->
     <p class="title">
       Longitude
     </p>
@@ -36,6 +39,7 @@
       <p class="text-danger" v-if="errors.has('longitude')">{{ errors.first('longitude') }}</p>
     </p>
     <hr/>
+    <!-- TODO: More data to edit? -->
     <button class="button is-primary" v-on:click="submit" :disabled="errors.any()">Edit Cluster</button>
     <router-link class="button" :to='"/projects/"+this.$route.params.project_id+"/services/"+this.$route.params.service_id'>Back</router-link>
   </div>
@@ -59,6 +63,7 @@
       }
     },
     created () {
+      // Get service data
       axios.get(auth.getAPIUrl() + 'v1/projects/' + this.$route.params.project_id + '/services/' + this.$route.params.service_id, {headers: {'Authorization': auth.getAuthHeader()}})
       .then(response => {
         this.managed = response.data.managed
@@ -68,13 +73,17 @@
       .catch(error => { console.log(error) })
     },
     methods: {
+      // Submit edit
       submit: function (event) {
+        // Check of form is valid
         if (this.errors.any()) {
           console.log('Form not valid')
           return
         }
+        // Set this outside of axios function
         var projectId = this.$route.params.project_id
         var serviceId = this.$route.params.service_id
+        // Send PUT to API
         axios({
           method: 'put',
           url: auth.getAPIUrl() + 'v1/projects/' + this.$route.params.project_id + '/services/' + this.$route.params.service_id,
