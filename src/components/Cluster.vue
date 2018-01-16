@@ -20,6 +20,7 @@
       {{cluster.description}}
     </p>
     <hr/>
+    <!-- TODO: More info on cluster status, networks... -->
     <div class="panel-block">
       <router-link class="button" :to='"/projects/"+this.$route.params.project_id'>Back</router-link>
       <router-link class="button" :to='"/projects/"+this.$route.params.project_id+"/clusters/"+cluster.id+"/edit"'>Edit Cluster</router-link>
@@ -34,6 +35,7 @@
   import router from '../router'
   export default {
     created () {
+      // Retrieve data of this cluster
       axios.get(auth.getAPIUrl() + 'v1/projects/' + this.$route.params.project_id + '/clusters/' + this.$route.params.cluster_id, {headers: {'Authorization': auth.getAuthHeader()}})
       .then(response => { this.cluster = response.data })
       .catch(error => { console.log(error) })
@@ -44,11 +46,15 @@
       }
     },
     methods: {
+      // Method to delete this cluster
       deleteCluster: function () {
+        // Setting there variables outside of axios function or else they can't be found
         var projectId = this.$route.params.project_id
         var clusterId = this.$route.params.cluster_id
+        // Confirmation dialog
         this.$dialog.confirm('Are you sure you want to delete the Cluster?', {okText: 'DELETE', cancelText: 'CANCEL'})
         .then(function () {
+          // Sending delete to API
           axios({
             method: 'delete',
             url: auth.getAPIUrl() + 'v1/projects/' + projectId + '/clusters/' + clusterId,

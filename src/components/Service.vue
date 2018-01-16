@@ -55,6 +55,7 @@
       {{service.longitude}}
     </p>
     <hr/>
+    <!-- List the configuration variables -->
     <div v-show="configuration.length > 0">
       <div v-for="envVar in configuration">
         <p class="title">
@@ -66,9 +67,12 @@
         <hr/>
       </div>
     </div>
+    <!-- Buttons -->
     <div class="panel-block">
       <router-link class="button" :to='"/projects/"+this.$route.params.project_id'>Back</router-link>
       <router-link class="button" :to='"/projects/"+this.$route.params.project_id+"/services/"+service.id+"/edit"'>Edit Service</router-link>
+      <!-- Show deploy button or deploying disabled button depending on whether service is being deployed -->
+      <!-- TODO: If Service is already deployed, don't show -->
       <button class="button is-primary" v-show="!deploying" v-on:click="deployService"><b>DEPLOY</b></button>
       <button class="button is-primary" v-show="deploying" disabled><b>DEPLOYING...</b></button>
       <button class="button is-danger" v-on:click="deleteService"><b>DELETE SERVICE</b></button>
@@ -82,20 +86,25 @@
   import router from '../router'
   export default {
     created () {
+      // Get Service details from API
       axios.get(auth.getAPIUrl() + 'v1/projects/' + this.$route.params.project_id + '/services/' + this.$route.params.service_id, {headers: {'Authorization': auth.getAuthHeader()}})
       .then(response => {
         var service = response.data
         this.service = service
+        // Parse config JSON string into object
         var configurationJSON = JSON.parse(service.configuration)
+        // Push env vars into array to display
         var configurationArray = []
         for (var envVar in configurationJSON) {
           configurationArray.push({name: envVar, value: configurationJSON[envVar]})
         }
         this.configuration = configurationArray
         console.log(configurationArray)
+        // Get Service type of this Service
         axios.get(auth.getAPIUrl() + 'v1/service_types/' + service.service_type_id, {headers: {'Authorization': auth.getAuthHeader()}})
         .then(response => { this.service_type = response.data })
         .catch(error => { console.log(error) })
+        // Get Cluster of this Service
         axios.get(auth.getAPIUrl() + 'v1/projects/' + this.$route.params.project_id + '/clusters/' + service.cluster_id, {headers: {'Authorization': auth.getAuthHeader()}})
         .then(response => { this.cluster = response.data.name })
         .catch(error => { console.log(error) })
@@ -113,14 +122,18 @@
       }
     },
     methods: {
+      // Delete Service
       deleteService: function (service) {
+        // Setting these variables outside of axios functions
         var projectId = this.$route.params.project_id
         var serviceId = this.service.id
         var clusterId = this.service.cluster_id
         var serviceName = this.service.name
         var serviceEndpoint = this.service.endpoint
+        // Confirmation dialog
         this.$dialog.confirm('Are you sure you want to delete the Service?', {okText: 'DELETE', cancelText: 'CANCEL'})
         .then(function () {
+          // If Service is currently deployed, remove the running stack from the Swarm Cluster
           if (serviceEndpoint !== 'Not Deployed') {
             axios.get(auth.getAPIUrl() + 'v1/projects/' + projectId + '/clusters/' + clusterId + '/removestack?service_id=' + serviceId + '&service_name=' + serviceName, {headers: {'Authorization': auth.getAuthHeader()}})
             .then(response => {
@@ -128,6 +141,7 @@
             })
             .catch(error => { console.log(error) })
           }
+          // DELETE to API
           axios({
             method: 'delete',
             url: auth.getAPIUrl() + 'v1/projects/' + projectId + '/services/' + serviceId,
@@ -145,22 +159,29 @@
           console.log(error)
         })
       },
+      // Deploy the Service to the cluster
       deployService: function () {
+        // Set deploying to disable buttons
         this.deploying = true
+        // Setting these variables outside of axios functions
         var projectId = this.$route.params.project_id
         var serviceId = this.$route.params.service_id
         var serviceName = this.service.name
+        // Deploy stack on Docker Swarm cluster
         axios.get(auth.getAPIUrl() + 'v1/projects/' + projectId + '/clusters/' + this.service.cluster_id + '/deploy?service_id=' + serviceId + '&service_name=' + serviceName, {headers: {'Authorization': auth.getAuthHeader()}})
         .then(response => {
           console.log(response.data)
           router.push('/projects/' + projectId)
         })
         .catch(error => {
+          // Pop up an alert if deployment fails
           alert('DEPLOYMENT FAILED: ' + error.response.data.message)
           console.log(error.response.data.message)
           this.deploying = false
         })
       },
+      // Get Service details from the Swarm Cluster, check if alive
+      // TODO: FIX THIS
       getService: function () {
         if (this.service.endpoint === 'Not deployed') {
           return

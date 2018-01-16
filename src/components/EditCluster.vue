@@ -86,6 +86,7 @@
       }
     },
     created () {
+      // Get Cluster data
       axios.get(auth.getAPIUrl() + 'v1/projects/' + this.$route.params.project_id + '/clusters/' + this.$route.params.cluster_id, {headers: {'Authorization': auth.getAuthHeader()}})
       .then(response => {
         this.name = response.data.name
@@ -98,12 +99,15 @@
       .catch(error => { console.log(error) })
     },
     methods: {
+      // Submit cluster edit
       submit: function (event) {
         if (this.errors.any()) {
           console.log('Form not valid')
           return
         }
+        // Setting this otuside of axios function
         var projectId = this.$route.params.project_id
+        // Send PUT to the API
         axios({
           method: 'put',
           url: auth.getAPIUrl() + 'v1/projects/' + this.$route.params.project_id + '/clusters/' + this.$route.params.cluster_id,

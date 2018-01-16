@@ -12,6 +12,7 @@
         </div>
       </section>
       <br/>
+      <!-- List all projects the user can access -->
       <table v-if="!noProjects()" class="table">
         <tbody v-for="project in projects">
           <tr>
@@ -21,6 +22,7 @@
           </tr>
         </tbody>
       </table>
+      <!-- If no projects available to the user, show button to create the first one -->
       <p v-if="noProjects()" class="field">
         <a v-on:click="isActive = !isActive" class="button is-large is-outlined is-fullwidth">
          <span>
@@ -29,6 +31,7 @@
         </a>
       </p>
       <hr/>
+      <!-- If projects already exist, show button for just new project -->
       <p v-if="!noProjects()" class="field">
         <a v-on:click="isActive = !isActive" class="button">
          <span>
@@ -38,6 +41,7 @@
       </p>
     </div>
     <div>
+      <!-- Popup box with new project creation form -->
       <div id="newProj" v-bind:class="{ 'modal' : true, 'is-active' : isActive }">
         <div class="modal-background"></div>
         <div class="modal-card">
@@ -85,6 +89,7 @@
   Vue.use(VeeValidate)
 
   export default {
+    // Get list of projects
     created () {
       axios.get(auth.getAPIUrl() + 'v1/projects', {headers: {'Authorization': auth.getAuthHeader()}})
       .then(response => { this.projects = response.data })
@@ -99,12 +104,14 @@
       }
     },
     methods: {
+      // Submit new project to API
       submit: function (event) {
         this.isActive = false
         if (this.errors.any()) {
           console.log('Form not valid')
           return
         }
+        // POST to API
         axios({
           method: 'post',
           url: auth.getAPIUrl() + 'v1/projects',
@@ -122,6 +129,7 @@
           console.log(error)
         })
       },
+      // Check if there are projects the user can access
       noProjects: function () {
         return (this.projects.length === 0)
       }

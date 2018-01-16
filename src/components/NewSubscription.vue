@@ -37,6 +37,7 @@
     </div>
     <hr/>
     <div class="field">
+      <!-- TODO: Should be optional -->
       <p class="title">
         Subscription expires
       </p>
@@ -63,6 +64,7 @@
     </div>
     <hr/>
     <div class="field">
+      <!-- TODO: Expand -->
       <p class="title">
         Entities
       </p>
@@ -79,6 +81,7 @@
     </div>
     <hr/>
     <div class="field">
+      <!-- TODO: Expand -->
       <p class="title">
         Conditions
       </p>
@@ -93,6 +96,8 @@
     </div>
     <hr/>
     <span class="field">
+      <!-- Creates a dropdown of the services registered to this project, to select one as the broker for the subs -->
+      <!-- TODO: Should onyl display context broker services -->
       <p class="title">
         Subscription Service
       </p>
@@ -107,6 +112,8 @@
     </span>
     <hr/>
     <span class="field">
+      <!-- Creates a dropdown of the services registered to this project, to select one as endpoint of notifications -->
+      <!-- TODO: Perhaps filter to only have appropriate endpoints? -->
       <p class="title">
         Notification endpoint
       </p>
@@ -133,6 +140,7 @@
   import Vue from 'vue'
   import VeeValidate from 'vee-validate'
 
+  // Function to check if a given string parses to a valid JSON
   const checkIfValidJson = {
     getMessage (field, args) {
       return 'Invalid JSON format'
@@ -146,12 +154,14 @@
       }
     }
   }
+  // Add to validator
   VeeValidate.Validator.extend('checkIfValidJson', checkIfValidJson)
 
   Vue.use(VeeValidate)
 
   export default {
     created () {
+      // Get services of this project
       axios.get(auth.getAPIUrl() + 'v1/projects/' + this.$route.params.id + '/services', {headers: {'Authorization': auth.getAuthHeader()}})
       .then(response => {
         this.services = response.data
@@ -173,12 +183,16 @@
       }
     },
     methods: {
+      // Submit new sub
       submit: function (event) {
+        // Return if form not valid
         if (this.errors.any()) {
           console.log('Form not valid')
           return
         }
+        // Set this outside of axios functions
         var projectId = this.$route.params.id
+        // POST to API
         axios({
           method: 'post',
           url: auth.getAPIUrl() + 'v1/projects/' + projectId + '/ngsi_subscriptions',
@@ -192,6 +206,7 @@
             expires: this.expires,
             throttling: this.throttling,
             service_id: this.service_id,
+            // Subs start unregistered by default
             status: 'unregistered'
           }
         })

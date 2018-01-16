@@ -10,6 +10,7 @@ require('../node_modules/bootstrap/less/bootstrap.less')
 
 Vue.config.productionTip = false
 Vue.use(VuejsDialog)
+// Mouseover tooltips settings
 Vue.use(Tooltip, {
   delay: 0,
   placement: 'top',
@@ -18,6 +19,7 @@ Vue.use(Tooltip, {
   offset: 0
 })
 
+// Main Vue app
 /* eslint-disable no-new */
 new Vue({
   el: '#app',

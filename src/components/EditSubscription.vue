@@ -28,6 +28,7 @@
       </p>
       <hr/>
       <div class="field">
+        <!-- TODO: Should be optional -->
         <p class="title">
           Subscription Expires
         </p>
@@ -48,6 +49,7 @@
       </div>
       <hr/>
       <div class="field">
+        <!-- TODO: Offer full form? -->
         <p class="title">
           Subscription subject
         </p>
@@ -58,6 +60,7 @@
       </div>
       <hr/>
       <div class="field">
+        <!-- TODO: Offer full form? -->
         <p class="title">
           Subscription notification
         </p>
@@ -80,6 +83,7 @@
   import Vue from 'vue'
   import VeeValidate from 'vee-validate'
 
+  // Checks if a string is parsable to a valid JSON
   const checkIfValidJson = {
     getMessage (field, args) {
       return 'Invalid JSON format'
@@ -93,6 +97,7 @@
       }
     }
   }
+  // Extend VeeValidate with JSON check function
   VeeValidate.Validator.extend('checkIfValidJson', checkIfValidJson)
 
   Vue.use(VeeValidate)
@@ -109,6 +114,7 @@
       }
     },
     created () {
+      // Get subscription
       axios.get(auth.getAPIUrl() + 'v1/projects/' + this.$route.params.project_id + '/ngsi_subscriptions/' + this.$route.params.subscription_id, {headers: {'Authorization': auth.getAuthHeader()}})
       .then(response => {
         this.name = response.data.name
@@ -121,12 +127,15 @@
       .catch(error => { console.log(error) })
     },
     methods: {
+      // Submit edits
       submit: function (event) {
         if (this.errors.any()) {
           console.log('Form not valid')
           return
         }
+        // Setting this outside of axios function
         var projectId = this.$route.params.project_id
+        // Send PUT to API
         axios({
           method: 'put',
           url: auth.getAPIUrl() + 'v1/projects/' + this.$route.params.project_id + '/ngsi_subscriptions/' + this.$route.params.subscription_id,

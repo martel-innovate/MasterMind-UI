@@ -35,6 +35,7 @@
     </p>
     <hr/>
     <div>
+      <!-- Show JSON or formatted list, depending on set toggled variable -->
       <div v-show="!showJSON">
         <div v-if="subscription.subject">
           <p class="title">
@@ -78,12 +79,14 @@
       </div>
     </div>
     <hr/>
+    <!-- Toggle between JSON and formatted data -->
     <button class="button" v-show="!showJSON" v-on:click="showJSON = true">Show JSON</button>
     <button class="button" v-show="showJSON" v-on:click="showJSON = false">Hide JSON</button>
     <hr/>
     <div class="panel-block">
       <router-link class="button" :to='"/projects/"+this.$route.params.project_id+"/subscriptions"'>Back</router-link>
       <router-link class="button" :to='"/projects/"+this.$route.params.project_id+"/subscriptions/"+subscription.id+"/edit"'>Edit Subscription</router-link>
+      <!-- Show register, activate or deactivate buttons depending on sub status -->
       <button class="button is-primary" v-show="this.subscription.subscription_id === 'pending'" v-on:click="registerSubscription"><b>Activate Subscription</b></button>
       <button class="button is-primary" v-show="this.subscription.subscription_id !== 'pending' && this.subscription.status === 'inactive'" v-on:click="activateSubscription"><b>Activate Subscription</b></button>
       <button class="button is-primary" v-show="this.subscription.subscription_id !== 'pending' && this.subscription.status === 'active'" v-on:click="deactivateSubscription"><b>Deactivate Subscription</b></button>
@@ -98,9 +101,11 @@
   import router from '../router'
   export default {
     created () {
+      // Get Sub
       axios.get(auth.getAPIUrl() + 'v1/projects/' + this.$route.params.project_id + '/ngsi_subscriptions/' + this.$route.params.subscription_id, {headers: {'Authorization': auth.getAuthHeader()}})
       .then(response => {
         this.subscription = response.data
+        // Parse JSONs for subject and notification into objects
         this.subscription.subject = JSON.parse(this.subscription.subject)
         this.subscription.notification = JSON.parse(this.subscription.notification)
       })
@@ -113,9 +118,11 @@
       }
     },
     methods: {
+      // Register Subscription to Broker
       registerSubscription: function (event) {
         var projectId = this.$route.params.project_id
         var subscriptionId = this.subscription.id
+        // Send request to API to register sub
         axios.get(auth.getAPIUrl() + 'v1/projects/' + projectId + '/ngsi_subscriptions/' + subscriptionId + '/register', {headers: {'Authorization': auth.getAuthHeader()}})
         .then(response => {
           console.log(response.data)
@@ -123,9 +130,12 @@
         })
         .catch(error => { console.log(error) })
       },
+      // Actovate Subscription on Broker
       activateSubscription: function (event) {
+        // Setting this outside of axios
         var projectId = this.$route.params.project_id
         var subscriptionId = this.subscription.id
+        // Send request to API to activate sub
         axios.get(auth.getAPIUrl() + 'v1/projects/' + projectId + '/ngsi_subscriptions/' + subscriptionId + '/activate', {headers: {'Authorization': auth.getAuthHeader()}})
         .then(response => {
           console.log(response.data)
@@ -133,9 +143,12 @@
         })
         .catch(error => { console.log(error) })
       },
+      // Deactivate Subscription on Broker
       deactivateSubscription: function (event) {
+        // Setting this outside of axios
         var projectId = this.$route.params.project_id
         var subscriptionId = this.subscription.id
+        // Send request to API to deactivate Sub
         axios.get(auth.getAPIUrl() + 'v1/projects/' + projectId + '/ngsi_subscriptions/' + subscriptionId + '/deactivate', {headers: {'Authorization': auth.getAuthHeader()}})
         .then(response => {
           console.log(response.data)
@@ -143,20 +156,25 @@
         })
         .catch(error => { console.log(error) })
       },
+      // Delete the Subscription
       deleteSubscription: function (event) {
+        // Setting this outside of axios
         var projectId = this.$route.params.project_id
         var subscriptionId = this.subscription.id
         var subId = this.subscription.subscription_id
+        // Confirmation dialog
         this.$dialog.confirm('Are you sure you want to delete the Subscription?', {okText: 'DELETE', cancelText: 'CANCEL'})
         .then(function () {
+          // If Sub is registered on the broker, remove it
           if (subId !== 'pending') {
+            // Send request to API to remove the sub from the broker
             axios.get(auth.getAPIUrl() + 'v1/projects/' + projectId + '/ngsi_subscriptions/' + subscriptionId + '/remove', {headers: {'Authorization': auth.getAuthHeader()}})
             .then(response => {
               console.log(response.data)
             })
             .catch(error => { console.log(error) })
           }
-
+          // DELETE to API
           axios({
             method: 'delete',
             url: auth.getAPIUrl() + 'v1/projects/' + projectId + '/ngsi_subscriptions/' + subscriptionId,

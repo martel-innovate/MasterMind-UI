@@ -3,8 +3,10 @@
     <aside class="column is-2 aside hero is-fullheight is-hidden-mobile">
       <div>
         <div class="main">
+          <!-- Sidebar items -->
           <div class="title">MASTERMIND</div>
           <br/>
+          <!-- Show Login or Logout depending on whether user is logged in or not -->
           <router-link v-if="!actorIsAuthenticated()" class="item" to="/login"><span class="name">Login</span></router-link>
           <router-link v-if="actorIsAuthenticated()" class="item" to="/login"><span class="name">Logout</span></router-link>
           <hr v-if="actorIsAuthenticated()"/>
@@ -37,6 +39,7 @@
 <script>
 import auth from './auth'
 export default {
+  // Main app of Vue
   name: 'app',
   methods: {
     actorIsAuthenticated: function () {

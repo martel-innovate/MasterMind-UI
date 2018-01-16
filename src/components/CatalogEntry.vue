@@ -14,6 +14,8 @@
   </section>
   <br/>
   <ul>
+    <!-- Display Env Variables that are configurable -->
+    <!-- TODO: Maybe improve the way they are displayed -->
     <li v-show="env_variables">
       <h2 class="notification is-info">Configuration Variables:</h2>
       <div class="box is-fullwidth">
@@ -29,6 +31,8 @@
       </div>
     </li>
     <br/>
+    <!-- Display the services that can be linked -->
+    <!-- TODO: Maybe improve the way they are displayed -->
     <li v-show="linked_services">
       <h2 class="notification is-info">Service Links:</h2>
       <div class="box is-fullwidth">
@@ -42,6 +46,7 @@
       </div>
     </li>
     <br/>
+    <!-- Display the docker compose that deploys this service type -->
     <li>
       <h2 class="notification is-info">Docker Compose:</h2>
       <div class="box is-fullwidth">
@@ -59,6 +64,7 @@
   import auth from '../auth'
   export default {
     created () {
+      // Retrieve all the service types
       axios.get(auth.getAPIUrl() + 'v1/service_types/' + this.$route.params.id, {headers: {'Authorization': auth.getAuthHeader()}})
       .then(response => {
         const yaml = require('js-yaml')
