@@ -93,6 +93,7 @@
         name: '',
         clusters: [],
         services: [],
+        prevClusterId: 0,
         cluster_id: 0,
         service_type_id: 0,
         prevConfiguration: '',
@@ -141,6 +142,7 @@
       .then(response => {
         this.name = response.data.name
         this.prevConfiguration = response.data.configuration
+        this.prevClusterId = response.data.cluster_id
         this.cluster_id = response.data.cluster_id
         this.service_type_id = response.data.service_type_id
         this.status = response.data.status
@@ -257,6 +259,15 @@
         // Set this outside of axios function
         var projectId = this.$route.params.project_id
         var serviceId = this.$route.params.service_id
+        var prevClusterId = this.prevClusterId
+        // Undeploy if deployed
+        if (status === 'Active') {
+          axios.get(auth.getAPIUrl() + 'v1/projects/' + projectId + '/clusters/' + prevClusterId + '/removestack?service_id=' + serviceId + '&service_name=' + name, {headers: {'Authorization': auth.getAuthHeader()}})
+          .then(response => {
+            console.log(response.data)
+          })
+          .catch(error => { console.log(error) })
+        }
         // Send PUT to API
         axios({
           method: 'put',

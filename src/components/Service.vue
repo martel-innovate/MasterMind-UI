@@ -67,14 +67,22 @@
         <hr/>
       </div>
     </div>
+    <p class="title">
+      Current Status on the Cluster
+    </p>
+    <p v-for="entry in currentStatus">
+      {{ entry.name }} : {{entry.status}}
+    </p>
+    <hr/>
     <!-- Buttons -->
     <div class="panel-block">
       <router-link class="button" :to='"/projects/"+this.$route.params.project_id'>Back</router-link>
       <router-link class="button" :to='"/projects/"+this.$route.params.project_id+"/services/"+service.id+"/edit"'>Edit Service</router-link>
-      <!-- Show deploy button or deploying disabled button depending on whether service is being deployed -->
-      <!-- TODO: If Service is already deployed, don't show -->
-      <button class="button is-primary" v-show="!deploying" v-on:click="deployService"><b>DEPLOY</b></button>
-      <button class="button is-primary" v-show="deploying" disabled><b>DEPLOYING...</b></button>
+      <!-- Show deploy/undeploy button or deploying/undeploying disabled button depending on whether service is being deployed/undeployed -->
+      <button class="button is-primary" v-show="service.status == 'Inactive' && !deploying" v-on:click="deployService"><b>DEPLOY</b></button>
+      <button class="button is-primary" v-show="service.status == 'Inactive' && deploying" disabled><b>DEPLOYING...</b></button>
+      <button class="button is-danger" v-show="service.status != 'Inactive' && !undeploying" v-on:click="undeployService"><b>UNDEPLOY</b></button>
+      <button class="button is-danger" v-show="service.status != 'Inactive' && undeploying" disabled><b>UNDEPLOYING...</b></button>
       <button class="button is-danger" v-on:click="deleteService"><b>DELETE SERVICE</b></button>
     </div>
   </div>
@@ -118,7 +126,9 @@
         configuration: [],
         service_type: '',
         cluster: '',
-        deploying: false
+        deploying: false,
+        undeploying: false,
+        currentStatus: []
       }
     },
     methods: {
@@ -171,7 +181,7 @@
         axios.get(auth.getAPIUrl() + 'v1/projects/' + projectId + '/clusters/' + this.service.cluster_id + '/deploy?service_id=' + serviceId + '&service_name=' + serviceName, {headers: {'Authorization': auth.getAuthHeader()}})
         .then(response => {
           console.log(response.data)
-          router.push('/projects/' + projectId)
+          location.reload()
         })
         .catch(error => {
           // Pop up an alert if deployment fails
@@ -180,8 +190,28 @@
           this.deploying = false
         })
       },
-      // Get Service details from the Swarm Cluster, check if alive
-      // TODO: FIX THIS
+      // Undeploy the Service from the cluster
+      undeployService: function () {
+        // Set undeploying to disable buttons
+        this.undeploying = true
+        // Setting these variables outside of axios functions
+        var projectId = this.$route.params.project_id
+        var serviceId = this.$route.params.service_id
+        var serviceName = this.service.name
+        // Undeploy stack from Docker Swarm cluster
+        axios.get(auth.getAPIUrl() + 'v1/projects/' + projectId + '/clusters/' + this.service.cluster_id + '/removestack?service_id=' + serviceId + '&service_name=' + serviceName, {headers: {'Authorization': auth.getAuthHeader()}})
+        .then(response => {
+          console.log(response.data)
+          location.reload()
+        })
+        .catch(error => {
+          // Pop up an alert if deployment fails
+          alert('UNDEPLOYMENT FAILED: ' + error.response.data.message)
+          console.log(error.response.data.message)
+          this.undeploying = false
+        })
+      },
+      // Get Service (stack) details from the Swarm Cluster
       getService: function () {
         if (this.service.endpoint === 'Not deployed') {
           return
@@ -193,27 +223,13 @@
         axios.get(auth.getAPIUrl() + 'v1/projects/' + projectId + '/clusters/' + this.service.cluster_id + '/getstack?service_id=' + serviceId + '&service_name=' + serviceName, {headers: {'Authorization': auth.getAuthHeader()}})
         .then(response => {
           console.log(response.data)
+          // TODO: Better format and display this
+          this.currentStatus = JSON.parse((response.data.stack_status).replace(/'/g, '"'))
         })
         .catch(error => {
           console.log(error)
-          /*
-          axios({
-            method: 'put',
-            url: auth.getAPIUrl() + 'v1/projects/' + projectId + '/services/' + serviceId,
-            headers: { 'Authorization': auth.getAuthHeader() },
-            data: {
-              endpoint: 'Not deployed',
-              status: 'Inactive'
-            }
-          })
-          .then(function (response) {
-            console.log(response.data)
-            location.reload()
-          })
-          .catch(function (error) {
-            console.log(error)
-          })
-          */
+          // TODO: Better format and display this
+          this.currentStatus = error
         })
       }
     }
