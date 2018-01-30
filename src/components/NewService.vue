@@ -137,8 +137,8 @@
       <hr/>
     </div>
     <!-- Display warnings and disable buttons if requirements not met to register Service -->
-    <p class="text-danger" v-if="services.length === 0 || noLinkableServices">You don't have the required dependent Services registered in order to deploy this Service</p>
-    <hr v-if="services.length === 0 || noLinkableServices"/>
+    <p class="text-danger" v-if="noLinkableServices">You don't have the required dependent Services registered in order to deploy this Service</p>
+    <hr v-if="noLinkableServices"/>
     <!-- Deploy button, switching between disabled, enabled, or pending deployment -->
     <button class="button is-primary" v-show="!deploying" v-on:click="submit" :disabled="errors.any() || cannotRegister || noLinkableServices">Register Service</button>
     <button class="button is-primary" v-show='!deploying && managed == "true"' v-on:click="submitAndDeploy" :disabled="errors.any() || cannotRegister || noLinkableServices">Register and Deploy Service</button>
@@ -233,11 +233,6 @@
         var filtered = this.services.filter(function (service) {
           return findServiceTypeById(service.service_type_id).name === type
         })
-        // If no service matched the filter, at least one of the linked services
-        // entries has no service to link, therefore we set this variable
-        if (filtered.length === 0) {
-          this.noLinkableServices = true
-        }
         return filtered
       },
       // Finds a service type matching a given id
