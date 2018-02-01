@@ -3,9 +3,7 @@
     <!-- Check if logged in and display correct button -->
     <p v-if="!logged">
       <!-- Redirect to Fiware Lab to authenticate -->
-      <!-- TODO: Move to configuration elsewhere -->
-      <a href="https://account.lab.fiware.org/oauth2/authorize?response_type=code&client_id=f856da058c20414db0e946d234a5b9b1&state=xyz&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Fauth%2Flogin"
-         class="button is-primary is-large is-outlined is-fullwidth" >Login via Fiware</a>
+      <a :href=loginURI class="button is-primary is-large is-outlined is-fullwidth">Login via Fiware</a>
     </p>
     <p v-if="logged" >
       <button class="button is-primary is-large is-outlined is-fullwidth" v-on:click="logout">Logout</button>
@@ -26,11 +24,13 @@
         this.logged = true
         router.push('/')
       }
+      this.loginURI = this.constructLoginURI()
     },
     // Check if logged in
     data () {
       return {
-        logged: auth.checkAuth()
+        logged: auth.checkAuth(),
+        loginURI: ''
       }
     },
     methods: {
@@ -39,6 +39,23 @@
         auth.logout()
         this.logged = false
         location.reload()
+      },
+      // Construct the URI for the Oauth authentication
+      constructLoginURI: function () {
+        var uri = ''
+        uri += process.env.MASTERMIND_OAUTH_URI
+        uri += '/oauth2/authorize'
+        uri += '?'
+        uri += 'response_type=code'
+        uri += '&'
+        uri += 'client_id='
+        uri += process.env.MASTERMIND_OAUTH_CLIENT_ID
+        uri += '&'
+        uri += 'state=xyz'
+        uri += '&'
+        uri += 'redirect_uri='
+        uri += process.env.MASTERMIND_OAUTH_REDIRECT_URI
+        return encodeURI(uri)
       }
     }
   }
