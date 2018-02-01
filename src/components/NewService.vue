@@ -388,6 +388,7 @@
           // Send request to API to deploy the newly created service
           axios.get(auth.getAPIUrl() + 'v1/projects/' + projectId + '/clusters/' + clusterId + '/deploy?service_id=' + serviceId + '&service_name=' + name, {headers: {'Authorization': auth.getAuthHeader()}})
           .then(response => {
+            alert('SERVICE SUCCESSFULLY CREATED AND DEPLOYED')
             console.log(response.data)
             router.push('/projects/' + projectId + '/services')
           })
