@@ -43,6 +43,7 @@
       // Construct the URI for the Oauth authentication
       constructLoginURI: function () {
         var uri = ''
+        uri += 'https://'
         uri += process.env.MASTERMIND_OAUTH_URI
         uri += '/oauth2/authorize'
         uri += '?'
@@ -54,7 +55,11 @@
         uri += 'state=xyz'
         uri += '&'
         uri += 'redirect_uri='
-        uri += process.env.MASTERMIND_OAUTH_REDIRECT_URI
+        uri += 'http://'
+        uri += process.env.MASTERMIND_API_HOST
+        uri += ':'
+        uri += process.env.MASTERMIND_API_PORT
+        uri += '/auth/login'
         return encodeURI(uri)
       }
     }
