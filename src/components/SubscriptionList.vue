@@ -266,6 +266,7 @@
         .then(response => {
           console.log(response)
           this.buttonsActive = true
+          location.reload()
         })
         .catch(error => {
           console.log(error)
