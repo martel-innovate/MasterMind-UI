@@ -130,35 +130,42 @@
       // Delete service
       deleteService: function (service) {
         // Set these outside of axios functions
+        var sendDeleteToApi = this.sendDeleteToApi
         var projectId = this.$route.params.id
         var serviceId = service.id
         var clusterId = service.cluster_id
         var serviceName = service.name
+        var serviceEndpoint = service.endpoint
         // Confirmation dialog box
         this.$dialog.confirm('Are you sure you want to delete the Service?', {okText: 'DELETE', cancelText: 'CANCEL'})
         .then(function () {
           // If Service is deployed, remove stack from Docker Swarm cluster as well
-          if (service.endpoint !== 'Not Deployed') {
+          if (serviceEndpoint !== 'Not Deployed') {
             axios.get(auth.getAPIUrl() + 'v1/projects/' + projectId + '/clusters/' + clusterId + '/removestack?service_id=' + serviceId + '&service_name=' + serviceName, {headers: {'Authorization': auth.getAuthHeader()}})
             .then(response => {
               console.log(response.data)
-              router.push('/projects/' + projectId)
+              sendDeleteToApi(projectId, serviceId)
             })
             .catch(error => { console.log(error) })
+          } else {
+            sendDeleteToApi(projectId, serviceId)
           }
-          // DELETE to API
-          axios({
-            method: 'delete',
-            url: auth.getAPIUrl() + 'v1/projects/' + projectId + '/services/' + serviceId,
-            headers: { 'Authorization': auth.getAuthHeader() }
-          })
-          .then(function (response) {
-            console.log(response.data)
-            location.reload()
-          })
-          .catch(function (error) {
-            console.log(error)
-          })
+        })
+        .catch(function (error) {
+          console.log(error)
+        })
+      },
+      // Send DELETE to API
+      sendDeleteToApi: function (projectId, serviceId) {
+        // DELETE to API
+        axios({
+          method: 'delete',
+          url: auth.getAPIUrl() + 'v1/projects/' + projectId + '/services/' + serviceId,
+          headers: { 'Authorization': auth.getAuthHeader() }
+        })
+        .then(function (response) {
+          console.log(response.data)
+          location.reload()
         })
         .catch(function (error) {
           console.log(error)
