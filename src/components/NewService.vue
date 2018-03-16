@@ -40,6 +40,58 @@
     <p class="text-danger" v-if="service_types.length === 0">No services to deploy</p>
     <hr/>
     <p class="title">
+      Endpoint Security
+    </p>
+    <p class="subtitle">
+      Option for securing API backends via Api-Umbrella 
+    </p>
+    <p class="control">
+      <label for="agree">
+        <input id="agree" type="checkbox" value="agree" v-model="checked"/>
+        Secure
+      </label>
+    </p>
+    <div v-if="checked" id="security" class="box">
+      <h2 class="subtitle">API-Umbrella backend configurations</h2>
+      <div class="control">
+        <input class="input is-focused" v-model="umb_hostname" type="text" placeholder="API-Umbrella Hostname">
+      </div>
+      <div class="control">
+        <input class="input is-focused" v-model="umb_admin_token" type="text" placeholder="Admin Auth Token">
+      </div>
+      <div class="control">
+        <input class="input is-focused" v-model="umb_user_key" type="text" placeholder="User API Key">
+      </div>
+      <div class="box">
+        <h2 class="subtitle">Securiy Rule</h2>
+        <div class="control">
+          <input class="input is-focused" v-model="umb_rule_name" type="text" placeholder="Rule name">
+        </div>
+        <div class="control">
+          <input class="input is-focused" v-model="umb_frontend_host" type="text" placeholder="Frontend host">
+        </div>
+        <div class="control">
+          <input class="input is-focused" v-model="umb_backend_host" type="text" placeholder="Backend host">
+        </div>
+        <div class="control">
+          <input class="input is-focused" v-model="umb_backend_server" type="text" placeholder="Backend server">
+        </div>
+        <div class="control">
+          <input class="input is-focused" v-model="umb_backend_port" type="text" placeholder="Backend port">
+        </div>
+        <div class="control">
+          <input class="input is-focused" v-model="umb_frontend_prefix" type="text" placeholder="Frontend prefix">
+        </div>
+        <div class="control">
+          <input class="input is-focused" v-model="umb_backend_prefix" type="text" placeholder="Backend prefix">
+        </div>
+        <button class="button is-primary" v-on:click="secureService">Secure Service</button>
+        <!--<button class="button is-primary" v-on:click="publishService">Publish Service</button>-->
+      </div>  
+    </div>
+
+    <hr/>
+    <p class="title">
       Managed
     </p>
     <p class="subtitle">
@@ -216,7 +268,18 @@
         services: [],
         cannotRegister: false,
         noLinkableServices: false,
-        deploying: false
+        deploying: false,
+        checked: false,
+        umb_hostname: '',
+        umb_admin_token: '',
+        umb_user_key: '',
+        umb_rule_name: '',
+        umb_frontend_host: '',
+        umb_backend_host: '',
+        umb_backend_server: '',
+        umb_backend_port: '',
+        umb_frontend_prefix: '',
+        umb_backend_prefix: ''
       }
     },
     methods: {
@@ -401,6 +464,54 @@
         })
         .catch(function (error) {
           console.log(error.response.data.message)
+        })
+      },
+      secureService: function (event) {
+        // var projectId = this.$route.params.id
+        var host = this.umb_hostname
+        var apiKey = this.umb_user_key
+        var adminAuthToken = this.umb_admin_token
+        var payload =
+          {
+            'api': {
+              'host': host,
+              'X-Api-Key': apiKey,
+              'X-Admin-Auth-Token': adminAuthToken,
+              'name': this.umb_rule_name,
+              'frontend_host': this.umb_frontend_host,
+              'backend_host': this.umb_backend_host,
+              'servers': [
+                {
+                  'host': this.umb_backend_server,
+                  'port': this.umb_backend_port
+                }
+              ],
+              'url_matches': [
+                {
+                  'frontend_prefix': this.umb_frontend_prefix,
+                  'backend_prefix': this.umb_backend_prefix
+                }
+              ]
+            }
+          }
+        axios({
+          method: 'post',
+          url: auth.getAPIUrl() + 'v1/projects/' + this.$route.params.id + '/services/secureservice',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': auth.getAuthHeader()
+          },
+          data: {
+            payload
+          }
+        })
+        .then(function (response) {
+          alert('API backend is saved')
+          var id = response.data
+          console.log(id)
+        })
+        .catch(function (error) {
+          console.log(error)
         })
       }
     }
