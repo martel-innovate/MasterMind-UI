@@ -37,16 +37,14 @@
     </div>
     <hr/>
     <div class="field">
-      <!-- TODO: Should be optional -->
       <p class="title">
         Subscription expires
       </p>
       <p class="subtitle">
-        The expiration time for this Subscription in ISO 8601 format (e.g. 2017-12-13T13:51:34+00:00)
+        The expiration time for this Subscription in ISO 8601 format (e.g. 2017-12-13T13:51:34+00:00). Leave empty if sub does not expire
       </p>
       <div class="control">
-        <input class="input" name="expires" type="text"v-model="expires" placeholder="Subscription expires" v-validate.initial="'required'">
-        <p class="text-danger" v-if="errors.has('expires')">{{ errors.first('expires') }}</p>
+        <input class="input" name="expires" type="text"v-model="expires" placeholder="Subscription expires">
       </div>
     </div>
     <hr/>
@@ -192,6 +190,11 @@
         }
         // Set this outside of axios functions
         var projectId = this.$route.params.id
+        // Check if expiration was provided, set to "never" if not so
+        var expires = this.expires
+        if (expires === '') {
+          expires = 'never'
+        }
         // POST to API
         axios({
           method: 'post',
@@ -203,7 +206,7 @@
             description: this.description,
             subject: JSON.stringify(this.subject),
             notification: JSON.stringify(this.notification),
-            expires: this.expires,
+            expires: expires,
             throttling: this.throttling,
             service_id: this.service_id,
             // Subs start unregistered by default
