@@ -48,7 +48,7 @@
         </td>
         <td>
           <p v-for="entity in subscription.subject.entities">
-            {{entity.id}}, {{entity.type}}
+            {{entity.idPattern}}, {{entity.typePattern}}
           </p>
         </td>
         <td>

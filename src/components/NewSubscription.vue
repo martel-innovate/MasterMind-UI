@@ -67,13 +67,13 @@
         Entities
       </p>
       <p class="subtitle">
-        The Entities the Subscription refers to, ID and Type (e.g. Room1, Room)
+        The Entities the Subscription refers to, ID and Type (e.g. Room1, Room). These can be patterns in the form of regular expressions (e.g. .* to match all ids/types).
       </p>
       <div class="control" v-for="(entity, i) in subject.entities" v>
-        <input class="input" name="entityId" type="text"v-model="subject.entities[i]['id']" placeholder="Id" v-validate.initial="'required'">
-        <input class="input" name="entityType" type="text"v-model="subject.entities[i]['type']" placeholder="Type" v-validate.initial="'required'">
+        <input class="input" name="entityId" type="text"v-model="subject.entities[i]['idPattern']" placeholder="Id" v-validate.initial="'required'">
+        <input class="input" name="entityType" type="text"v-model="subject.entities[i]['typePattern']" placeholder="Type" v-validate.initial="'required'">
       </div>
-      <button class="button is-primary" v-on:click="subject.entities.push({})">+</button>
+      <button class="button is-primary" v-on:click="subject.entities.push({})">+ Add Attribute</button>
       <p class="text-danger" v-if="errors.has('entityId')">{{ errors.first('entityId') }}</p>
       <p class="text-danger" v-if="errors.has('entityType')">{{ errors.first('entityType') }}</p>
     </div>
@@ -89,7 +89,7 @@
       <div class="control" v-for="(condition, i) in subject.condition.attrs" v>
         <input class="input" name="condition" type="text"v-model="subject.condition.attrs[i]" placeholder="Value" v-validate.initial="'required'">
       </div>
-      <button class="button is-primary" v-on:click="subject.condition.attrs.push('')">+</button>
+      <button class="button is-primary" v-on:click="subject.condition.attrs.push('')">+ Add Condition</button>
       <p class="text-danger" v-if="errors.has('condition')">{{ errors.first('condition') }}</p>
     </div>
     <hr/>
@@ -113,16 +113,27 @@
       <!-- Creates a dropdown of the services registered to this project, to select one as endpoint of notifications -->
       <!-- TODO: Perhaps filter to only have appropriate endpoints? -->
       <p class="title">
-        Notification endpoint
+        Notification Endpoint
       </p>
       <p class="subtitle">
-        The endpoint Service of the Notifications for this Subscription
+        The endpoint Service of the Notifications for this Subscription (e.g. http://192.168.99.100:8668/v2/notify)
       </p>
-      <select v-model="notification['http']['url']">
-        <option v-for="service in services" v-bind:value="'http://'+service.endpoint">
-          {{ service.name }}
-        </option>
-      </select>
+      <input class="input" name="notification_endpoint" type="text" v-model="notification['http']['url']" placeholder="Notification endpoint" v-validate.initial="'required'">
+      <p class="text-danger" v-if="errors.has('notification_endpoint')">{{ errors.first('notification_endpoint') }}</p>
+    </span>
+    <hr/>
+    <span class="field">
+      <p class="title">
+        Notification Metadata
+      </p>
+      <p class="subtitle">
+        Metadata to filter for in the notifcations (none for no filtering)
+      </p>
+      <div class="control" v-for="(metadata, i) in notification.metadata" v>
+        <input class="input" name="metadata" type="text"v-model="notification.metadata[i]" placeholder="Value" v-validate.initial="'required'">
+      </div>
+      <button class="button is-primary" v-on:click="notification.metadata.push('')">+ Add Metadata</button>
+      <p class="text-danger" v-if="errors.has('metadata')">{{ errors.first('metadata') }}</p>
     </span>
     <hr/>
     <br/>
@@ -164,7 +175,6 @@
       .then(response => {
         this.services = response.data
         this.service_id = this.services[0].id
-        this.notification.http.url = 'http://' + this.services[0].endpoint
       })
       .catch(error => { console.log(error) })
     },
@@ -172,8 +182,8 @@
       return {
         name: '',
         description: '',
-        subject: {entities: [{}], condition: {attrs: ['']}},
-        notification: {http: {url: ''}},
+        subject: {entities: [{}], condition: {attrs: []}},
+        notification: {http: {url: ''}, metadata: []},
         expires: '',
         throttling: '',
         service_id: 0,
