@@ -11,9 +11,15 @@
     </div>
   </section>
   <br/>
-  <router-link class="button" :to='"/projects/"+$route.params.id'>Back</router-link>
-  <!-- Search box -->
-  <input class="is-pulled-right" v-model="searchQuery" placeholder="Search...">
+  <div>
+    <router-link :to='"/"'>Projects</router-link>
+    /
+    <router-link :to='"/projects/"+$route.params.id'>{{project.name}}</router-link>
+    /
+    Subscriptions
+    <!-- Search box -->
+    <input class="is-pulled-right" v-model="searchQuery" placeholder="Search...">
+  </div>
   <hr/>
   <table class="table">
     <thead>
