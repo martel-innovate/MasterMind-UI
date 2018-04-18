@@ -88,7 +88,10 @@
       .then(response => { this.project = response.data })
       .catch(error => { console.log(error) })
       axios.get(auth.getAPIUrl() + 'v1/projects/' + this.$route.params.id + '/services', {headers: {'Authorization': auth.getAuthHeader()}})
-      .then(response => { this.services = response.data })
+      .then(response => {
+        this.services = response.data
+        console.log(this.services)
+      })
       .catch(error => { console.log(error) })
       axios.get(auth.getAPIUrl() + 'v1/projects/' + this.$route.params.id + '/clusters', {headers: {'Authorization': auth.getAuthHeader()}})
       .then(response => { this.clusters = response.data })
