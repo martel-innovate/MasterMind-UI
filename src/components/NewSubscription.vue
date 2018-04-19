@@ -80,8 +80,9 @@
         <label for="isTypePattern">Pattern</label>
         <input type="radio" id="isTypePattern" value="true" v-model="subject.entities[i]['isTypePattern']">
         <input class="input" name="entityType" type="text"v-model="subject.entities[i]['type']" placeholder="Type" v-validate.initial="'required'">
+        <hr/>
       </div>
-      <button class="button is-primary" v-on:click="subject.entities.push({isIdPattern: false, isTypePattern: false})">+ Add Attribute</button>
+      <button class="button is-primary" v-on:click="subject.entities.push({isIdPattern: false, isTypePattern: false})">+ Add Entity</button>
       <p class="text-danger" v-if="errors.has('entityId')">{{ errors.first('entityId') }}</p>
       <p class="text-danger" v-if="errors.has('entityType')">{{ errors.first('entityType') }}</p>
     </div>
@@ -129,6 +130,20 @@
       <input class="input" name="notification_endpoint" type="text" v-model="notification['http']['url']" placeholder="Notification endpoint" v-validate.initial="'required'">
       <p class="text-danger" v-if="errors.has('notification_endpoint')">{{ errors.first('notification_endpoint') }}</p>
     </span>
+    <hr/>
+    <div class="field">
+      <p class="title">
+        Notification Attributes
+      </p>
+      <p class="subtitle">
+        The attributes to send in notifications (e.g. temperature, pressure, ...). Don't specify any attributes to send all of them.
+      </p>
+      <div class="control" v-for="(att, i) in notification.attrs" v>
+        <input class="input" name="notificationAttr" type="text"v-model="notification.attrs[i]" placeholder="Value" v-validate.initial="'required'">
+      </div>
+      <button class="button is-primary" v-on:click="notification.attrs.push('')">+ Add Attribute</button>
+      <p class="text-danger" v-if="errors.has('notificationAttr')">{{ errors.first('notificationAttr') }}</p>
+    </div>
     <hr/>
     <span class="field">
       <p class="title">
@@ -191,7 +206,7 @@
         name: '',
         description: '',
         subject: {entities: [{isIdPattern: false, isTypePattern: false}], condition: {attrs: []}},
-        notification: {http: {url: ''}, metadata: []},
+        notification: {http: {url: ''}, metadata: [], attrs: []},
         expires: '',
         throttling: '',
         service_id: 0,
