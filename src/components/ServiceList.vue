@@ -29,6 +29,7 @@
         <td>Cluster</td>
         <td>Docker ID</td>
         <td>Managed</td>
+        <td>Secured</td>
         <td>Status</td>
         <td>Actions</td>
       </tr>
@@ -50,6 +51,9 @@
         </td>
         <td>
           {{service.managed}}
+        </td>
+        <td>
+          {{service.secured}}
         </td>
         <td>
           {{service.status}}
