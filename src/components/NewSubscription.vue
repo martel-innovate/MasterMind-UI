@@ -70,10 +70,18 @@
         The Entities the Subscription refers to, ID and Type (e.g. Room1, Room). These can be patterns in the form of regular expressions (e.g. .* to match all ids/types).
       </p>
       <div class="control" v-for="(entity, i) in subject.entities" v>
-        <input class="input" name="entityId" type="text"v-model="subject.entities[i]['idPattern']" placeholder="Id" v-validate.initial="'required'">
-        <input class="input" name="entityType" type="text"v-model="subject.entities[i]['typePattern']" placeholder="Type" v-validate.initial="'required'">
+        <label for="isIdPattern">Single</label>
+        <input type="radio" id="isIdPattern" value="false" v-model="subject.entities[i]['isIdPattern']">
+        <label for="isIdPattern">Pattern</label>
+        <input type="radio" id="isIdPattern" value="true" v-model="subject.entities[i]['isIdPattern']">
+        <input class="input" name="entityId" type="text"v-model="subject.entities[i]['id']" placeholder="Id" v-validate.initial="'required'">
+        <label for="isTypePattern">Single</label>
+        <input type="radio" id="isTypePattern" value="false" v-model="subject.entities[i]['isTypePattern']">
+        <label for="isTypePattern">Pattern</label>
+        <input type="radio" id="isTypePattern" value="true" v-model="subject.entities[i]['isTypePattern']">
+        <input class="input" name="entityType" type="text"v-model="subject.entities[i]['type']" placeholder="Type" v-validate.initial="'required'">
       </div>
-      <button class="button is-primary" v-on:click="subject.entities.push({})">+ Add Attribute</button>
+      <button class="button is-primary" v-on:click="subject.entities.push({isIdPattern: false, isTypePattern: false})">+ Add Attribute</button>
       <p class="text-danger" v-if="errors.has('entityId')">{{ errors.first('entityId') }}</p>
       <p class="text-danger" v-if="errors.has('entityType')">{{ errors.first('entityType') }}</p>
     </div>
@@ -182,7 +190,7 @@
       return {
         name: '',
         description: '',
-        subject: {entities: [{}], condition: {attrs: []}},
+        subject: {entities: [{isIdPattern: false, isTypePattern: false}], condition: {attrs: []}},
         notification: {http: {url: ''}, metadata: []},
         expires: '',
         throttling: '',
@@ -204,6 +212,20 @@
         var expires = this.expires
         if (expires === '') {
           expires = 'never'
+        }
+        for (var i = 0; i < this.subject.entities.length; i++) {
+          var e = {}
+          if (this.subject.entities[i].isIdPattern === 'true') {
+            e.idPattern = this.subject.entities[i].id
+          } else {
+            e.id = this.subject.entities[i].id
+          }
+          if (this.subject.entities[i].isTypePattern === 'true') {
+            e.typePattern = this.subject.entities[i].type
+          } else {
+            e.type = this.subject.entities[i].type
+          }
+          this.subject.entities[i] = e
         }
         // POST to API
         axios({
