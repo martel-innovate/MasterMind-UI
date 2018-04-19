@@ -32,7 +32,7 @@
       <span class="select">
         <select v-model="service_type_id" @change="getConfigTemplate">
           <option v-for="service_type in service_types" v-bind:value="service_type.id">
-            {{ service_type.name }}
+            {{ service_type.name }}:{{ service_type.version }}
           </option>
         </select>
       </span>
