@@ -4,7 +4,7 @@
     <div class="hero-body">
       <div class="container">
         <h1 class="title">
-          {{service.name}}
+          {{service.name}}:{{service.version}}
         </h1>
         <h2 class="subtitle">
           {{service.service_protocol_type}}, NGSI Ver. {{service.ngsi_version}}

@@ -11,9 +11,15 @@
     </div>
   </section>
   <br/>
-  <router-link class="button" :to='"/projects/"+$route.params.id'>Back</router-link>
-  <!-- Search box -->
-  <input class="is-pulled-right" v-model="searchQuery" placeholder="Search...">
+  <div>
+    <router-link :to='"/"'>Projects</router-link>
+    /
+    <router-link :to='"/projects/"+$route.params.id'>{{project.name}}</router-link>
+    /
+    Services
+    <!-- Search box -->
+    <input class="is-pulled-right" v-model="searchQuery" placeholder="Search...">
+  </div>
   <hr/>
   <table class="table">
     <thead>
@@ -23,6 +29,7 @@
         <td>Cluster</td>
         <td>Docker ID</td>
         <td>Managed</td>
+        <td>Secured</td>
         <td>Status</td>
         <td>Actions</td>
       </tr>
@@ -44,6 +51,9 @@
         </td>
         <td>
           {{service.managed}}
+        </td>
+        <td>
+          {{service.secured}}
         </td>
         <td>
           {{service.status}}
@@ -82,7 +92,10 @@
       .then(response => { this.project = response.data })
       .catch(error => { console.log(error) })
       axios.get(auth.getAPIUrl() + 'v1/projects/' + this.$route.params.id + '/services', {headers: {'Authorization': auth.getAuthHeader()}})
-      .then(response => { this.services = response.data })
+      .then(response => {
+        this.services = response.data
+        console.log(this.services)
+      })
       .catch(error => { console.log(error) })
       axios.get(auth.getAPIUrl() + 'v1/projects/' + this.$route.params.id + '/clusters', {headers: {'Authorization': auth.getAuthHeader()}})
       .then(response => { this.clusters = response.data })

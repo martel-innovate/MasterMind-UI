@@ -32,7 +32,7 @@
       <span class="select">
         <select v-model="service_type_id" @change="getConfigTemplate">
           <option v-for="service_type in service_types" v-bind:value="service_type.id">
-            {{ service_type.name }}
+            {{ service_type.name }}:{{ service_type.version }}
           </option>
         </select>
       </span>
@@ -43,95 +43,77 @@
       Endpoint Security
     </p>
     <p class="subtitle">
-      Option for securing API backends via Api-Umbrella 
+      Option for securing API backends via Api-Umbrella
     </p>
     <p class="control">
       <label for="agree">
-        <input id="agree" type="checkbox" value="agree" v-model="checked"/>
+        <input id="agree" type="checkbox" value="agree" v-model="secure_checked"/>
         Secure
       </label>
     </p>
-    <div v-if="checked" id="security">
+    <div v-if="secure_checked" id="security">
       <h2 class="subtitle">API-Umbrella backend configurations</h2>
       <!-- API Umbrella hostname -->
       <div class="field">
         <p class="control">
-          <label v-tooltip="'API-Umbrella installation url'" class="label">
-            API-Umbrella url            
+          <label class="label">
+            API Umbrella Service instance
           </label>
-          <input class="input is-focused" name="umb_hostname" v-model="umb_hostname" type="text" placeholder="https://192.168.99.101" v-validate.initial="'required'">
-          <p class="text-danger" v-if="errors.has('umb_hostname')">{{ errors.first('umb_hostname') }}</p>
+          <span v-tooltip="'The API Umbrella Service instance to use for securing this new Service.'" class="select">
+            <select v-model="umb_hostname">
+              <option disabled value="">Select an API Umbrella instance to use</option>
+              <option v-for="service in filterServicesByType('api-umbrella')" v-bind:value="service.endpoint">
+                {{ service.name }}
+              </option>
+            </select>
+          </span>
         </p>
+        <p class="text-danger" v-if="clusters.length === 0">You need to register a cluster before registering or deploying services</p>
       </div>
       <!-- API Umbrella admin auth token -->
       <div class="field">
         <p class="control">
-          <label v-tooltip="'Login the web admin tool, and choose My Account under the top right gear menu. On that page, you should see your Admin API Token listed'"  class="label">
+          <label class="label">
             API-Umbrella admin authentication token
-          </label>  
-          <input class="input is-focused" name="umb_admin_token"  v-model="umb_admin_token" type="text" placeholder="admin-api-token" v-validate.initial="'required'">
-          <p class="text-danger" v-if="errors.has('umb_admin_token')">{{ errors.first('umb_admin_token') }}</p>          
-        </p>  
+          </label>
+          <input v-tooltip="'Login to the API Umbrella web admin tool (https://api-umbrella-host/admin), and choose My Account under the top right gear menu. On that page, you should see your Admin API Token listed'"
+          class="input is-focused" name="umb_admin_token"  v-model="umb_admin_token" type="text" placeholder="admin-api-token" v-validate.initial="'required'">
+          <p class="text-danger" v-if="errors.has('umb_admin_token')">{{ errors.first('umb_admin_token') }}</p>
+        </p>
       </div>
       <!-- API Umbrella user API -->
       <div class="field">
         <p class="control">
-          <label v-tooltip="'https://your-api-umbrella-host/signup/ Signup to receive your own unique API key for your development environment'"  class="label">
+          <label class="label">
             API-Umbrella user API key
-          </label>  
-          <input class="input is-focused" name="umb_user_key" v-model="umb_user_key" type="text" placeholder="user-api-token" v-validate.initial="'required'">
-          <p class="text-danger" v-if="errors.has('umb_user_key')">{{ errors.first('umb_user_key') }}</p>          
+          </label>
+          <input v-tooltip="'Signup to https://your-api-umbrella-host/signup/ receive your own unique API key for your development environment'"
+          class="input is-focused" name="umb_user_key" v-model="umb_user_key" type="text" placeholder="user-api-token" v-validate.initial="'required'">
+          <p class="text-danger" v-if="errors.has('umb_user_key')">{{ errors.first('umb_user_key') }}</p>
         </p>
       </div>
-      
+
       <div class="box">
         <h2 class="subtitle">Securiy Rule</h2>
         <!-- API Umbrella rule name -->
         <div class="field">
           <p class="control">
-            <label v-tooltip="'Name of the custom security rule'"  class="label">
+            <label class="label">
               Rule Name
             </label>
-            <input class="input is-focused" name="umb_rule_name" v-model="umb_rule_name" type="text" placeholder="Orion mapping" v-validate.initial="'required'">
-            <p class="text-danger" v-if="errors.has('umb_rule_name')">{{ errors.first('umb_rule_name') }}</p>          
-          </p>  
-        </div>
-        <!-- API Umbrella frontend url -->
-        <div class="field">
-          <p class="control">
-            <label v-tooltip="'Proxy url acting as the frontend line'"  class="label">
-              Frontend url
-            </label>
-            <input class="input is-focused" name="umb_frontend_host" v-model="umb_frontend_host" type="text" placeholder="192.168.99.101" v-validate.initial="'required'">              
-            <p class="text-danger" v-if="errors.has('umb_frontend_host')">{{ errors.first('umb_frontend_host') }}</p>                      
+            <input v-tooltip="'Name of this custom security rule'"
+            class="input is-focused" name="umb_rule_name" v-model="umb_rule_name" type="text" placeholder="Rule Name" v-validate.initial="'required'">
+            <p class="text-danger" v-if="errors.has('umb_rule_name')">{{ errors.first('umb_rule_name') }}</p>
           </p>
-        </div>
-        <!-- API Uumbrella backend host -->
-        <div class="field">
-          <p class="control">
-            <label v-tooltip="'Backe'"  class="label">
-              Backend url
-            </label>
-            <input class="input is-focused" name="umb_backend_host" v-model="umb_backend_host" type="text" placeholder="maps.googleapis.com" v-validate.initial="'required'">
-            <p class="text-danger" v-if="errors.has('umb_backend_host')">{{ errors.first('umb_backend_host') }}</p>          
-          </p>
-        </div>
-        <div class="field">
-          <p class="control">
-            <label class="label">
-              Backend server url
-            </label>
-            <input class="input is-focused" name="umb_backend_server" v-model="umb_backend_server" type="text" placeholder="maps.googleapis.com" v-validate.initial="'required'">
-            <p class="text-danger" v-if="errors.has('umb_backend_server')">{{ errors.first('umb_backend_server') }}</p>          
-          </p>    
         </div>
         <div class="field">
           <p class="control">
             <label class="label">
               Backend server port
             </label>
-            <input class="input is-focused" name="umb_backend_port" v-model="umb_backend_port" type="text" placeholder="80" v-validate.initial="'required'">
-            <p class="text-danger" v-if="errors.has('umb_backend_port')">{{ errors.first('umb_backend_port') }}</p>          
+            <input v-tooltip="'The port used by the backend Service API'"
+            class="input is-focused" name="umb_backend_port" v-model="umb_backend_port" type="text" placeholder="80" v-validate.initial="'required'">
+            <p class="text-danger" v-if="errors.has('umb_backend_port')">{{ errors.first('umb_backend_port') }}</p>
           </p>
         </div>
         <div class="field">
@@ -139,8 +121,9 @@
             <label class="label">
               Front matching prefix
             </label>
-            <input class="input is-focused" name="umb_frontend_prefix" v-model="umb_frontend_prefix" type="text" placeholder="/someUrl/" v-validate.initial="'required'">
-            <p class="text-danger" v-if="errors.has('umb_frontend_prefix')">{{ errors.first('umb_frontend_prefix') }}</p>          
+            <input v-tooltip="'The prefix to use for the URL pointing to this service (e.g. /orion/)'"
+            class="input is-focused" name="umb_frontend_prefix" v-model="umb_frontend_prefix" type="text" placeholder="/someUrl/" v-validate.initial="'required'">
+            <p class="text-danger" v-if="errors.has('umb_frontend_prefix')">{{ errors.first('umb_frontend_prefix') }}</p>
           </p>
         </div>
         <div class="field">
@@ -148,11 +131,12 @@
             <label class="label">
               Backend matching prefix
             </label>
-            <input class="input is-focused" name="umb_backend_prefix" v-model="umb_backend_prefix" type="text" placeholder="/" v-validate.initial="'required'">
-            <p class="text-danger" v-if="errors.has('umb_backend_prefix')">{{ errors.first('umb_backend_prefix') }}</p>          
+            <input v-tooltip="'The prefix for the backend Service API URLs (use / to match all URLs)'"
+            class="input is-focused" name="umb_backend_prefix" v-model="umb_backend_prefix" type="text" placeholder="/" v-validate.initial="'required'">
+            <p class="text-danger" v-if="errors.has('umb_backend_prefix')">{{ errors.first('umb_backend_prefix') }}</p>
           </p>
         </div>
-      </div>  
+      </div>
     </div>
 
     <hr/>
@@ -334,7 +318,7 @@
         cannotRegister: false,
         noLinkableServices: false,
         deploying: false,
-        checked: false,
+        secure_checked: false,
         umb_hostname: '',
         umb_admin_token: '',
         umb_user_key: '',
@@ -464,6 +448,7 @@
             latitude: this.latitude,
             longitude: this.longitude,
             managed: this.managed,
+            secured: String(this.secure_checked),
             cluster_id: this.cluster_id,
             status: 'Inactive',
             endpoint: endpoint,
@@ -490,6 +475,8 @@
         var projectId = this.$route.params.id
         var clusterId = this.cluster_id
         var name = this.name
+        var secureChecked = this.secure_checked
+        var secureService = this.secureService
         // Set this variable to disable deploy buttons while attempting deploy
         this.deploying = true
         // Send POST to API
@@ -504,6 +491,7 @@
             latitude: this.latitude,
             longitude: this.longitude,
             managed: this.managed,
+            secured: String(this.secure_checked),
             cluster_id: this.cluster_id,
             status: 'Inactive',
             endpoint: 'Not deployed',
@@ -518,8 +506,8 @@
           .then(response => {
             alert('SERVICE SUCCESSFULLY CREATED AND DEPLOYED')
             console.log(response.data)
-            if (this.checked) {
-              this.secureService()
+            if (secureChecked) {
+              secureService()
             }
             router.push('/projects/' + projectId + '/services')
           })
@@ -536,7 +524,7 @@
       },
       secureService: function (event) {
         // var projectId = this.$route.params.id
-        var host = this.umb_hostname
+        var host = 'https://' + this.umb_hostname
         var apiKey = this.umb_user_key
         var adminAuthToken = this.umb_admin_token
         var payload =
@@ -546,11 +534,11 @@
               'X-Api-Key': apiKey,
               'X-Admin-Auth-Token': adminAuthToken,
               'name': this.umb_rule_name,
-              'frontend_host': this.umb_frontend_host,
-              'backend_host': this.umb_backend_host,
+              'frontend_host': this.umb_hostname,
+              'backend_host': this.umb_hostname,
               'servers': [
                 {
-                  'host': this.umb_backend_server,
+                  'host': this.umb_hostname,
                   'port': this.umb_backend_port
                 }
               ],

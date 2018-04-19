@@ -13,7 +13,7 @@
     <br/>
     <!-- List the service types from the catalog -->
     <p v-for="service in catalog">
-      <router-link class="button is-primary is-large is-outlined is-fullwidth" :to='"/catalog/"+service.id'>{{service.name}}</router-link>
+      <router-link class="button is-primary is-large is-outlined is-fullwidth" :to='"/catalog/"+service.id'>{{service.name}}:{{service.version}}</router-link>
     </p>
   </div>
 </template>

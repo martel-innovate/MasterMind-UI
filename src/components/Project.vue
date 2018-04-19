@@ -12,7 +12,9 @@
   </section>
   <br/>
   <div>
-    <router-link class="button" :to='"/"'>Back</router-link>
+    <router-link :to='"/projects"'>Projects</router-link>
+    /
+    {{ project.name }}
   </div>
   <hr/>
   <!-- Display some hints if there's no services or clusters registered already -->

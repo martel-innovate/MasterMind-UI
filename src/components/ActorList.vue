@@ -11,7 +11,13 @@
     </div>
   </section>
   <br/>
-  <router-link class="button" :to='"/projects/"+$route.params.id'>Back</router-link>
+  <div>
+    <router-link :to='"/"'>Projects</router-link>
+    /
+    <router-link :to='"/projects/"+$route.params.id'>{{project.name}}</router-link>
+    /
+    Actors
+  </div>
   <hr/>
   <table class="table">
     <thead>

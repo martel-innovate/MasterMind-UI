@@ -67,13 +67,22 @@
         Entities
       </p>
       <p class="subtitle">
-        The Entities the Subscription refers to, ID and Type (e.g. Room1, Room)
+        The Entities the Subscription refers to, ID and Type (e.g. Room1, Room). These can be patterns in the form of regular expressions (e.g. .* to match all ids/types).
       </p>
       <div class="control" v-for="(entity, i) in subject.entities" v>
+        <label for="isIdPattern">Single</label>
+        <input type="radio" id="isIdPattern" value="false" v-model="subject.entities[i]['isIdPattern']">
+        <label for="isIdPattern">Pattern</label>
+        <input type="radio" id="isIdPattern" value="true" v-model="subject.entities[i]['isIdPattern']">
         <input class="input" name="entityId" type="text"v-model="subject.entities[i]['id']" placeholder="Id" v-validate.initial="'required'">
+        <label for="isTypePattern">Single</label>
+        <input type="radio" id="isTypePattern" value="false" v-model="subject.entities[i]['isTypePattern']">
+        <label for="isTypePattern">Pattern</label>
+        <input type="radio" id="isTypePattern" value="true" v-model="subject.entities[i]['isTypePattern']">
         <input class="input" name="entityType" type="text"v-model="subject.entities[i]['type']" placeholder="Type" v-validate.initial="'required'">
+        <hr/>
       </div>
-      <button class="button is-primary" v-on:click="subject.entities.push({})">+</button>
+      <button class="button is-primary" v-on:click="subject.entities.push({isIdPattern: false, isTypePattern: false})">+ Add Entity</button>
       <p class="text-danger" v-if="errors.has('entityId')">{{ errors.first('entityId') }}</p>
       <p class="text-danger" v-if="errors.has('entityType')">{{ errors.first('entityType') }}</p>
     </div>
@@ -89,7 +98,7 @@
       <div class="control" v-for="(condition, i) in subject.condition.attrs" v>
         <input class="input" name="condition" type="text"v-model="subject.condition.attrs[i]" placeholder="Value" v-validate.initial="'required'">
       </div>
-      <button class="button is-primary" v-on:click="subject.condition.attrs.push('')">+</button>
+      <button class="button is-primary" v-on:click="subject.condition.attrs.push('')">+ Add Condition</button>
       <p class="text-danger" v-if="errors.has('condition')">{{ errors.first('condition') }}</p>
     </div>
     <hr/>
@@ -113,16 +122,41 @@
       <!-- Creates a dropdown of the services registered to this project, to select one as endpoint of notifications -->
       <!-- TODO: Perhaps filter to only have appropriate endpoints? -->
       <p class="title">
-        Notification endpoint
+        Notification Endpoint
       </p>
       <p class="subtitle">
-        The endpoint Service of the Notifications for this Subscription
+        The endpoint Service of the Notifications for this Subscription (e.g. http://192.168.99.100:8668/v2/notify)
       </p>
-      <select v-model="notification['http']['url']">
-        <option v-for="service in services" v-bind:value="'http://'+service.endpoint">
-          {{ service.name }}
-        </option>
-      </select>
+      <input class="input" name="notification_endpoint" type="text" v-model="notification['http']['url']" placeholder="Notification endpoint" v-validate.initial="'required'">
+      <p class="text-danger" v-if="errors.has('notification_endpoint')">{{ errors.first('notification_endpoint') }}</p>
+    </span>
+    <hr/>
+    <div class="field">
+      <p class="title">
+        Notification Attributes
+      </p>
+      <p class="subtitle">
+        The attributes to send in notifications (e.g. temperature, pressure, ...). Don't specify any attributes to send all of them.
+      </p>
+      <div class="control" v-for="(att, i) in notification.attrs" v>
+        <input class="input" name="notificationAttr" type="text"v-model="notification.attrs[i]" placeholder="Value" v-validate.initial="'required'">
+      </div>
+      <button class="button is-primary" v-on:click="notification.attrs.push('')">+ Add Attribute</button>
+      <p class="text-danger" v-if="errors.has('notificationAttr')">{{ errors.first('notificationAttr') }}</p>
+    </div>
+    <hr/>
+    <span class="field">
+      <p class="title">
+        Notification Metadata
+      </p>
+      <p class="subtitle">
+        Metadata to filter for in the notifcations (none for no filtering)
+      </p>
+      <div class="control" v-for="(metadata, i) in notification.metadata" v>
+        <input class="input" name="metadata" type="text"v-model="notification.metadata[i]" placeholder="Value" v-validate.initial="'required'">
+      </div>
+      <button class="button is-primary" v-on:click="notification.metadata.push('')">+ Add Metadata</button>
+      <p class="text-danger" v-if="errors.has('metadata')">{{ errors.first('metadata') }}</p>
     </span>
     <hr/>
     <br/>
@@ -164,7 +198,6 @@
       .then(response => {
         this.services = response.data
         this.service_id = this.services[0].id
-        this.notification.http.url = 'http://' + this.services[0].endpoint
       })
       .catch(error => { console.log(error) })
     },
@@ -172,8 +205,8 @@
       return {
         name: '',
         description: '',
-        subject: {entities: [{}], condition: {attrs: ['']}},
-        notification: {http: {url: ''}},
+        subject: {entities: [{isIdPattern: false, isTypePattern: false}], condition: {attrs: []}},
+        notification: {http: {url: ''}, metadata: [], attrs: []},
         expires: '',
         throttling: '',
         service_id: 0,
@@ -194,6 +227,20 @@
         var expires = this.expires
         if (expires === '') {
           expires = 'never'
+        }
+        for (var i = 0; i < this.subject.entities.length; i++) {
+          var e = {}
+          if (this.subject.entities[i].isIdPattern === 'true') {
+            e.idPattern = this.subject.entities[i].id
+          } else {
+            e.id = this.subject.entities[i].id
+          }
+          if (this.subject.entities[i].isTypePattern === 'true') {
+            e.typePattern = this.subject.entities[i].type
+          } else {
+            e.type = this.subject.entities[i].type
+          }
+          this.subject.entities[i] = e
         }
         // POST to API
         axios({
