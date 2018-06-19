@@ -1,7 +1,5 @@
 FROM node:8
 
-ENV NODE_ENV=production
-
 ENV MASTERMIND_VERSION='"0.1.0"'
 ENV MASTERMIND_API_HOST='"localhost"'
 ENV MASTERMIND_API_PORT='"3000"'
@@ -17,4 +15,4 @@ RUN npm run build
 
 EXPOSE 8080
 
-ENTRYPOINT serve --single -p 8080 dist
+ENTRYPOINT NODE_ENV=production serve --single -p 8080 dist
