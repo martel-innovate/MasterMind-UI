@@ -1,12 +1,12 @@
 <template>
   <div class="box is-fullwidth">
     <section class="hero is-primary">
-      <div class="hero-body">
+      <div class="hero-body has-text-centered">
         <div class="container">
-          <h1 class="title">
+          <h1 class="title is-2">
             {{cluster.name}}
           </h1>
-          <h2 class="subtitle">
+          <h2 class="subtitle is-4">
             {{cluster.endpoint}}
           </h2>
         </div>
@@ -21,10 +21,10 @@
     </p>
     <hr/>
     <!-- TODO: More info on cluster status, networks... -->
-    <div class="panel-block">
-      <router-link class="button" :to='"/projects/"+this.$route.params.project_id'>Back</router-link>
-      <router-link class="button" :to='"/projects/"+this.$route.params.project_id+"/clusters/"+cluster.id+"/edit"'>Edit Cluster</router-link>
-      <button v-on:click="deleteCluster" class="button is-danger">Delete Cluster</button>
+    <div class="buttons">
+      <router-link class="button is-medium" :to='"/projects/"+this.$route.params.project_id+"/clusters"'>Back</router-link>
+      <router-link class="button is-medium" :to='"/projects/"+this.$route.params.project_id+"/clusters/"+cluster.id+"/edit"'>Edit Cluster</router-link>
+      <button v-on:click="deleteCluster" class="button is-medium is-danger">Delete Cluster</button>
     </div>
   </div>
 </template>

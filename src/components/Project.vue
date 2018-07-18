@@ -2,10 +2,10 @@
 <div class="box is-fullwidth">
   <section class="hero is-primary">
     <div class="hero-body has-text-centered">
-      <h1 class="title">
+      <h1 class="title is-2">
         {{project.name}}
       </h1>
-      <h2 class="subtitle">
+      <h2 class="subtitle is-4">
         {{project.description}}
       </h2>
     </div>
@@ -56,8 +56,8 @@
   </section>
   <hr/>
   <div class="buttons">
-    <router-link class="button" :to='"/projects/"+project.id+"/edit"'>Edit Project</router-link>
-    <a v-on:click="deleteProject" class="button is-danger">Delete project</a>
+    <router-link class="button is-medium" :to='"/projects/"+project.id+"/edit"'>Edit Project</router-link>
+    <a v-on:click="deleteProject" class="button is-medium is-danger">Delete project</a>
   </div>
 </div>
 </template>

@@ -2,11 +2,9 @@
   <section class="box">
     <section class="hero is-primary">
       <div class="hero-body">
-        <div class="container">
-          <h1 class="title">
-            Register Subscription
-          </h1>
-        </div>
+        <h1 class="title is-2">
+          Register Subscription
+        </h1>
       </div>
     </section>
     <br/>
@@ -159,9 +157,8 @@
       <p class="text-danger" v-if="errors.has('metadata')">{{ errors.first('metadata') }}</p>
     </span>
     <hr/>
-    <br/>
-    <button class="button is-primary" v-on:click="submit" :disabled="errors.any() || service_id === 0">New Subscription</button>
-    <router-link class="button" :to='"/projects/"+this.$route.params.id'>Back</router-link>
+    <router-link class="button is-medium" :to='"/projects/"+this.$route.params.id+"/subscriptions"'>Back</router-link>
+    <button class="button is-medium is-primary" v-on:click="submit" :disabled="errors.any() || service_id === 0">New Subscription</button>
   </section>
 </template>
 

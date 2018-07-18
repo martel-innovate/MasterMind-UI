@@ -2,11 +2,9 @@
   <div class="box">
     <section class="hero is-primary">
       <div class="hero-body">
-        <div class="container">
-          <h1 class="title">
-            Edit {{ name }} Service
-          </h1>
-        </div>
+        <h1 class="title title is-2">
+          Edit {{ name }} Service
+        </h1>
       </div>
     </section>
     <hr/>
@@ -73,8 +71,8 @@
       </span>
       <hr/>
     </div>
-    <button class="button is-primary" v-on:click="submit" :disabled="errors.any()">Edit Service</button>
-    <router-link class="button" :to='"/projects/"+this.$route.params.project_id+"/services/"+this.$route.params.service_id'>Back</router-link>
+    <router-link class="button is-medium" :to='"/projects/"+this.$route.params.project_id+"/services"'>Back</router-link>
+    <button class="button is-medium is-primary" v-on:click="submit" :disabled="errors.any()">Edit Service</button>
   </div>
 </template>
 

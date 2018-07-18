@@ -1,46 +1,37 @@
 <template>
-  <div id="app" class="columns">
-    <aside class="column is-2 aside hero is-fullheight is-hidden-mobile">
-      <div>
-        <div class="main">
-          <!-- Sidebar items -->
-          <div class="title">MASTERMIND</div>
-          <br/>
-          <!-- Show Login or Logout depending on whether user is logged in or not -->
-          <router-link v-if="!actorIsAuthenticated()" class="item" to="/login"><span class="name">Login</span></router-link>
-          <router-link v-if="actorIsAuthenticated()" class="item" to="/login"><span class="name">Logout</span></router-link>
-          <hr v-if="actorIsAuthenticated()"/>
-          <router-link v-if="actorIsAuthenticated()" class="item" to="/projects"><span class="name">Projects</span></router-link>
-          <router-link v-if="actorIsAuthenticated()" class="item" to="/catalog"><span class="name">Service Catalog</span></router-link>
-        </div>
+  <div id="main" class="columns">
+    <aside id="sidebar" class="column is-2">
+      <div id="mastermind-title" class="title is-centered">
+        <h2><router-link class="item" to="/"><span class="name">MASTERMIND</span></router-link></h2>
       </div>
+      <hr/>
+      <ul id="side-menu" class="is-centered">
+        <li>
+          <Login></Login>
+        </li>
+        <li v-if="actorIsAuthenticated()">
+          <h4><router-link class="item" to="/projects"><span class="name button is-medium is-fullwidth">Projects</span></router-link></h4>
+        </li>
+        <li v-if="actorIsAuthenticated()">
+          <h4><router-link class="item" to="/catalog"><span class="name button is-medium is-fullwidth">Service Catalog</span></router-link></h4>
+        </li>
+      </ul>
     </aside>
-    <div class="column is-10 admin-panel">
-      <nav class="nav has-shadow" id="top">
-        <div class="container">
-          <div class="nav-left"></div>
-          <span class="nav-toggle">
-            <span></span>
-            <span></span>
-            <span></span>
-          </span>
-        </div>
-      </nav>
-      <div class="columns is-mobile">
-        <div class="column is-10 is-offset-1">
-          <br/>
-          <router-view></router-view>
-        </div>
-      </div>
+    <div id="main-body" class="column is-10">
+      <router-view></router-view>
     </div>
   </div>
 </template>
 
 <script>
 import auth from './auth'
+import Login from '@/components/Login.vue'
 export default {
   // Main app of Vue
   name: 'app',
+  components: {
+    Login
+  },
   methods: {
     actorIsAuthenticated: function () {
       return auth.checkAuth()
@@ -48,3 +39,12 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+  #side-menu {
+    text-align: center;
+  }
+  #mastermind-title {
+    text-align: center;
+  }
+</style>

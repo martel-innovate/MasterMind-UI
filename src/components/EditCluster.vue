@@ -2,11 +2,9 @@
   <div class="box">
     <section class="hero is-primary">
       <div class="hero-body">
-        <div class="container">
-          <h1 class="title">
-            Edit Cluster
-          </h1>
-        </div>
+        <h1 class="title is-2">
+          Edit Cluster
+        </h1>
       </div>
     </section>
     <br/>
@@ -59,8 +57,8 @@
         <p class="text-danger" v-if="errors.has('ca')">{{ errors.first('ca') }}</p>
       </p>
       <hr/>
-      <button class="button is-primary" v-on:click="submit" :disabled="errors.any()">Edit Cluster</button>
-      <router-link class="button" :to='"/projects/"+this.$route.params.project_id+"/clusters/"+this.$route.params.cluster_id'>Back</router-link>
+      <router-link class="button is-medium" :to='"/projects/"+this.$route.params.project_id+"/clusters/"'>Back</router-link>
+      <button class="button is-primary is-medium" v-on:click="submit" :disabled="errors.any()">Edit Cluster</button>
     </div>
   </div>
 </template>

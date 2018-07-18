@@ -3,25 +3,21 @@
     <div class="box">
       <section class="hero is-primary">
         <div class="hero-body has-text-centered">
-          <h1 class="title">
+          <h1 class="title is-2">
             Projects
           </h1>
-          <h2 class="subtitle">
+          <h2 class="subtitle is-4">
             List of all projects available
           </h2>
         </div>
       </section>
-      <br/>
+      <hr/>
       <!-- List all projects the user can access -->
-      <table v-if="!noProjects()" class="table">
-        <tbody v-for="project in projects">
-          <tr>
-            <td>
-              <router-link class="button is-primary is-large is-outlined is-fullwidth" :to='"/projects/"+project.id'>{{project.name}}</router-link>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+      <div v-if="!noProjects()">
+        <div v-for="project in projects">
+          <router-link class="button is-primary is-large is-outlined is-fullwidth" :to='"/projects/"+project.id'>{{project.name}}</router-link>
+        </div>
+      </div>
       <!-- If no projects available to the user, show button to create the first one -->
       <p v-if="noProjects()" class="field">
         <a v-on:click="isActive = !isActive" class="button is-large is-outlined is-fullwidth">
@@ -33,7 +29,7 @@
       <hr/>
       <!-- If projects already exist, show button for just new project -->
       <p v-if="!noProjects()" class="field">
-        <a v-on:click="isActive = !isActive" class="button">
+        <a v-on:click="isActive = !isActive" class="button is-medium">
          <span>
            New Project
          </span>
@@ -46,31 +42,30 @@
         <div class="modal-background"></div>
         <div class="modal-card">
           <header class="modal-card-head">
-            <p class="modal-card-title">New Project</p>
-            <button class="delete" aria-label="close"></button>
+            <h1 class="modal-card-title">New Project</h1>
+            <button class="delete" aria-label="close" v-on:click="isActive = !isActive"></button>
           </header>
           <section class="modal-card-body">
-             <div class="panel-block">
-               <p class="title">
+             <div>
+               <label class="title">
                  Project name
-               </p>
-              <p class="control">
+               </label>
+              <div class="control">
                 <input class="input" name="name" type="text" placeholder="Project name" v-model="name" v-validate.initial="'required|alpha_dash'">
                 <p class="text-danger" v-if="errors.has('name')">{{ errors.first('name') }}</p>
-              </p>
+              </div>
               <hr/>
-              <p class="title">
+              <label class="title">
                 Project description
-              </p>
-              <p class="control has-icon has-icon-right">
-                <input class="input is-success" name="description" type="text" placeholder="Description" v-model="description" v-validate.initial="'required'">
+              </label>
+              <div class="control has-icon has-icon-right">
+                <textarea class="input is-success" name="description" type="textarea" placeholder="Description" v-model="description" v-validate.initial="'required'"></textarea>
                 <p class="text-danger" v-if="errors.has('description')">{{ errors.first('description') }}</p>
-              </p>
+              </div>
             </div>
           </section>
           <footer class="modal-card-foot">
-            <button v-on:click="submit" class="button is-success" :disabled="errors.any()">Create Project</button>
-            <button v-on:click="isActive = !isActive" class="button">Cancel</button>
+            <button v-on:click="submit" class="button is-success is-medium" :disabled="errors.any()">Create Project</button>
           </footer>
         </div>
       </div>

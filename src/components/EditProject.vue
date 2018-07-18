@@ -2,13 +2,12 @@
   <div class="box">
     <section class="hero is-primary">
       <div class="hero-body">
-        <div class="container">
-          <h1 class="title">
-            Edit Project
-          </h1>
-        </div>
+        <h1 class="title is-2">
+          Edit Project
+        </h1>
       </div>
     </section>
+    <hr/>
     <div id="project">
       <p class="title">
         Name
@@ -25,9 +24,9 @@
         <input class="input" name="description" type="text" v-model="description" placeholder="Description" v-validate.initial="'required'">
         <p class="text-danger" v-if="errors.has('description')">{{ errors.first('description') }}</p>
       </p>
-      <button class="button is-primary" v-on:click="submit" :disabled="errors.any()">Edit Project</button>
       <hr/>
-      <router-link class="button" :to='"/projects/"+this.$route.params.id'>Back</router-link>
+      <router-link class="button is-medium" :to='"/projects/"+this.$route.params.id'>Back</router-link>
+      <button class="button is-medium is-primary" v-on:click="submit" :disabled="errors.any()">Edit Project</button>
     </div>
   </div>
 </template>
