@@ -3,16 +3,16 @@
   <section class="hero is-primary">
     <div class="hero-body">
       <div class="container">
-        <h1 class="title">
+        <h1 class="title is-2">
           {{service.name}}:{{service.version}}
         </h1>
-        <h2 class="subtitle">
+        <h2 class="subtitle is-4">
           {{service.service_protocol_type}}, NGSI Ver. {{service.ngsi_version}}
         </h2>
       </div>
     </div>
   </section>
-  <br/>
+  <hr/>
   <ul>
     <!-- Display Env Variables that are configurable -->
     <!-- TODO: Maybe improve the way they are displayed -->
@@ -30,7 +30,6 @@
         </p>
       </div>
     </li>
-    <br/>
     <!-- Display the services that can be linked -->
     <!-- TODO: Maybe improve the way they are displayed -->
     <li v-show="linked_services">
@@ -45,7 +44,6 @@
         </p>
       </div>
     </li>
-    <br/>
     <!-- Display the docker compose that deploys this service type -->
     <li>
       <h2 class="notification is-info">Docker Compose:</h2>

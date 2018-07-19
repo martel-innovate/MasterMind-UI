@@ -2,10 +2,10 @@
 <div class="box is-fullwidth">
   <section class="hero is-primary">
     <div class="hero-body has-text-centered">
-      <h1 class="title">
+      <h1 class="title is-2">
         {{project.name}} Subscriptions
       </h1>
-      <h2 class="subtitle">
+      <h2 class="subtitle is-4">
         The NGSI Subscriptions registered in this project
       </h2>
     </div>
@@ -67,7 +67,7 @@
         </td>
         <td>
           <!-- Button to see sub details -->
-          <span class="button" v-tooltip="'View Subscription details'">
+          <span class="button is-large" v-tooltip="'View Subscription details'">
             <i class="fa fa-eye" v-on:click='subscriptionDetails(subscription.id)'></i>
           </span>
         </td>
@@ -76,14 +76,14 @@
   </table>
   <hr/>
   <!-- Buttons to act upon the selected subs, either displayed or shown as a loading circle if an action is in progress -->
-  <button v-if="!buttonsActive" class="button is-loading" disabled></button>
-  <button v-if="!buttonsActive" class="button is-loading" disabled></button>
-  <button v-if="!buttonsActive" class="button is-danger is-loading" disabled></button>
-  <button v-if="buttonsActive" class="button" v-on:click="activateSubscription"><b>Activate</b></button>
-  <button v-if="buttonsActive" class="button" v-on:click="deactivateSubscription"><b>Deactivate</b></button>
-  <button v-if="buttonsActive" class="button is-danger" v-on:click="deleteSubscription"><b>Delete</b></button>
+  <button v-if="!buttonsActive" class="button is-medium is-loading" disabled></button>
+  <button v-if="!buttonsActive" class="button is-medium is-loading" disabled></button>
+  <button v-if="!buttonsActive" class="button is-medium is-danger is-loading" disabled></button>
+  <button v-if="buttonsActive" class="button is-medium" v-on:click="activateSubscription"><b>Activate</b></button>
+  <button v-if="buttonsActive" class="button is-medium" v-on:click="deactivateSubscription"><b>Deactivate</b></button>
+  <button v-if="buttonsActive" class="button is-medium is-danger" v-on:click="deleteSubscription"><b>Delete</b></button>
   <hr/>
-  <router-link class="button is-primary" :to='"/projects/"+$route.params.id+"/subscriptions/new"'>Register Subscription</router-link>
+  <router-link class="button is-medium is-primary" :to='"/projects/"+$route.params.id+"/subscriptions/new"'>Register Subscription</router-link>
 </div>
 </template>
 

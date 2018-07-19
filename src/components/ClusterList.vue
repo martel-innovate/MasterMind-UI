@@ -2,10 +2,10 @@
 <div class="box is-fullwidth">
   <section class="hero is-primary">
     <div class="hero-body has-text-centered">
-      <h1 class="title">
+      <h1 class="title is-2">
         {{project.name}} Clusters
       </h1>
-      <h2 class="subtitle">
+      <h2 class="subtitle is-4">
         The clusters registered to deploy services on
       </h2>
     </div>
@@ -40,23 +40,23 @@
         </td>
         <!-- Actions on the clusters (details, edit, delete) -->
         <td>
-          <span class="button" v-tooltip="'View Cluster details'">
-            <i class="fa fa-eye" v-on:click='clusterDetails(cluster.id)'></i>
+          <span class="button is-large" v-on:click='clusterDetails(cluster.id)' v-tooltip="'View Cluster details'">
+            <i class="fa fa-eye"></i>
           </span>
           &nbsp
-          <span class="button" v-tooltip="'Edit Cluster'">
-            <i class="fa fa-edit" v-on:click='editCluster(cluster.id)'></i>
+          <span class="button is-large" v-on:click='editCluster(cluster.id)' v-tooltip="'Edit Cluster'">
+            <i class="fa fa-edit"></i>
           </span>
           &nbsp
-          <span class="button" v-tooltip="'Delete Cluster'">
-            <i class="fa fa-trash" v-on:click='deleteCluster(cluster.id)'></i>
+          <span class="button is-large is-danger" v-on:click='deleteCluster(cluster.id)' v-tooltip="'Delete Cluster'">
+            <i class="fa fa-trash"></i>
           </span>
         </td>
       </tr>
     </tbody>
   </table>
   <hr/>
-  <router-link class="button is-primary" :to='"/projects/"+$route.params.id+"/clusters/new"'>Register Cluster</router-link>
+  <router-link class="button is-medium is-primary" :to='"/projects/"+$route.params.id+"/clusters/new"'>Register Cluster</router-link>
 </div>
 </template>
 

@@ -2,14 +2,13 @@
   <section class="box">
     <section class="hero is-primary">
       <div class="hero-body">
-        <div class="container">
-          <h1 class="title">
-            Register Cluster
-          </h1>
-        </div>
+        <h1 class="title is-2">
+          Register Cluster
+        </h1>
       </div>
     </section>
     <br/>
+    <section>
     <div class="field">
       <p class="title">
         Cluster name
@@ -91,8 +90,9 @@
       </div>
     </div>
     <hr/>
-    <button class="button is-primary" v-on:click="submit" :disabled="errors.any()">Register Cluster</button>
-    <router-link class="button" :to='"/projects/"+this.$route.params.id'>Back</router-link>
+    <router-link class="button is-medium" :to='"/projects/"+this.$route.params.id+"/clusters"'>Back</router-link>
+    <button class="button is-medium is-primary" v-on:click="submit" :disabled="errors.any()">Register Cluster</button>
+    </section>
   </section>
 </template>
 
@@ -164,7 +164,7 @@
         })
         .then(function (response) {
           console.log(response.data)
-          router.push('/projects/' + projectId)
+          router.push('/projects/' + projectId + '/clusters')
         })
         .catch(function (error) {
           console.log(error)

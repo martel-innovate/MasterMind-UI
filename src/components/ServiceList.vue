@@ -2,10 +2,10 @@
 <div class="box is-fullwidth">
   <section class="hero is-primary">
     <div class="hero-body has-text-centered">
-      <h1 class="title">
+      <h1 class="title is-2">
         {{project.name}} Services
       </h1>
-      <h2 class="subtitle">
+      <h2 class="subtitle is-4">
         The IoT services registered in this Project
       </h2>
     </div>
@@ -61,23 +61,23 @@
         <!-- Display buttons for actions: details, edit, delete -->
         <!-- TODO: Could add deploy/undeploy button? -->
         <td>
-          <span class="button" v-tooltip="'View Service details'">
-            <i class="fa fa-eye" v-on:click='serviceDetails(service.id)'></i>
+          <span class="button is-large" v-tooltip="'View Service details'" v-on:click='serviceDetails(service.id)'>
+            <i class="fa fa-eye"></i>
           </span>
           &nbsp
-          <span class="button" v-tooltip="'Edit Service'">
-            <i class="fa fa-edit" v-on:click='editService(service.id)'></i>
+          <span class="button is-large" v-tooltip="'Edit Service'" v-on:click='editService(service.id)'>
+            <i class="fa fa-edit"></i>
           </span>
           &nbsp
-          <span class="button" v-tooltip="'Delete Service'">
-            <i class="fa fa-trash" v-on:click='deleteService(service)'></i>
+          <span class="button is-large is-danger" v-tooltip="'Delete Service'" v-on:click='deleteService(service)'>
+            <i class="fa fa-trash"></i>
           </span>
         </td>
       </tr>
     </tbody>
   </table>
   <hr/>
-  <router-link class="button is-primary" :to='"/projects/"+$route.params.id+"/services/new"'>Register Service</router-link>
+  <router-link class="button is-primary is-medium" :to='"/projects/"+$route.params.id+"/services/new"'>Register Service</router-link>
 </div>
 </template>
 
@@ -187,22 +187,3 @@
     }
   }
 </script>
-
-<style scoped>
-  h1, h2 {
-    font-weight: normal;
-  }
-
-  ul {
-    list-style-type: none;
-    padding: 0;
-  }
-
-  li {
-    margin: 0 10px;
-  }
-
-  a {
-    color: #42b983;
-  }
-</style>

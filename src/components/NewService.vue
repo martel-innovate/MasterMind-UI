@@ -2,11 +2,9 @@
   <section class="box">
     <section class="hero is-primary">
       <div class="hero-body">
-        <div class="container">
-          <h1 class="title">
-            Register Service
-          </h1>
-        </div>
+        <h1 class="title is-2">
+          Register Service
+        </h1>
       </div>
     </section>
     <br/>
@@ -241,10 +239,10 @@
     <p class="text-danger" v-if="noLinkableServices">You don't have the required dependent Services registered in order to deploy this Service</p>
     <hr v-if="noLinkableServices"/>
     <!-- Deploy button, switching between disabled, enabled, or pending deployment -->
-    <button class="button is-primary" v-show="!deploying" v-on:click="submit" :disabled="errors.any() || cannotRegister || noLinkableServices">Register Service</button>
-    <button class="button is-primary" v-show='!deploying && managed == "true"' v-on:click="submitAndDeploy" :disabled="errors.any() || cannotRegister || noLinkableServices">Register and Deploy Service</button>
-    <button class="button is-primary" v-show="deploying" disabled><b>DEPLOYING...</b></button>
-    <router-link class="button" :to='"/projects/"+this.$route.params.id'>Back</router-link>
+    <router-link class="button is-medium" :to='"/projects/"+this.$route.params.id+"/services"'>Back</router-link>
+    <button class="button is-primary is-medium" v-show="!deploying" v-on:click="submit" :disabled="errors.any() || cannotRegister || noLinkableServices">Register Service</button>
+    <button class="button is-primary is-medium" v-show='!deploying && managed == "true"' v-on:click="submitAndDeploy" :disabled="errors.any() || cannotRegister || noLinkableServices">Register and Deploy Service</button>
+    <button class="button is-primary is-medium" v-show="deploying" disabled><b>DEPLOYING...</b></button>
   </section>
 </template>
 

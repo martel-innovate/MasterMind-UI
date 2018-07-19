@@ -2,17 +2,24 @@
   <div class="box is-fullwidth">
     <section class="hero is-primary">
       <div class="hero-body">
-        <div class="container">
-          <h1 class="title">
-            {{service.name}}
-          </h1>
-          <h2 class="subtitle">
-            {{service.endpoint}}, {{service.status}}
-          </h2>
-        </div>
+        <h1 class="title is-2">
+          {{service.name}}
+        </h1>
+        <h2 class="subtitle is-4">
+          {{service.endpoint}}, {{service.status}}
+        </h2>
       </div>
     </section>
-    <br/>
+    <hr/>
+    <div class="box">
+      <p class="title">
+        Current Status on the Cluster
+      </p>
+      <p v-for="entry in currentStatus">
+        {{ entry.name }} : {{entry.status}}
+      </p>
+    </div>
+    <hr/>
     <p class="title">
       Service Type
     </p>
@@ -67,23 +74,17 @@
         <hr/>
       </div>
     </div>
-    <p class="title">
-      Current Status on the Cluster
-    </p>
-    <p v-for="entry in currentStatus">
-      {{ entry.name }} : {{entry.status}}
-    </p>
-    <hr/>
+    <hr v-if="configuration.length > 0"></hr>
     <!-- Buttons -->
-    <div class="panel-block">
-      <router-link class="button" :to='"/projects/"+this.$route.params.project_id'>Back</router-link>
-      <router-link class="button" :to='"/projects/"+this.$route.params.project_id+"/services/"+service.id+"/edit"'>Edit Service</router-link>
+    <div class="buttons">
+      <router-link class="button is-medium" :to='"/projects/"+this.$route.params.project_id+"/services"'>Back</router-link>
+      <router-link class="button is-medium" :to='"/projects/"+this.$route.params.project_id+"/services/"+service.id+"/edit"'>Edit Service</router-link>
       <!-- Show deploy/undeploy button or deploying/undeploying disabled button depending on whether service is being deployed/undeployed -->
-      <button class="button is-primary" v-show="service.status == 'Inactive' && !deploying" v-on:click="deployService"><b>DEPLOY</b></button>
-      <button class="button is-primary" v-show="service.status == 'Inactive' && deploying" disabled><b>DEPLOYING...</b></button>
-      <button class="button is-danger" v-show="service.status != 'Inactive' && !undeploying" v-on:click="undeployService"><b>UNDEPLOY</b></button>
-      <button class="button is-danger" v-show="service.status != 'Inactive' && undeploying" disabled><b>UNDEPLOYING...</b></button>
-      <button class="button is-danger" v-on:click="deleteService"><b>DELETE SERVICE</b></button>
+      <button class="button is-medium is-primary" v-show="service.status == 'Inactive' && !deploying" v-on:click="deployService"><b>DEPLOY</b></button>
+      <button class="button is-medium is-primary" v-show="service.status == 'Inactive' && deploying" disabled><b>DEPLOYING...</b></button>
+      <button class="button is-medium is-danger" v-show="service.status != 'Inactive' && !undeploying" v-on:click="undeployService"><b>UNDEPLOY</b></button>
+      <button class="button is-medium is-danger" v-show="service.status != 'Inactive' && undeploying" disabled><b>UNDEPLOYING...</b></button>
+      <button class="button is-medium is-danger" v-on:click="deleteService"><b>DELETE SERVICE</b></button>
     </div>
   </div>
 </template>

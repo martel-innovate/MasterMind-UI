@@ -2,7 +2,7 @@
   <div class="box is-fullwidth">
     <section class="hero is-primary">
       <div class="hero-body has-text-centered">
-        <h1 class="title">
+        <h1 class="title is-2">
           Welcome to MasterMind!
         </h1>
       </div>
@@ -16,7 +16,7 @@
       registering and managing NSGI subscriptions.
     </p>
     <p>
-      If you're a new user, you may proceed to the Projects page to create a new Project.
+      If you're a new user, you may log in and proceed to the Projects page to create a new Project.
     </p>
     <p>
       For more on MasterMind, see <a href="http://mastermind-main.readthedocs.io/en/latest/">the full documentation</a>

@@ -1,20 +1,37 @@
 <template>
   <div class="box is-fullwidth">
-    <section class="hero is-primary">
+    <div class="hero is-primary">
       <div class="hero-body has-text-centered">
-        <h1 class="title">
+        <h1 class="title is-2">
           Service Catalog
         </h1>
-        <h2 class="subtitle">
+        <h2 class="subtitle is-4">
           A list of available services for MasterMind to deploy
         </h2>
       </div>
-    </section>
-    <br/>
+    </div>
     <!-- List the service types from the catalog -->
-    <p v-for="service in catalog">
-      <router-link class="button is-primary is-large is-outlined is-fullwidth" :to='"/catalog/"+service.id'>{{service.name}}:{{service.version}}</router-link>
-    </p>
+    <hr/>
+    <div class="columns is-multiline is-mobile">
+      <div class="column card is-one-quarter" v-for="service in catalog">
+        <div class="card-content">
+          <div class="media">
+            <div class="media-left">
+              <figure class="image is-48x48">
+                <img src="https://bulma.io/images/placeholders/96x96.png" alt="Placeholder image">
+              </figure>
+            </div>
+            <div class="media-content">
+              <p><router-link class="title is-4" :to='"/catalog/"+service.id'>{{service.name}}</router-link></p>
+              <p class="subtitle is-5">{{service.version}}</p>
+            </div>
+          </div>
+          <div class="content">
+            {{service.description}}
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -25,7 +42,15 @@
     // Get service types from API
     created () {
       axios.get(auth.getAPIUrl() + 'v1/service_types', {headers: {'Authorization': auth.getAuthHeader()}})
-      .then(response => { this.catalog = response.data })
+      .then(response => {
+        var catalog = response.data
+        catalog.sort(function (a, b) {
+          if (a.name < b.name) return -1
+          if (a.name > b.name) return 1
+          return 0
+        })
+        this.catalog = response.data
+      })
       .catch(error => { console.log(error) })
     },
     data () {

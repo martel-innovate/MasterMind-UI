@@ -2,10 +2,10 @@
 <div class="box is-fullwidth">
   <section class="hero is-primary">
     <div class="hero-body has-text-centered">
-      <h1 class="title">
+      <h1 class="title is-2">
         {{project.name}} Actors
       </h1>
-      <h2 class="subtitle">
+      <h2 class="subtitle is-4">
         The actors registered to this project, and their roles within it
       </h2>
     </div>
@@ -65,7 +65,7 @@
   </div>
   <hr/>
   <!-- Add actor button -->
-  <button class="button" v-show="!isAddingActor" v-on:click="isAddingActor = !isAddingActor">Add Actor</button>
+  <button class="button is-medium" v-show="!isAddingActor" v-on:click="isAddingActor = !isAddingActor">Add Actor</button>
 </div>
 </template>
 

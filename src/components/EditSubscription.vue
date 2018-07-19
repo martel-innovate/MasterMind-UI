@@ -2,11 +2,9 @@
   <div class="box">
     <section class="hero is-primary">
       <div class="hero-body">
-        <div class="container">
-          <h1 class="title">
-            Edit Subscription
-          </h1>
-        </div>
+        <h1 class="title is-2">
+          Edit Subscription
+        </h1>
       </div>
     </section>
     <br/>
@@ -70,8 +68,8 @@
         </div>
       </div>
       <hr/>
+      <router-link class="button" :to='"/projects/"+this.$route.params.project_id+"/subscriptions"'>Back</router-link>
       <button class="button is-primary" v-on:click="submit" :disabled="errors.any()">Edit Subscription</button>
-      <router-link class="button" :to='"/projects/"+this.$route.params.project_id+"/subscriptions/"+this.$route.params.subscription_id'>Back</router-link>
     </div>
   </div>
 </template>
