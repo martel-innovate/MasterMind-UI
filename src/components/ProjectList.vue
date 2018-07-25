@@ -13,9 +13,16 @@
       </section>
       <hr/>
       <!-- List all projects the user can access -->
-      <div v-if="!noProjects()">
-        <div v-for="project in projects">
-          <router-link class="button is-primary is-large is-outlined is-fullwidth" :to='"/projects/"+project.id'>{{project.name}}</router-link>
+      <div v-if="!noProjects()" class="card" v-for="project in projects">
+        <div class="card-content">
+          <div class="media">
+            <div class="media-content">
+              <h2><router-link class="is-primary" :to='"/projects/"+project.id'>{{project.name}}</router-link></h2>
+            </div>
+          </div>
+          <div class="content">
+            {{project.description}}
+          </div>
         </div>
       </div>
       <!-- If no projects available to the user, show button to create the first one -->
