@@ -12,6 +12,22 @@
     </div>
     <!-- List the service types from the catalog -->
     <hr/>
+    <a class="button is-large is-outlined is-fullwidth" v-on:click='updateCatalog()' v-show="!updating">
+     <span>
+       Update Catalog
+     </span>
+    </a>
+    <a class="button is-large is-outlined is-fullwidth" v-show="updating" disabled>
+     <span>
+       Updating...
+     </span>
+    </a>
+    <article v-if="updateError" class="message is-error">
+      <div class="message-body">
+        <h5>You are not allowed to update the Catalog, must be a MasterMind Superadmin</h5>
+      </div>
+    </article>
+    <hr/>
     <div class="columns is-multiline is-mobile">
       <div class="column card is-one-quarter" v-for="service in catalog">
         <div class="card-content">
@@ -55,7 +71,21 @@
     },
     data () {
       return {
-        catalog: []
+        catalog: [],
+        updating: false,
+        updateError: false
+      }
+    },
+    methods: {
+      // Updates the Catalog with the latest recipes from the main repo
+      updateCatalog: function () {
+        this.updating = true
+        axios.get(auth.getAPIUrl() + 'v1/catalog/refresh', {headers: {'Authorization': auth.getAuthHeader()}})
+        .then(response => { location.reload() })
+        .catch(error => {
+          console.log(error)
+          this.updating = false
+        })
       }
     }
   }

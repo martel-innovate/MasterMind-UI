@@ -559,6 +559,9 @@
               .then(response => {
                 console.log(response)
               })
+              .catch(function (error) {
+                console.log(error)
+              })
             )
           }
           for (var volume in requiredVolumes) {
@@ -571,6 +574,9 @@
               })
               .then(response => {
                 console.log(response)
+              })
+              .catch(function (error) {
+                console.log(error)
               })
             )
           }
