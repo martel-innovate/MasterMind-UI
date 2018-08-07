@@ -22,9 +22,10 @@
        Updating...
      </span>
     </a>
-    <article v-if="updateError" class="message is-error">
+    <hr v-if="updateError" />
+    <article v-if="updateError" class="message is-danger">
       <div class="message-body">
-        <h5>You are not allowed to update the Catalog, must be a MasterMind Superadmin</h5>
+        <h5>{{ errorMessage }}</h5>
       </div>
     </article>
     <hr/>
@@ -73,7 +74,8 @@
       return {
         catalog: [],
         updating: false,
-        updateError: false
+        updateError: false,
+        errorMessage: ''
       }
     },
     methods: {
@@ -81,9 +83,21 @@
       updateCatalog: function () {
         this.updating = true
         axios.get(auth.getAPIUrl() + 'v1/catalog/refresh', {headers: {'Authorization': auth.getAuthHeader()}})
-        .then(response => { location.reload() })
+        .then(response => {
+          location.reload()
+        })
         .catch(error => {
           console.log(error)
+          this.updateError = true
+          if (error.response) {
+            if (error.response.status === 401) {
+              this.errorMessage = 'You are not allowed to update the Catalog, must be a MasterMind Superadmin'
+            } else {
+              this.errorMessage = 'An error occured while trying to update the catalog'
+            }
+          } else {
+            this.errorMessage = 'API not responding'
+          }
           this.updating = false
         })
       }

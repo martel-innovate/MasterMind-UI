@@ -238,22 +238,22 @@
     <!-- Display warnings and disable buttons if requirements not met to register Service -->
     <p class="text-danger" v-if="noLinkableServices">You don't have the required dependent Services registered in order to deploy this Service</p>
     <hr v-if="noLinkableServices"/>
-    <article v-if="required_networks.length > 0" class="message is-warning">
+    <article v-if="docker_networks.length > 0" class="message is-warning">
       <div class="message-body">
         <h5>In order to deploy this service, the following external networks are needed on the Cluster:</h5>
         <h5><ul>
-          <li v-for="network in required_networks">
+          <li v-for="network in docker_networks">
             {{ network }}
           </li>
         </ul></h5>
         <h5>If they do not exist, they will be created when deploying the Service</h5>
       </div>
     </article>
-    <article v-if="required_volumes.length > 0" class="message is-warning">
+    <article v-if="docker_volumes.length > 0" class="message is-warning">
       <div class="message-body">
         <h5>In order to deploy this service, the following external volumes are needed on the Cluster:</h5>
         <h5><ul>
-          <li v-for="volume in required_volumes">
+          <li v-for="volume in docker_volumes">
             {{ volume }}
           </li>
         </ul></h5>
@@ -322,8 +322,8 @@
       return {
         name: '',
         configuration: {},
-        required_networks: [],
-        required_volumes: [],
+        docker_networks: [],
+        docker_volumes: [],
         status: 'Inactive',
         managed: 'true',
         endpoint: '',
@@ -383,8 +383,8 @@
         // Resetting these values
         var currentServiceType = {}
         this.noLinkableServices = false
-        this.required_networks = []
-        this.required_volumes = []
+        this.docker_networks = []
+        this.docker_volumes = []
         // Setting these variables outside of axios functions
         var managed = this.managed
         var allServices = this.services
@@ -403,16 +403,16 @@
         for (var network in networks) {
           if (networks.hasOwnProperty(network) && networks[network] != null && 'external' in networks[network]) {
             if (networks[network]['external'] === true) {
-              this.required_networks.push(network)
-              console.log(this.required_networks)
+              this.docker_networks.push(network)
+              console.log(this.docker_networks)
             }
           }
         }
         for (var volume in volumes) {
           if (volumes.hasOwnProperty(volume) && volumes[volume] != null && 'external' in volumes[volume]) {
             if (volumes[volume]['external'] === true) {
-              this.required_volumes.push(volume)
-              console.log(this.required_volumes)
+              this.docker_volumes.push(volume)
+              console.log(this.docker_volumes)
             }
           }
         }
@@ -520,8 +520,8 @@
         var name = this.name
         var secureChecked = this.secure_checked
         var secureService = this.secureService
-        var requiredNetworks = this.required_networks
-        var requiredVolumes = this.required_volumes
+        var requiredNetworks = this.docker_networks
+        var requiredVolumes = this.docker_volumes
         // Set this variable to disable deploy buttons while attempting deploy
         this.deploying = true
         // Send POST to API
