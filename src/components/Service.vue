@@ -146,7 +146,7 @@
         this.$dialog.confirm('Are you sure you want to delete the Service?', {okText: 'DELETE', cancelText: 'CANCEL'})
         .then(function () {
           // If Service is deployed, remove stack from Docker Swarm cluster as well
-          if (serviceEndpoint !== 'Not Deployed') {
+          if ((serviceEndpoint).toLowerCase() !== 'not deployed') {
             axios.get(auth.getAPIUrl() + 'v1/projects/' + projectId + '/clusters/' + clusterId + '/removestack?service_id=' + serviceId + '&service_name=' + serviceName, {headers: {'Authorization': auth.getAuthHeader()}})
             .then(response => {
               console.log(response.data)

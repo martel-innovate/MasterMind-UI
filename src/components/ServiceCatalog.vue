@@ -12,6 +12,23 @@
     </div>
     <!-- List the service types from the catalog -->
     <hr/>
+    <a class="button is-large is-outlined is-fullwidth" v-on:click='updateCatalog()' v-show="!updating">
+     <span>
+       Update Catalog
+     </span>
+    </a>
+    <a class="button is-large is-outlined is-fullwidth" v-show="updating" disabled>
+     <span>
+       Updating...
+     </span>
+    </a>
+    <hr v-if="updateError" />
+    <article v-if="updateError" class="message is-danger">
+      <div class="message-body">
+        <h5>{{ errorMessage }}</h5>
+      </div>
+    </article>
+    <hr/>
     <div class="columns is-multiline is-mobile">
       <div class="column card is-one-quarter" v-for="service in catalog">
         <div class="card-content">
@@ -55,7 +72,34 @@
     },
     data () {
       return {
-        catalog: []
+        catalog: [],
+        updating: false,
+        updateError: false,
+        errorMessage: ''
+      }
+    },
+    methods: {
+      // Updates the Catalog with the latest recipes from the main repo
+      updateCatalog: function () {
+        this.updating = true
+        axios.get(auth.getAPIUrl() + 'v1/catalog/refresh', {headers: {'Authorization': auth.getAuthHeader()}})
+        .then(response => {
+          location.reload()
+        })
+        .catch(error => {
+          console.log(error)
+          this.updateError = true
+          if (error.response) {
+            if (error.response.status === 401) {
+              this.errorMessage = 'You are not allowed to update the Catalog, must be a MasterMind Superadmin'
+            } else {
+              this.errorMessage = 'An error occured while trying to update the catalog'
+            }
+          } else {
+            this.errorMessage = 'API not responding'
+          }
+          this.updating = false
+        })
       }
     }
   }
