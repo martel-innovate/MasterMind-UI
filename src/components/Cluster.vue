@@ -12,13 +12,32 @@
         </div>
       </div>
     </section>
-    <br/>
+    <hr/>
     <p class="title">
       Description
     </p>
     <p class="subtitle">
       {{cluster.description}}
     </p>
+    <hr/>
+    <p class="title">
+      Current state of the Cluster
+    </p>
+    <div v-if="status">
+      <label>Managers</label>
+      <div class="box" v-for="manager in status.managers">
+        <p v-for="(item, key, index) in manager"><b>{{ key }}</b>: {{ item }}</p>
+      </div>
+      <label>Workers</label>
+      <div class="box" v-for="worker in status.workers">
+        <p v-for="(item, key, index) in worker"><b>{{ key }}</b>: {{ item }}</p>
+      </div>
+    </div>
+    <div v-if="!status">
+      No response from the Cluster...
+    </div>
+    <hr/>
+    <button v-on:click="getCluster" class="button is-medium">Refresh</button>
     <hr/>
     <!-- TODO: More info on cluster status, networks... -->
     <div class="buttons">
@@ -37,12 +56,16 @@
     created () {
       // Retrieve data of this cluster
       axios.get(auth.getAPIUrl() + 'v1/projects/' + this.$route.params.project_id + '/clusters/' + this.$route.params.cluster_id, {headers: {'Authorization': auth.getAuthHeader()}})
-      .then(response => { this.cluster = response.data })
+      .then(response => {
+        this.cluster = response.data
+        this.getCluster()
+      })
       .catch(error => { console.log(error) })
     },
     data () {
       return {
-        cluster: {}
+        cluster: {},
+        status: null
       }
     },
     methods: {
@@ -71,6 +94,22 @@
         })
         .catch(function (error) {
           console.log(error)
+        })
+      },
+      // Get Status of the Swarm Cluster
+      getCluster: function () {
+        var projectId = this.$route.params.project_id
+        var clusterId = this.$route.params.cluster_id
+        axios.get(auth.getAPIUrl() + 'v1/projects/' + projectId + '/clusters/' + clusterId + '/getswarm', {headers: {'Authorization': auth.getAuthHeader()}})
+        .then(response => {
+          console.log(response.data)
+          // TODO: Better format and display this
+          this.status = JSON.parse(response.data.swarm_status.replace(/'/g, '"'))
+        })
+        .catch(error => {
+          console.log(error)
+          // TODO: Better format and display this
+          this.status = null
         })
       }
     }
