@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import auth from '../auth'
 import Welcome from '@/components/Welcome'
 import ServiceCatalog from '@/components/ServiceCatalog'
+import CustomRecipes from '@/components/CustomRecipes'
 import ProjectList from '@/components/ProjectList'
 import ActorList from '@/components/ActorList'
 import ClusterList from '@/components/ClusterList'
@@ -55,6 +56,11 @@ var router = new Router({
       path: '/projects/:id',
       name: 'Project',
       component: Project
+    },
+    {
+      path: '/projects/:id/customrecipes',
+      name: 'CustomRecipes',
+      component: CustomRecipes
     },
     {
       path: '/projects/:id/actors',

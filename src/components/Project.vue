@@ -53,6 +53,14 @@
         </router-link>
       </div>
     </div>
+    <hr/>
+    <div class="columns">
+      <div class="column is-fullwidth">
+        <router-link class="button is-large has-text-centered is-info is-outlined is-fullwidth" :to='"/projects/"+this.$route.params.id+"/customrecipes"'>
+          Custom Recipes
+        </router-link>
+      </div>
+    </div>
   </section>
   <hr/>
   <div class="buttons">
