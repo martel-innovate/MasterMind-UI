@@ -22,7 +22,16 @@
     <hr/>
     <div class="columns">
       <div class="column is-fullwidth">
-        <a v-on:click="isActive = !isActive" class="button is-large has-text-centered is-info is-outlined is-fullwidth">
+        <a v-on:click="createRecipeIsActive = !createRecipeIsActive" class="button is-large has-text-centered is-info is-outlined is-fullwidth">
+         <span>
+           Create new Recipe
+         </span>
+        </a>
+      </div>
+    </div>
+    <div class="columns">
+      <div class="column is-fullwidth">
+        <a v-on:click="importRecipeIsActive = !importRecipeIsActive" class="button is-large has-text-centered is-info is-outlined is-fullwidth">
          <span>
            Import Recipes
          </span>
@@ -60,12 +69,12 @@
     </div>
 
     <!-- Popup box with catalog import form -->
-    <div id="importCatalog" v-bind:class="{ 'modal' : true, 'is-active' : isActive }">
+    <div id="importCatalog" v-bind:class="{ 'modal' : true, 'is-active' : importRecipeIsActive }">
       <div class="modal-background"></div>
       <div class="modal-card">
         <header class="modal-card-head">
           <h1 class="modal-card-title">Import Custom Catalog</h1>
-          <button class="delete" aria-label="close" v-on:click="isActive = !isActive"></button>
+          <button class="delete" aria-label="close" v-on:click="importRecipeIsActive = !importRecipeIsActive"></button>
         </header>
         <section class="modal-card-body">
            <div>
@@ -81,13 +90,100 @@
               Catalog Repository Branch
             </label>
             <div class="control has-icon has-icon-right">
-              <textarea class="input is-success" name="catalogBranch" type="textarea" placeholder="master" v-model="catalogBranch" v-validate.initial="'alpha_dash'"></textarea>
+              <input class="input is-success" name="catalogBranch" type="text" placeholder="master" v-model="catalogBranch" v-validate.initial="'alpha_dash'"></input>
               <p class="text-danger" v-if="errors.has('catalogBranch')">{{ errors.first('catalogBranch') }}</p>
             </div>
           </div>
         </section>
         <footer class="modal-card-foot">
-          <button v-on:click="submit" class="button is-success is-medium" :disabled="errors.any()">Import</button>
+          <button v-on:click="importCatalog" class="button is-success is-medium">Import</button>
+        </footer>
+      </div>
+    </div>
+
+    <!-- Popup box with catalog import form -->
+    <div id="importCatalog" v-bind:class="{ 'modal' : true, 'is-active' : createRecipeIsActive }">
+      <div class="modal-background"></div>
+      <div class="modal-card">
+        <header class="modal-card-head">
+          <h1 class="modal-card-title">Create new Recipe</h1>
+          <button class="delete" aria-label="close" v-on:click="createRecipeIsActive = !createRecipeIsActive"></button>
+        </header>
+        <section class="modal-card-body">
+          <div>
+            <label class="title">
+              Name
+            </label>
+            <div class="control has-icon has-icon-right">
+              <input class="input is-success" name="name" type="text" placeholder="name" v-model="name" v-validate.initial="'alpha_dash'"></input>
+              <p class="text-danger" v-if="errors.has('name')">{{ errors.first('name') }}</p>
+            </div>
+          </div>
+          <hr/>
+          <div>
+            <label class="title">
+              Description
+            </label>
+            <div class="control has-icon has-icon-right">
+              <input class="input is-success" name="description" type="text" placeholder="description" v-model="description" v-validate.initial="'alpha_dash'"></input>
+              <p class="text-danger" v-if="errors.has('description')">{{ errors.first('description') }}</p>
+            </div>
+          </div>
+          <hr/>
+          <div>
+            <label class="title">
+              Version
+            </label>
+            <div class="control has-icon has-icon-right">
+              <input class="input is-success" name="version" type="text" placeholder="version" v-model="version" v-validate.initial="'alpha_dash'"></input>
+              <p class="text-danger" v-if="errors.has('version')">{{ errors.first('version') }}</p>
+            </div>
+          </div>
+          <hr/>
+          <div>
+            <label class="title">
+              Protocol Type
+            </label>
+            <div class="control has-icon has-icon-right">
+              <input class="input is-success" name="service_protocol_type" type="text" placeholder="HTTP" v-model="service_protocol_type" v-validate.initial="'alpha_dash'"></input>
+              <p class="text-danger" v-if="errors.has('service_protocol_type')">{{ errors.first('service_protocol_type') }}</p>
+            </div>
+          </div>
+          <hr/>
+          <div>
+            <label class="title">
+              NGSI Version
+            </label>
+            <div class="control has-icon has-icon-right">
+              <input class="input is-success" name="ngsi_version" type="text" placeholder="1" v-model="ngsi_version" v-validate.initial="'alpha_dash'"></input>
+              <p class="text-danger" v-if="errors.has('ngsi_version')">{{ errors.first('ngsi_version') }}</p>
+            </div>
+          </div>
+          <hr/>
+           <div>
+             <label class="title">
+               Compose File
+             </label>
+             <div class="control">
+               <!-- When user selects a file, fill in the value with its contents on the change event -->
+               <input name="composeFile" type="file" @change='readFile("compose", $event)' v-validate.initial="'required'">
+               <p class="text-danger" v-if="errors.has('composeFile')">{{ errors.first('composeFile') }}</p>
+             </div>
+          </div>
+          <hr/>
+          <div>
+            <label class="title">
+              MasterMind Config File
+            </label>
+            <div class="control">
+              <!-- When user selects a file, fill in the value with its contents on the change event -->
+              <input name="configFile" type="file" @change='readFile("config", $event)' v-validate.initial="'required'">
+              <p class="text-danger" v-if="errors.has('configFile')">{{ errors.first('configFile') }}</p>
+            </div>
+         </div>
+        </section>
+        <footer class="modal-card-foot">
+          <button v-on:click="createNewRecipe" class="button is-success is-medium">Import</button>
         </footer>
       </div>
     </div>
@@ -121,18 +217,74 @@
         catalog: [],
         catalogURI: '',
         catalogBranch: 'master',
-        isActive: false
+        name: '',
+        description: '',
+        version: '',
+        composeFile: '',
+        configFile: '',
+        service_protocol_type: '',
+        ngsi_version: '',
+        importRecipeIsActive: false,
+        createRecipeIsActive: false
       }
     },
     methods: {
-      // Import Catalog
-      submit: function (event) {
-        this.isActive = false
-        var projectId = this.$route.params.id
-        if (this.errors.any()) {
-          console.log('Form not valid')
-          return
+      readFile: function (fileType, event) {
+        // Create file reader and open selected file
+        var reader = new FileReader()
+        var file = (event.target.files || event.dataTransfer.files)[0]
+        // On file load, read content into variable
+        reader.onload = (e) => {
+          var fileContent = e.target.result
+          if (fileType === 'compose') {
+            this.composeFile = fileContent
+            console.log(this.composeFile)
+            return
+          }
+          if (fileType === 'config') {
+            this.configFile = fileContent
+            console.log(this.configFile)
+            return
+          }
+          console.log('Failed to read ' + fileType)
         }
+        reader.readAsBinaryString(file)
+      },
+      // Create New Recipe
+      createNewRecipe: function (event) {
+        this.createRecipeIsActive = false
+        var projectId = this.$route.params.id
+        // POST to API
+        axios({
+          method: 'post',
+          url: auth.getAPIUrl() + 'v1/service_types',
+          headers: { 'Authorization': auth.getAuthHeader() },
+          data: {
+            project_id: projectId,
+            is_imported: true,
+            name: this.name,
+            description: this.description,
+            version: this.version,
+            deploy_template: this.composeFile,
+            configuration_template: this.configFile,
+            service_protocol_type: this.service_protocol_type,
+            ngsi_version: this.ngsi_version,
+            local_path: ''
+          }
+        })
+        .then(function (response) {
+          console.log(response.data)
+          location.reload()
+        })
+        .catch(function (error) {
+          console.log(error)
+          alert('COULD NOT CREATE RECIPE: ' + error.response.data.message)
+        })
+      },
+      // Import Catalog
+      importCatalog: function (event) {
+        this.importRecipeIsActive = false
+        var projectId = this.$route.params.id
         // POST to API
         axios({
           method: 'post',
