@@ -23,14 +23,17 @@
       Service Type
     </p>
     <p class="subtitle">
-      The Type of Service to deploy. The available Types can be found in the MasterMind Catalog
+      The Type of Service to deploy. The available Types can be found in the MasterMind Catalog and the imported recipes
     </p>
     <!-- Create dropdown with a list of available service types, on change event generate new config form template -->
     <p class="control">
       <span class="select">
         <select v-model="service_type_id" @change="getConfigTemplate">
-          <option v-for="service_type in service_types" v-bind:value="service_type.id">
-            {{ service_type.name }}:{{ service_type.version }}
+          <option v-for="service_type in main_catalog" v-bind:value="service_type.id">
+            {{ service_type.name }}:{{ service_type.version }}(OFFICIAL)
+          </option>
+          <option v-for="service_type in custom_catalog" v-bind:value="service_type.id">
+            {{ service_type.name }}:{{ service_type.version }}(CUSTOM)
           </option>
         </select>
       </span>
@@ -280,16 +283,16 @@
       var getConfigTemplate = this.getConfigTemplate
       // List of axios promises for syncing action after all promises fulfilled
       var promises = []
-      // Get service types
+      // Get service types from main catalog
       promises.push(axios.get(auth.getAPIUrl() + 'v1/service_types', {headers: {'Authorization': auth.getAuthHeader()}})
       .then(response => {
-        this.service_types = response.data
-        // Check if at leats one service type to deploy exists
-        if (this.service_types.length > 0) {
-          this.service_type_id = this.service_types[0].id
-        } else {
-          this.cannotRegister = true
-        }
+        this.main_catalog = response.data
+      })
+      .catch(error => { console.log(error) }))
+      // Get service types from custom catalog
+      promises.push(axios.get(auth.getAPIUrl() + 'v1/service_types?project_id=' + projectId, {headers: {'Authorization': auth.getAuthHeader()}})
+      .then(response => {
+        this.custom_catalog = response.data
       })
       .catch(error => { console.log(error) }))
       // Get clusters
@@ -312,6 +315,13 @@
       .catch(error => { console.log(error) }))
       // Once Services, Clusers and Service Types obtained, generate config template
       axios.all(promises).then(response => {
+        this.service_types = this.main_catalog.concat(this.custom_catalog)
+        // Check if at leats one service type to deploy exists
+        if (this.service_types.length > 0) {
+          this.service_type_id = this.service_types[0].id
+        } else {
+          this.cannotRegister = true
+        }
         getConfigTemplate()
       })
       .catch(error => {
@@ -333,6 +343,8 @@
         service_type_id: 0,
         cluster_id: 0,
         service_types: [],
+        main_catalog: [],
+        custom_catalog: [],
         env_variables: [],
         linked_services: [],
         clusters: [],
