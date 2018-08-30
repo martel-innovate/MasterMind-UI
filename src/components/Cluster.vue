@@ -100,7 +100,7 @@
       getCluster: function () {
         var projectId = this.$route.params.project_id
         var clusterId = this.$route.params.cluster_id
-        axios.get(auth.getAPIUrl() + 'v1/projects/' + projectId + '/clusters/' + clusterId + '/getswarm', {headers: {'Authorization': auth.getAuthHeader()}})
+        axios.get(auth.getAPIUrl() + 'v1/projects/' + projectId + '/clusters/' + clusterId + '/getclusterinfo', {headers: {'Authorization': auth.getAuthHeader()}})
         .then(response => {
           console.log(response.data)
           // TODO: Better format and display this
